@@ -126,7 +126,7 @@ def curtain(
 
     # setup user interface for changing the curtain position
     curtain_slider = ipywidgets.IntSlider(
-        value=slice_number,
+        value=image.shape[-2] / 2,
         min=0,
         max=image.shape[-2],
         continuous_update=continuous_update,
