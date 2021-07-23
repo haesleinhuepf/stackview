@@ -126,14 +126,17 @@ def curtain(
 
     # setup user interface for changing the curtain position
     curtain_slider = ipywidgets.IntSlider(
-        value=image.shape[-2] / 2,
+        value=image.shape[-1] / 2,
         min=0,
-        max=image.shape[-2],
+        max=image.shape[-1],
         continuous_update=continuous_update,
         description="Curtain"
     )
 
-    view = niw.NumpyImage(np.take(image, slice_number, axis=axis))
+    if len(image.shape) <= 2:
+        view = niw.NumpyImage(image)
+    else:
+        view = niw.NumpyImage(np.take(image, slice_number, axis=axis))
     if display_width is not None:
         view.width_display = display_width
     if display_height is not None:
@@ -141,7 +144,7 @@ def curtain(
 
     def transform_image():
         if slice_slider is None:
-            image_slice = image
+            image_slice = image.copy()
             image_slice_curtain = image_curtain
         else:
             image_slice = np.take(image, slice_slider.value, axis=axis)
