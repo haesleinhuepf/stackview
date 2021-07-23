@@ -5,8 +5,8 @@ def slice(
         image,
         slice_number : int = None,
         axis : int = 0,
-        display_width : int = 256,
-        display_height : int = 256,
+        display_width : int = 240,
+        display_height : int = 240,
         continuous_update:bool=False,
         slider_text:str="Slice"
 ):
@@ -79,8 +79,8 @@ def curtain(
         image_curtain,
         slice_number: int = None,
         axis: int = 0,
-        display_width: int = 256,
-        display_height: int = 256,
+        display_width: int = 240,
+        display_height: int = 240,
         continuous_update: bool = False
 ):
     """Show two images and allow with a slider to show either the one or the other image.
@@ -169,8 +169,8 @@ def curtain(
 
 def orthogonal(
         image,
-        display_width : int = 256,
-        display_height : int = 256,
+        display_width : int = 240,
+        display_height : int = 240,
         continuous_update:bool=False
 ):
     """
