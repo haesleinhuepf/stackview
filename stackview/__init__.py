@@ -1,7 +1,15 @@
 __version__ = "0.1.0"
 
 
-def slice(image, slice_number : int = None, axis : int = 0, display_width : int = None, display_height : int = None, continuous_update:bool=False, slider_text:str="Slice"):
+def slice(
+        image,
+        slice_number : int = None,
+        axis : int = 0,
+        display_width : int = 256,
+        display_height : int = 256,
+        continuous_update:bool=False,
+        slider_text:str="Slice"
+):
     """Shows an image with a slider to go through a stack.
 
     Parameters
@@ -48,7 +56,7 @@ def slice(image, slice_number : int = None, axis : int = 0, display_width : int 
         min=0,
         max=image.shape[0]-1,
         continuous_update=continuous_update,
-        description = slider_text
+        description = slider_text,
     )
 
     def transform_image(z):
@@ -66,8 +74,15 @@ def slice(image, slice_number : int = None, axis : int = 0, display_width : int 
     return ipywidgets.VBox([view, slice_slider])
 
 
-def curtain(image, image_curtain, slice_number: int = None, axis: int = 0, display_width: int = None,
-              display_height: int = None, continuous_update: bool = False):
+def curtain(
+        image,
+        image_curtain,
+        slice_number: int = None,
+        axis: int = 0,
+        display_width: int = 256,
+        display_height: int = 256,
+        continuous_update: bool = False
+):
     """Show two images and allow with a slider to show either the one or the other image.
 
     Parameters
@@ -152,7 +167,12 @@ def curtain(image, image_curtain, slice_number: int = None, axis: int = 0, displ
     else:
         return ipywidgets.VBox([view, curtain_slider])
 
-def orthogonal(image, display_width : int = None, display_height : int = None, continuous_update:bool=False):
+def orthogonal(
+        image,
+        display_width : int = 256,
+        display_height : int = 256,
+        continuous_update:bool=False
+):
     """
 
     Parameters
@@ -173,7 +193,6 @@ def orthogonal(image, display_width : int = None, display_height : int = None, c
     See Also
     --------
     slice()
-
     """
     import ipywidgets
 
