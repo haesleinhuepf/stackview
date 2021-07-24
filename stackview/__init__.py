@@ -416,7 +416,11 @@ def interact(func, image, *args, **kwargs):
     if viewer.slice_slider is not None:
         return ipywidgets.VBox([
             viewer.view,
-            viewer.slice_slider
+            viewer.slice_slider,
+            command_label
         ])
     else:
-        return viewer.view
+        return ipywidgets.VBox([
+            viewer.view,
+            command_label
+        ])
