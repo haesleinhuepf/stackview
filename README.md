@@ -38,6 +38,19 @@ stackview.curtain(image, modified_image * 65537, continuous_update=True)
 ```
 ![](docs/images/demo_curtain.gif)
 
+The curtain also works with 2D data. 
+Btw. to visualize both images properly, you need adjust their grey value range yourself. 
+For example, multiply a binary image with 255 so that it visualizes nicely side-by-side with the original image in 8-bit range:
+```python
+slice_image = imread('https://github.com/haesleinhuepf/stackview/blob/main/docs/data/blobs.tif?raw=true', plugin='tifffile')
+from skimage.filters import threshold_otsu
+binary = (slice_image > threshold_otsu(slice_image)) * 255
+stackview.curtain(slice_image, binary, continuous_update=True)
+```
+![](docs/images/demo_curtain2.gif)
+
+
+
 ## Contributing
 
 Contributions, bug-reports and ideas for further development are very welcome.
