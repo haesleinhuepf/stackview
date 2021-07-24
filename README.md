@@ -54,6 +54,29 @@ stackview.side_by_side(image_stack[1:], image_stack[:-1], continuous_update=True
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_side_by_side.gif)
 
+Exploration of the parameter space of image processing functions is available using `interact`:
+```python
+from skimage.filters.rank import maximum
+stackview.interact(maximum, slice_image)
+```
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_interact1.gif)
+
+This might be useful for custom functions implementing image processing workflows:
+```python
+from skimage.filters import gaussian, threshold_otsu, sobel
+def my_custom_code(image, sigma:float = 1):
+    blurred_image = gaussian(image, sigma=sigma)
+    binary_image = blurred_image > threshold_otsu(blurred_image)
+    edge_image = sobel(binary_image)
+    
+    return edge_image * 255 + image 
+
+stackview.interact(my_custom_code, slice_image)
+```
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_interact2.gif)
+
+stackview.interact(cle.gaussian_blur, image)
+
 ## Contributing
 
 Contributions, bug-reports and ideas for further development are very welcome.
@@ -72,6 +95,8 @@ There are other libraries doing similar stuff
 * [napari](https://github.com/napari/napari)
 * [JNI's Volume Viewer based on Matplotlib](https://github.com/jni/mpl-volume-viewer)
 * [Holoviz hvPlot](https://hvplot.holoviz.org/user_guide/Gridded_Data.html#n-d-plots)
+* [magicgui](https://github.com/napari/magicgui)
+* [ipywidgets interact](https://ipywidgets.readthedocs.io/en/latest/examples/Using%20Interact.html)
 
 [BSD-3]: http://opensource.org/licenses/BSD-3-Clause
 [image.sc]: https://image.sc

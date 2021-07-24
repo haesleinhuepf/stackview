@@ -1,5 +1,60 @@
 __version__ = "0.1.1"
 
+class _SliceViewer():
+    def __init__(self,
+                 image,
+                 slice_number: int = None,
+                 axis: int = 0,
+                 display_width: int = 240,
+                 display_height: int = 240,
+                 continuous_update: bool = False,
+                 slider_text: str = "Slice"
+                 ):
+        import ipywidgets
+        import numpy_image_widget as niw
+        import numpy as np
+
+        self.image = image
+
+        if slice_number is None:
+            slice_number = int(image.shape[axis] / 2)
+
+        if len(image.shape) <= 2:
+            self.view = niw.NumpyImage(image)
+        else:
+            self.view = niw.NumpyImage(np.take(image, slice_number, axis=axis))
+        if display_width is not None:
+            self.view.width_display = display_width
+        if display_height is not None:
+            self.view.height_display = display_height
+        if len(image.shape) <= 2:
+            self.slice_slider = None
+        else:
+            # setup user interface for changing the slice
+            self.slice_slider = ipywidgets.IntSlider(
+                value=slice_number,
+                min=0,
+                max=image.shape[0] - 1,
+                continuous_update=continuous_update,
+                description=slider_text,
+            )
+
+        # event handler when the user changed something:
+        def configuration_updated(event):
+            if self.slice_slider is not None:
+                self.view.data = np.take(self.image, self.slice_slider.value, axis=axis)
+            else:
+                self.view.data = self.image
+
+        self.configuration_updated = configuration_updated
+
+        if self.slice_slider is not None:
+            # connect user interface with event
+            self.slice_slider.observe(configuration_updated)
+
+        configuration_updated(None)
+
+
 
 def slice(
         image,
@@ -33,43 +88,16 @@ def slice(
     """
 
     import ipywidgets
-    import numpy_image_widget as niw
-    import numpy as np
-
-    if slice_number is None:
-        slice_number = int(image.shape[axis] / 2)
-
-    if len(image.shape) <= 2:
-        view = niw.NumpyImage(image)
-    else:
-        view = niw.NumpyImage(np.take(image, slice_number, axis=axis))
-    if display_width is not None:
-        view.width_display = display_width
-    if display_height is not None:
-        view.height_display = display_height
-    if len(image.shape) <= 2:
-        return view
-
-    # setup user interface for changing the slice
-    slice_slider = ipywidgets.IntSlider(
-        value=slice_number,
-        min=0,
-        max=image.shape[0]-1,
-        continuous_update=continuous_update,
-        description = slider_text,
+    viewer = _SliceViewer(image,
+        slice_number,
+        axis,
+        display_width,
+        display_height,
+        continuous_update,
+        slider_text
     )
-
-    def transform_image(z):
-        return np.take(image, z, axis=axis)
-
-    # event handler when the user changed something:
-    def configuration_updated(event):
-        view.data = transform_image(slice_slider.value)
-
-    # connect user interface with event
-    slice_slider.observe(configuration_updated)
-
-    configuration_updated(None)
+    view = viewer.view
+    slice_slider = viewer.slice_slider
 
     return ipywidgets.VBox([view, slice_slider])
 
@@ -304,3 +332,91 @@ def side_by_side(
     else:
         return ipywidgets.HBox([view1, view2, view3])
 
+
+def interact(func, image, *args, **kwargs):
+    """Takes a function which has an image as first parameter and additional parameters.
+    It will build a user interface consisting of sliders for numeric parameters and parameters
+    that are called "footprint" or "selem".
+
+    Parameters
+    ----------
+    func : function
+    image : Image
+    args
+    kwargs
+
+    """
+    import inspect
+    import ipywidgets
+
+    exposable_parameters = []
+    footprint_parameters = []
+
+    sig = inspect.signature(func)
+    for key in sig.parameters.keys():
+        exposable = False
+        default_value = 0
+        if isinstance(sig.parameters[key].default, int) or isinstance(sig.parameters[key].default, float):
+            default_value = sig.parameters[key].default
+
+        if sig.parameters[key].annotation is int:
+            default_value = ipywidgets.IntSlider(min=0, max=20, step=1, value=default_value, continuous_update=False)
+            exposable = True
+        elif sig.parameters[key].annotation is float:
+            default_value = ipywidgets.FloatSlider(min=-20, max=20, step=1, value=default_value, continuous_update=False)
+            exposable = True
+        elif key == 'sigma' or key == 'radius':
+            default_value = ipywidgets.FloatSlider(min=-20, max=20, step=1, value=default_value, continuous_update=False)
+            exposable = True
+        elif key == 'footprint' or key == 'selem' or key == 'structuring_element':
+            footprint_parameters.append(key)
+            default_value = ipywidgets.IntSlider(min=0, max=20, step=1, value=default_value)
+            exposable = True
+
+        if exposable:
+            if key in kwargs.keys():
+                default_value = kwargs[key]
+            exposable_parameters.append(inspect.Parameter(key, inspect.Parameter.KEYWORD_ONLY, default=default_value))
+
+    viewer = _SliceViewer(image)
+    command_label = ipywidgets.Label(value=func.__name__ + "()")
+
+    from skimage import morphology
+
+    def worker_function(*otherargs, **kwargs):
+
+        command = func.__name__ + "(..."
+
+        for key in [e.name for e in exposable_parameters]:
+
+            if key in footprint_parameters:
+                if len(image.shape) == 2:
+                    command = command + ", " + key + "=disk(" + str(kwargs[key]) + ")"
+                    kwargs[key] = morphology.disk(kwargs[key])
+                elif len(image.shape) == 3:
+                    command = command + ", " + key + "=ball(" + str(kwargs[key]) + ")"
+                    kwargs[key] = morphology.ball(kwargs[key])
+            else:
+                command = command + ", " + key + "=" + str(kwargs[key])
+        command = command + ")"
+        command_label.value = command
+
+        viewer.image = func(image, *args, **kwargs)
+        viewer.configuration_updated(None)
+
+
+
+    import ipywidgets
+
+
+    worker_function.__signature__ = inspect.Signature(exposable_parameters)
+
+    ipywidgets.interact(worker_function)
+
+    if viewer.slice_slider is not None:
+        return ipywidgets.VBox([
+            viewer.view,
+            viewer.slice_slider
+        ])
+    else:
+        return viewer.view
