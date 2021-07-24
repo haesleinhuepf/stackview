@@ -77,8 +77,6 @@ stackview.interact(my_custom_code, slice_image)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_interact2.gif)
 
-stackview.interact(cle.gaussian_blur, image)
-
 ## Contributing
 
 Contributions, bug-reports and ideas for further development are very welcome.
