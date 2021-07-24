@@ -21,6 +21,7 @@ image = imread('data/Haase_MRT_tfl3d1.tif', plugin='tifffile')
 
 You can then view it slice-by-slice:
 ```python
+import stackview
 stackview.slice(image, continuous_update=True)
 ```
 ![](docs/images/demo_slice.gif)
@@ -49,6 +50,12 @@ Distributed under the terms of the [BSD-3] license,
 ## Issues
 
 If you encounter any problems, please create a thread on [image.sc] along with a detailed description and tag [@haesleinhuepf].
+
+## See also
+There are other libraries doing similar stuff
+* [napari](https://github.com/napari/napari)
+* [JNI's Volume Viewer based on Matplotlib](https://github.com/jni/mpl-volume-viewer)
+* [Holoviz hvPlot](https://hvplot.holoviz.org/user_guide/Gridded_Data.html#n-d-plots)
 
 [BSD-3]: http://opensource.org/licenses/BSD-3-Clause
 [image.sc]: https://image.sc
