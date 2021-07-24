@@ -176,7 +176,7 @@ def orthogonal(
         display_height : int = 240,
         continuous_update:bool=False
 ):
-    """
+    """Show three viewers slicing the image stack in Z,Y and X.
 
     Parameters
     ----------
