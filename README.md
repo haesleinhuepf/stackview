@@ -24,32 +24,35 @@ You can then view it slice-by-slice:
 import stackview
 stackview.slice(image, continuous_update=True)
 ```
-![](docs/images/demo_slice.gif)
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_slice.gif)
 
 Orthogonal views are also available:
 ```python
 stackview.orthogonal(image, continuous_update=True)
 ```
-![](docs/images/demo_orthogonal.gif)
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_orthogonal.gif)
 
 Furthermore, to visualize an original image in combination with a processed version, a curtain view may be helpful:
 ```python
 stackview.curtain(image, modified_image * 65537, continuous_update=True)
 ```
-![](docs/images/demo_curtain.gif)
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain.gif)
 
 The curtain also works with 2D data. 
 Btw. to visualize both images properly, you need adjust their grey value range yourself. 
 For example, multiply a binary image with 255 so that it visualizes nicely side-by-side with the original image in 8-bit range:
 ```python
-slice_image = imread('https://github.com/haesleinhuepf/stackview/blob/main/docs/data/blobs.tif?raw=true', plugin='tifffile')
-from skimage.filters import threshold_otsu
 binary = (slice_image > threshold_otsu(slice_image)) * 255
 stackview.curtain(slice_image, binary, continuous_update=True)
 ```
-![](docs/images/demo_curtain2.gif)
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain2.gif)
 
-
+A side-by-side view for colocalization visualization is also available.
+If you're working with time-lapse data, you can also use this view for visualizing differences between timepoints:
+```python
+stackview.side_by_side(image_stack[1:], image_stack[:-1], continuous_update=True, display_width=300)
+```
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_side_by_side.gif)
 
 ## Contributing
 

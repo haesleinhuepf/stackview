@@ -205,3 +205,102 @@ def orthogonal(
         slice(image, axis=2, slider_text="X", display_width=display_width, display_height=display_height, continuous_update=continuous_update),
     ])
 
+
+def side_by_side(
+        image1,
+        image2,
+        slice_number: int = None,
+        axis: int = 0,
+        display_width: int = None,
+        display_height: int = None,
+        continuous_update: bool = False,
+        slider_text: str = "Slice"
+):
+    """Shows two images in magenta and green plus a third with their colocalization / overlap view and
+    a slider to go through a stack.
+
+    Parameters
+    ----------
+    image1 : image
+        Image shown on the left
+    image2 : image
+        Image shown on the right
+    slice_number : int, optional
+        Slice-position in the stack
+    axis : int, optional
+        Axis in case we are slicing a stack
+    display_width : int, optional
+        Size of the displayed image in pixels
+    display_height : int, optional
+        Size of the displayed image in pixels
+    continuous_update : bool, optional
+        Update the image while dragging the mouse, default: False
+
+    Returns
+    -------
+    An ipywidget with three image displays and a slider.
+    """
+
+    import ipywidgets
+    import numpy_image_widget as niw
+    import numpy as np
+
+    if slice_number is None:
+        slice_number = int(image1.shape[axis] / 2)
+
+    if len(image1.shape) <= 2:
+        slice_image = image1
+    else:
+        slice_image = np.take(image1, slice_number, axis=axis)
+
+    zeros_image = np.zeros(slice_image.shape)
+    view1 = niw.NumpyImage(slice_image)
+    view2 = niw.NumpyImage(slice_image)
+    view3 = niw.NumpyImage(slice_image)
+
+    if display_width is not None:
+        view1.width_display = display_width
+        view2.width_display = display_width
+        view3.width_display = display_width
+    if display_height is not None:
+        view1.height_display = display_height
+        view2.height_display = display_height
+        view3.height_display = display_height
+
+    # setup user interface for changing the slice
+    slice_slider = None
+    if len(image1.shape) > 2:
+        slice_slider = ipywidgets.IntSlider(
+            value=slice_number,
+            min=0,
+            max=image1.shape[0] - 1,
+            continuous_update=continuous_update,
+            description=slider_text,
+        )
+
+    # event handler when the user changed something:
+    def configuration_updated(event):
+        if slice_slider is not None:
+            z = slice_slider.value
+            slice_image1 = np.take(image1, z, axis=axis)
+            slice_image2 = np.take(image2, z, axis=axis)
+        else:
+            slice_image1 = image1
+            slice_image2 = image2
+        view1.data = np.asarray([slice_image1, zeros_image, slice_image1]).swapaxes(0, 2)
+        view2.data = np.asarray([zeros_image, slice_image2, zeros_image]).swapaxes(0, 2)
+        view3.data = np.asarray([slice_image1, slice_image2, slice_image1]).swapaxes(0, 2)
+
+    configuration_updated(None)
+
+    if slice_slider is not None:
+        # connect user interface with event
+        slice_slider.observe(configuration_updated)
+
+        return ipywidgets.VBox([
+            ipywidgets.HBox([view1, view2, view3]),
+            slice_slider
+        ])
+    else:
+        return ipywidgets.HBox([view1, view2, view3])
+
