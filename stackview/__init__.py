@@ -15,7 +15,7 @@ def slice(
     Parameters
     ----------
     image : image
-        Image shown on the left (behind the curtain)
+        Image shown
     slice_number : int, optional
         Slice-position in the stack
     axis : int, optional
@@ -204,3 +204,4 @@ def orthogonal(
         slice(image, axis=1, slider_text="Y", display_width=display_width, display_height=display_height, continuous_update=continuous_update),
         slice(image, axis=2, slider_text="X", display_width=display_width, display_height=display_height, continuous_update=continuous_update),
     ])
+
