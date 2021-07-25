@@ -424,3 +424,70 @@ def interact(func, image, *args, **kwargs):
             viewer.view,
             command_label
         ])
+
+
+def picker(
+        image,
+        slice_number: int = None,
+        display_width: int = 240,
+        display_height: int = 240,
+        continuous_update: bool = False,
+        slider_text: str = "Slice"
+):
+    """Shows an image with a slider to go through a stack plus a label with the current mouse position and intensity at that position.
+
+    Parameters
+    ----------
+    image : image
+        Image shown
+    slice_number : int, optional
+        Slice-position in the stack
+    display_width : int, optional
+        Size of the displayed image in pixels
+    display_height : int, optional
+        Size of the displayed image in pixels
+    continuous_update : bool, optional
+        Update the image while dragging the mouse, default: False
+
+    Returns
+    -------
+    An ipywidget with an image display, a slider and a label showing mouse position and intensity.
+    """
+
+    import ipywidgets
+    viewer = _SliceViewer(image,
+                          slice_number=slice_number,
+                          display_width=display_width,
+                          display_height=display_height,
+                          continuous_update=continuous_update,
+                          slider_text=slider_text
+                          )
+    view = viewer.view
+    slice_slider = viewer.slice_slider
+    label = ipywidgets.Label("[]:")
+
+    from ipyevents import Event
+    event_handler = Event(source=view, watched_events=['mousemove'])
+
+    def update_display(event):
+
+        relative_position_x = event['offsetX'] / view.width_display
+        relative_position_y = event['offsetY'] / view.height_display
+        absolute_position_x = int(relative_position_x * image.shape[-1])
+        absolute_position_y = int(relative_position_y * image.shape[-2])
+
+        if slice_slider is not None:
+            absolute_position_z = slice_slider.value
+            intensity = image[absolute_position_z, absolute_position_y, absolute_position_x]
+            label.value = "[z=" + str(absolute_position_z) + ", y=" + str(absolute_position_y) + ", x=" + str(
+                absolute_position_x) + "] = " + str(intensity)
+        else:
+            intensity = image[absolute_position_y, absolute_position_x]
+            label.value = "[y=" + str(absolute_position_y) + ", x=" + str(absolute_position_x) + "] = " + str(intensity)
+
+    event_handler.on_dom_event(update_display)
+
+    if slice_slider is not None:
+        return ipywidgets.VBox([view, slice_slider, label])
+    else:
+        return ipywidgets.VBox([view, label])
