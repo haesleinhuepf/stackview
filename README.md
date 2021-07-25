@@ -28,6 +28,12 @@ stackview.slice(image, continuous_update=True)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_slice.gif)
 
+To read the intensity of pixels where the mouse is moving, use the picker.
+```python
+stackview.picker(image, continuous_update=True)
+```
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_picker.gif)
+
 Orthogonal views are also available:
 ```python
 stackview.orthogonal(image, continuous_update=True)
