@@ -11,7 +11,7 @@ class _SliceViewer():
                  slider_text: str = "Slice"
                  ):
         import ipywidgets
-        import numpy_image_widget as niw
+        from ._numpy_image_widget import NumpyImage
         import numpy as np
 
         self.image = image
@@ -20,9 +20,9 @@ class _SliceViewer():
             slice_number = int(image.shape[axis] / 2)
 
         if len(image.shape) <= 2:
-            self.view = niw.NumpyImage(image)
+            self.view = NumpyImage(image)
         else:
-            self.view = niw.NumpyImage(np.take(image, slice_number, axis=axis))
+            self.view = NumpyImage(np.take(image, slice_number, axis=axis))
         if display_width is not None:
             self.view.width_display = display_width
         if display_height is not None:
@@ -135,7 +135,7 @@ def curtain(
     An ipywidget with an image display and a slider.
     """
     import ipywidgets
-    import numpy_image_widget as niw
+    from ._numpy_image_widget import NumpyImage
     import numpy as np
 
     slice_slider = None
@@ -162,9 +162,9 @@ def curtain(
     )
 
     if len(image.shape) <= 2:
-        view = niw.NumpyImage(image)
+        view = NumpyImage(image)
     else:
-        view = niw.NumpyImage(np.take(image, slice_number, axis=axis))
+        view = NumpyImage(np.take(image, slice_number, axis=axis))
     if display_width is not None:
         view.width_display = display_width
     if display_height is not None:
@@ -270,7 +270,7 @@ def side_by_side(
     """
 
     import ipywidgets
-    import numpy_image_widget as niw
+    from ._numpy_image_widget import NumpyImage
     import numpy as np
 
     if slice_number is None:
@@ -282,9 +282,9 @@ def side_by_side(
         slice_image = np.take(image1, slice_number, axis=axis)
 
     zeros_image = np.zeros(slice_image.shape)
-    view1 = niw.NumpyImage(slice_image)
-    view2 = niw.NumpyImage(slice_image)
-    view3 = niw.NumpyImage(slice_image)
+    view1 = NumpyImage(slice_image)
+    view2 = NumpyImage(slice_image)
+    view3 = NumpyImage(slice_image)
 
     if display_width is not None:
         view1.width_display = display_width
