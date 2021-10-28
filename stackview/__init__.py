@@ -99,7 +99,10 @@ def slice(
     view = viewer.view
     slice_slider = viewer.slice_slider
 
-    return ipywidgets.VBox([view, slice_slider])
+    if slice_slider is None:
+        return view
+    else:
+        return ipywidgets.VBox([view, slice_slider])
 
 
 def curtain(
