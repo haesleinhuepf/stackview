@@ -34,7 +34,7 @@ class _SliceViewer():
             self.slice_slider = ipywidgets.IntSlider(
                 value=slice_number,
                 min=0,
-                max=image.shape[0] - 1,
+                max=image.shape[axis] - 1,
                 continuous_update=continuous_update,
                 description=slider_text,
             )
@@ -144,22 +144,24 @@ def curtain(
     slice_slider = None
     if len(image.shape) > 2:
         if slice_number is None:
-            slice_number = int(image.shape[0] / 2)
+            slice_number = int(image.shape[axis] / 2)
 
         # setup user interface for changing the slice
         slice_slider = ipywidgets.IntSlider(
             value=slice_number,
             min=0,
-            max=image.shape[0]-1,
+            max=image.shape[axis]-1,
             continuous_update=continuous_update,
             description="Slice"
         )
 
     # setup user interface for changing the curtain position
+    slice_shape = list(image.shape)
+    slice_shape.pop(axis)
     curtain_slider = ipywidgets.IntSlider(
-        value=image.shape[-1] / 2,
+        value=slice_shape[-1] / 2,
         min=0,
-        max=image.shape[-1],
+        max=slice_shape[-1],
         continuous_update=continuous_update,
         description="Curtain"
     )
