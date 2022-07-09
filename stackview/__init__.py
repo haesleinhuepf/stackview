@@ -5,13 +5,13 @@ class _SliceViewer():
                  image,
                  slice_number: int = None,
                  axis: int = 0,
-                 display_width: int = 240,
-                 display_height: int = 240,
+                 display_width: int = None,
+                 display_height: int = None,
                  continuous_update: bool = False,
                  slider_text: str = "Slice"
                  ):
         import ipywidgets
-        from ._numpy_image_widget import NumpyImage
+        from ._image_widget import ImageWidget
         import numpy as np
 
         self.image = image
@@ -20,13 +20,13 @@ class _SliceViewer():
             slice_number = int(image.shape[axis] / 2)
 
         if len(image.shape) <= 2:
-            self.view = NumpyImage(image)
+            self.view = ImageWidget(image)
         else:
-            self.view = NumpyImage(np.take(image, slice_number, axis=axis))
+            self.view = ImageWidget(np.take(image, slice_number, axis=axis))
         if display_width is not None:
-            self.view.width_display = display_width
+            self.view.width = display_width
         if display_height is not None:
-            self.view.height_display = display_height
+            self.view.height = display_height
         if len(image.shape) <= 2:
             self.slice_slider = None
         else:
@@ -55,13 +55,12 @@ class _SliceViewer():
         configuration_updated(None)
 
 
-
 def slice(
         image,
         slice_number : int = None,
         axis : int = 0,
-        display_width : int = 240,
-        display_height : int = 240,
+        display_width : int = None,
+        display_height : int = None,
         continuous_update:bool=False,
         slider_text:str="Slice"
 ):
@@ -100,9 +99,9 @@ def slice(
     slice_slider = viewer.slice_slider
 
     if slice_slider is None:
-        return view
+        return _no_resize(view)
     else:
-        return ipywidgets.VBox([view, slice_slider])
+        return ipywidgets.VBox([_no_resize(view), slice_slider])
 
 
 def curtain(
@@ -110,8 +109,8 @@ def curtain(
         image_curtain,
         slice_number: int = None,
         axis: int = 0,
-        display_width: int = 240,
-        display_height: int = 240,
+        display_width: int = None,
+        display_height: int = None,
         continuous_update: bool = False
 ):
     """Show two images and allow with a slider to show either the one or the other image.
@@ -138,7 +137,7 @@ def curtain(
     An ipywidget with an image display and a slider.
     """
     import ipywidgets
-    from ._numpy_image_widget import NumpyImage
+    from ._image_widget import ImageWidget
     import numpy as np
 
     slice_slider = None
@@ -167,13 +166,13 @@ def curtain(
     )
 
     if len(image.shape) <= 2:
-        view = NumpyImage(image)
+        view = ImageWidget(image)
     else:
-        view = NumpyImage(np.take(image, slice_number, axis=axis))
+        view = ImageWidget(np.take(image, slice_number, axis=axis))
     if display_width is not None:
-        view.width_display = display_width
+        view.width = display_width
     if display_height is not None:
-        view.height_display = display_height
+        view.height = display_height
 
     def transform_image():
         if slice_slider is None:
@@ -199,14 +198,14 @@ def curtain(
         # connect user interface with event
         slice_slider.observe(configuration_updated)
 
-        return ipywidgets.VBox([view, slice_slider, curtain_slider])
+        return ipywidgets.VBox([_no_resize(view), slice_slider, curtain_slider])
     else:
-        return ipywidgets.VBox([view, curtain_slider])
+        return ipywidgets.VBox([_no_resize(view), curtain_slider])
 
 def orthogonal(
         image,
-        display_width : int = 240,
-        display_height : int = 240,
+        display_width : int = None,
+        display_height : int = None,
         continuous_update:bool=False
 ):
     """Show three viewers slicing the image stack in Z,Y and X.
@@ -275,7 +274,7 @@ def side_by_side(
     """
 
     import ipywidgets
-    from ._numpy_image_widget import NumpyImage
+    from ._image_widget import ImageWidget
     import numpy as np
 
     if slice_number is None:
@@ -287,18 +286,18 @@ def side_by_side(
         slice_image = np.take(image1, slice_number, axis=axis)
 
     zeros_image = np.zeros(slice_image.shape)
-    view1 = NumpyImage(slice_image)
-    view2 = NumpyImage(slice_image)
-    view3 = NumpyImage(slice_image)
+    view1 = ImageWidget(slice_image)
+    view2 = ImageWidget(slice_image)
+    view3 = ImageWidget(slice_image)
 
     if display_width is not None:
-        view1.width_display = display_width
-        view2.width_display = display_width
-        view3.width_display = display_width
+        view1.display = display_width
+        view2.display = display_width
+        view3.display = display_width
     if display_height is not None:
-        view1.height_display = display_height
-        view2.height_display = display_height
-        view3.height_display = display_height
+        view1.display = display_height
+        view2.display = display_height
+        view3.display = display_height
 
     # setup user interface for changing the slice
     slice_slider = None
@@ -320,6 +319,7 @@ def side_by_side(
         else:
             slice_image1 = image1
             slice_image2 = image2
+
         view1.data = np.asarray([slice_image1, zeros_image, slice_image1]).swapaxes(0, 2)
         view2.data = np.asarray([zeros_image, slice_image2, zeros_image]).swapaxes(0, 2)
         view3.data = np.asarray([slice_image1, slice_image2, slice_image1]).swapaxes(0, 2)
@@ -331,11 +331,11 @@ def side_by_side(
         slice_slider.observe(configuration_updated)
 
         return ipywidgets.VBox([
-            ipywidgets.HBox([view1, view2, view3]),
+            ipywidgets.HBox([_no_resize(view1), _no_resize(view2), _no_resize(view3)]),
             slice_slider
         ])
     else:
-        return ipywidgets.HBox([view1, view2, view3])
+        return ipywidgets.HBox([_no_resize(view1), _no_resize(view2), _no_resize(view3)])
 
 
 def interact(func, image, *args, **kwargs):
@@ -420,13 +420,13 @@ def interact(func, image, *args, **kwargs):
 
     if viewer.slice_slider is not None:
         return ipywidgets.VBox([
-            viewer.view,
+            _no_resize(viewer.view),
             viewer.slice_slider,
             command_label
         ])
     else:
         return ipywidgets.VBox([
-            viewer.view,
+            _no_resize(viewer.view),
             command_label
         ])
 
@@ -434,8 +434,8 @@ def interact(func, image, *args, **kwargs):
 def picker(
         image,
         slice_number: int = None,
-        display_width: int = 240,
-        display_height: int = 240,
+        display_width: int = None,
+        display_height: int = None,
         continuous_update: bool = False,
         slider_text: str = "Slice"
 ):
@@ -475,11 +475,10 @@ def picker(
     event_handler = Event(source=view, watched_events=['mousemove'])
 
     def update_display(event):
-
-        relative_position_x = event['offsetX'] / view.width_display
-        relative_position_y = event['offsetY'] / view.height_display
-        absolute_position_x = int(relative_position_x * image.shape[-1])
-        absolute_position_y = int(relative_position_y * image.shape[-2])
+        relative_position_x = event['relativeX']
+        relative_position_y = event['relativeY']
+        absolute_position_x = int(relative_position_x)
+        absolute_position_y = int(relative_position_y)
 
         if slice_slider is not None:
             absolute_position_z = slice_slider.value
@@ -493,6 +492,10 @@ def picker(
     event_handler.on_dom_event(update_display)
 
     if slice_slider is not None:
-        return ipywidgets.VBox([view, slice_slider, label])
+        return ipywidgets.VBox([_no_resize(view), slice_slider, label], stretch=False)
     else:
-        return ipywidgets.VBox([view, label])
+        return ipywidgets.VBox([_no_resize(view), label])
+
+def _no_resize(widget):
+    import ipywidgets
+    return ipywidgets.HBox([ipywidgets.VBox([widget])])
