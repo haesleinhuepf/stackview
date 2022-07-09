@@ -1,13 +1,19 @@
 # stackview
 Interactive image stack viewing in jupyter notebooks based on a fork of 
-[numpy_image_widget](https://github.com/Who8MyLunch/Numpy_Image_Widget) and 
+[ipycanvas](https://ipycanvas.readthedocs.io/) and 
 [ipywidgets](https://ipywidgets.readthedocs.io/en/latest/).
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/banner.gif)
 
 ## Installation
 
-```shell
+stackview is build on ipycanvas. Thus, please install it first ([see also](https://ipycanvas.readthedocs.io/en/latest/installation.html))
+
+```
+conda install -c conda-forge ipycanvas
+```
+
+```
 pip install stackview
 ```
 
