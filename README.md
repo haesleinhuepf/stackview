@@ -1,5 +1,5 @@
 # stackview
-Interactive image stack viewing in jupyter notebooks based on a fork of 
+Interactive image stack viewing in jupyter notebooks based on 
 [ipycanvas](https://ipycanvas.readthedocs.io/) and 
 [ipywidgets](https://ipywidgets.readthedocs.io/en/latest/).
 
