@@ -4,8 +4,8 @@ from functools import lru_cache
 
 class ImageWidget(Canvas):
     def __init__(self, image):
-        if len(image.shape) != 2:
-            raise NotImplementedError("Only 2D images are supported")
+        if not ((len(image.shape) == 2) or (len(image.shape) == 3 and image.shape[-1] == 3)):
+            raise NotImplementedError("Only 2D images are supported" + str(image.shape))
 
         width = image.shape[1]
         height = image.shape[0]
@@ -44,7 +44,7 @@ def _img_to_rgb(image,
     if len(image.shape) == 3 and image.shape[2] == 3:
         return image
 
-    if image.dtype == np.uint32:
+    if image.dtype == np.uint32 or image.dtype == np.int64:
         lut = _labels_lut()
         return np.asarray([lut[:, c].take(image) for c in range(0, 3)]).swapaxes(0, 2) * 255
 

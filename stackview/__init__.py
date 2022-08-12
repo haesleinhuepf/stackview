@@ -174,15 +174,17 @@ def curtain(
     if display_height is not None:
         view.height = display_height
 
+    from ._image_widget import _img_to_rgb
+
     def transform_image():
         if slice_slider is None:
-            image_slice = image.copy()
-            image_slice_curtain = image_curtain
+            image_slice = _img_to_rgb(image.copy())
+            image_slice_curtain = _img_to_rgb(image_curtain)
         else:
-            image_slice = np.take(image, slice_slider.value, axis=axis)
-            image_slice_curtain = np.take(image_curtain, slice_slider.value, axis=axis)
+            image_slice = _img_to_rgb(np.take(image, slice_slider.value, axis=axis))
+            image_slice_curtain = _img_to_rgb(np.take(image_curtain, slice_slider.value, axis=axis))
 
-        image_slice[:, curtain_slider.value:] = image_slice_curtain[:, curtain_slider.value:]
+        image_slice[curtain_slider.value:] = image_slice_curtain[curtain_slider.value:]
         return image_slice
 
     # event handler when the user changed something:
