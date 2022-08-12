@@ -74,7 +74,7 @@ labels = label(binary)
 stackview.curtain(slice_image, labels, continuous_update=True)
 ```
 
-![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain2.gif)
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain3.gif)
 
 A side-by-side view for colocalization visualization is also available.
 If you're working with time-lapse data, you can also use this view for visualizing differences between timepoints:
