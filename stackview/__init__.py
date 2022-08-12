@@ -402,6 +402,9 @@ def interact(func, image, *args, **kwargs):
         elif key == 'sigma' or key == 'radius':
             default_value = ipywidgets.FloatSlider(min=-20, max=20, step=1, value=default_value, continuous_update=False)
             exposable = True
+        elif key.startswith("is_") or sig.parameters[key].annotation is bool:
+            default_value = ipywidgets.Checkbox(value=default_value)
+            exposable = True
         elif key == 'footprint' or key == 'selem' or key == 'structuring_element':
             footprint_parameters.append(key)
             default_value = ipywidgets.IntSlider(min=0, max=20, step=1, value=default_value)
