@@ -62,6 +62,15 @@ stackview.curtain(slice_image, binary, continuous_update=True)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain2.gif)
 
+The same also works with label images
+```python
+from skimage.measure import label
+labels = label(binary)
+stackview.curtain(slice_image, labels, continuous_update=True)
+```
+
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain2.gif)
+
 A side-by-side view for colocalization visualization is also available.
 If you're working with time-lapse data, you can also use this view for visualizing differences between timepoints:
 ```python
@@ -79,16 +88,20 @@ stackview.interact(maximum, slice_image)
 This might be useful for custom functions implementing image processing workflows:
 ```python
 from skimage.filters import gaussian, threshold_otsu, sobel
-def my_custom_code(image, sigma:float = 1):
+def my_custom_code(image, sigma:float = 1, show_labels: bool = True):
+    sigma = abs(sigma)
     blurred_image = gaussian(image, sigma=sigma)
     binary_image = blurred_image > threshold_otsu(blurred_image)
     edge_image = sobel(binary_image)
     
-    return edge_image * 255 + image 
+    if show_labels:
+        return label(binary_image)
+    else:
+        return edge_image * 255 + image 
 
 stackview.interact(my_custom_code, slice_image)
 ```
-![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_interact2.gif)
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_interact3.gif)
 
 ## Contributing
 
