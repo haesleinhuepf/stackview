@@ -37,6 +37,10 @@ class ImageWidget(Canvas):
         self.put_image_data(_img_to_rgb(self._data), 0, 0)
 
 
+def _is_label_image(image):
+    return image.dtype == np.uint32 or image.dtype == np.int64
+
+
 def _img_to_rgb(image,
                 display_min=None,
                 display_max=None):
@@ -44,7 +48,7 @@ def _img_to_rgb(image,
     if len(image.shape) == 3 and image.shape[2] == 3:
         return image
 
-    if image.dtype == np.uint32 or image.dtype == np.int64:
+    if _is_label_image(image):
         lut = _labels_lut()
         return np.asarray([lut[:, c].take(image) for c in range(0, 3)]).swapaxes(0, 2) * 255
 

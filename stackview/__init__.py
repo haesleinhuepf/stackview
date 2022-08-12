@@ -1,5 +1,8 @@
 __version__ = "0.2.0"
 
+import warnings
+
+
 class _SliceViewer():
     def __init__(self,
                  image,
@@ -312,6 +315,8 @@ def side_by_side(
             description=slider_text,
         )
 
+    from ._image_widget import _is_label_image, _img_to_rgb
+
     # event handler when the user changed something:
     def configuration_updated(event):
         if slice_slider is not None:
@@ -322,9 +327,31 @@ def side_by_side(
             slice_image1 = image1
             slice_image2 = image2
 
-        view1.data = np.asarray([slice_image1, zeros_image, slice_image1]).swapaxes(0, 2)
-        view2.data = np.asarray([zeros_image, slice_image2, zeros_image]).swapaxes(0, 2)
-        view3.data = np.asarray([slice_image1, slice_image2, slice_image1]).swapaxes(0, 2)
+        if _is_label_image(slice_image1) or _is_label_image(slice_image2):
+            rgb_image1 = _img_to_rgb(slice_image1)
+            rgb_image2 = _img_to_rgb(slice_image2)
+
+            if _is_label_image(slice_image1) and _is_label_image(slice_image2):
+                warnings.warn("Side-by-side mixing two label images may look weird." +
+                              "Consider showing original image and a label image side-by-side.")
+                factor1 = 0.5
+                factor2 = 0.5
+            elif _is_label_image(slice_image1):
+                factor1 = 0.3
+                factor2 = 0.7
+            elif _is_label_image(slice_image2):
+                factor1 = 0.7
+                factor2 = 0.3
+
+            rgb_mix = factor1 * rgb_image1 + factor2 * rgb_image2
+
+            view1.data = rgb_image1
+            view2.data = rgb_image2
+            view3.data = rgb_mix
+        else:
+            view1.data = np.asarray([slice_image1, zeros_image, slice_image1]).swapaxes(0, 2)
+            view2.data = np.asarray([zeros_image, slice_image2, zeros_image]).swapaxes(0, 2)
+            view3.data = np.asarray([slice_image1, slice_image2, slice_image1]).swapaxes(0, 2)
 
     configuration_updated(None)
 
