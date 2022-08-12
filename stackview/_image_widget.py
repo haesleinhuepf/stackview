@@ -38,7 +38,8 @@ class ImageWidget(Canvas):
 
 
 def _is_label_image(image):
-    return image.dtype == np.uint32 or image.dtype == np.int64
+    return image.dtype == np.uint32 or image.dtype == np.uint64 or \
+           image.dtype == np.int32 or image.dtype == np.int64
 
 
 def _img_to_rgb(image,
@@ -47,6 +48,9 @@ def _img_to_rgb(image,
 
     if len(image.shape) == 3 and image.shape[2] == 3:
         return image
+
+    if image.dtype == bool:
+        image = image * 1
 
     if _is_label_image(image):
         lut = _labels_lut()
@@ -71,4 +75,5 @@ def _labels_lut():
     rs = RandomState(MT19937(SeedSequence(3)))
     lut = rs.rand(65537, 3)
     lut[0, :] = 0
+    lut[1, :] = 1
     return lut
