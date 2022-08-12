@@ -1,6 +1,6 @@
 from ipycanvas import Canvas
-from ipywidgets import Image
 import numpy as np
+from functools import lru_cache
 
 class ImageWidget(Canvas):
     def __init__(self, image):
@@ -13,7 +13,7 @@ class ImageWidget(Canvas):
         self.fill_style = "red"
         self.stroke_style = "blue"
         self.stroke_rect(0, 0, width=width, height=height)
-        self.data = image
+        self.data = np.asarray(image)
         self.layout.stretch = False
 
 
@@ -30,7 +30,7 @@ class ImageWidget(Canvas):
         if new_data is None:
             return
 
-        self._data = new_data.swapaxes(0, 1)
+        self._data = np.asarray(new_data).swapaxes(0, 1)
         self._update_image()
 
     def _update_image(self):
@@ -44,6 +44,10 @@ def _img_to_rgb(image,
     if len(image.shape) == 3 and image.shape[2] == 3:
         return image
 
+    if image.dtype == np.uint32:
+        lut = _labels_lut()
+        return np.asarray([lut[:, c].take(image) for c in range(0, 3)]).swapaxes(0, 2) * 255
+
     if display_min is None:
         display_min = image.min()
     if display_max is None:
@@ -55,3 +59,12 @@ def _img_to_rgb(image,
 
     image = (image - display_min) / img_range * 255
     return np.asarray([image, image, image]).swapaxes(0, 2)
+
+@lru_cache(maxsize=1)
+def _labels_lut():
+    from numpy.random import MT19937
+    from numpy.random import RandomState, SeedSequence
+    rs = RandomState(MT19937(SeedSequence(3)))
+    lut = rs.rand(65537, 3)
+    lut[0, :] = 0
+    return lut
