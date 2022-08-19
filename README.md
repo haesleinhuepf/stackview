@@ -22,6 +22,8 @@ OR
 pip install stackview
 ```
 
+If you run the installation from within a notebook, you need to restart Jupyter (not just the kernel), before you can use stackview.
+
 ## Usage
 You can use `stackview` from within jupyter notebooks as shown below.
 Also check out the [demo notebook on google colab](https://colab.research.google.com/github/haesleinhuepf/stackview/blob/master/docs/demo.ipynb) or in
