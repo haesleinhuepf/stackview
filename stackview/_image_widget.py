@@ -36,6 +36,22 @@ class ImageWidget(Canvas):
     def _update_image(self):
         self.put_image_data(_img_to_rgb(self._data), 0, 0)
 
+    def __repr__(self):
+        from PIL import Image
+        from skimage import io
+
+        img = _img_to_rgb(self._data)
+        image = Image.fromarray(img.astype('uint8'), 'RGB')
+
+        return self._png_to_html(image.tobytes())
+
+    def _repr_html_(self):
+        return self.__repr__()
+
+    def _png_to_html(self, png):
+        import base64
+        url = 'data:image/png;base64,' + base64.b64encode(png).decode('utf-8')
+        return f'<img src="{url}"></img>'
 
 def _is_label_image(image):
     return image.dtype == np.uint32 or image.dtype == np.uint64 or \

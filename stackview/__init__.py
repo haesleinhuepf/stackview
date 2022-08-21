@@ -1,7 +1,7 @@
 __version__ = "0.3.0"
 
 import warnings
-
+from ._widgets import MyVBox, MyHBox
 
 class _SliceViewer():
     def __init__(self,
@@ -102,9 +102,19 @@ def slice(
     slice_slider = viewer.slice_slider
 
     if slice_slider is None:
-        return _no_resize(view)
+        result = _no_resize(view)
     else:
-        return ipywidgets.VBox([_no_resize(view), slice_slider])
+        result = MyVBox([_no_resize(view), slice_slider])
+
+    #def func(sth=None):
+    #    return "Hello world"
+    #result.__repr__ = func
+
+    #def func_html(sth=None):
+    #    return "Hello world html"
+    #result._repr_html_ = func_html
+
+    return result
 
 
 def curtain(
@@ -203,9 +213,9 @@ def curtain(
         # connect user interface with event
         slice_slider.observe(configuration_updated)
 
-        return ipywidgets.VBox([_no_resize(view), slice_slider, curtain_slider])
+        return MyVBox([_no_resize(view), slice_slider, curtain_slider])
     else:
-        return ipywidgets.VBox([_no_resize(view), curtain_slider])
+        return MyVBox([_no_resize(view), curtain_slider])
 
 def orthogonal(
         image,
@@ -236,7 +246,7 @@ def orthogonal(
     """
     import ipywidgets
 
-    return ipywidgets.HBox([
+    return MyHBox([
         slice(image, axis=0, slider_text="Z", display_width=display_width, display_height=display_height, continuous_update=continuous_update),
         slice(image, axis=1, slider_text="Y", display_width=display_width, display_height=display_height, continuous_update=continuous_update),
         slice(image, axis=2, slider_text="X", display_width=display_width, display_height=display_height, continuous_update=continuous_update),
@@ -359,12 +369,12 @@ def side_by_side(
         # connect user interface with event
         slice_slider.observe(configuration_updated)
 
-        return ipywidgets.VBox([
-            ipywidgets.HBox([_no_resize(view1), _no_resize(view2), _no_resize(view3)]),
+        return MyVBox([
+            MyHBox([_no_resize(view1), _no_resize(view2), _no_resize(view3)]),
             slice_slider
         ])
     else:
-        return ipywidgets.HBox([_no_resize(view1), _no_resize(view2), _no_resize(view3)])
+        return MyHBox([_no_resize(view1), _no_resize(view2), _no_resize(view3)])
 
 
 def interact(func, image, *args, **kwargs):
@@ -451,13 +461,13 @@ def interact(func, image, *args, **kwargs):
     ipywidgets.interact(worker_function)
 
     if viewer.slice_slider is not None:
-        return ipywidgets.VBox([
+        return MyVBox([
             _no_resize(viewer.view),
             viewer.slice_slider,
             command_label
         ])
     else:
-        return ipywidgets.VBox([
+        return MyVBox([
             _no_resize(viewer.view),
             command_label
         ])
@@ -524,10 +534,10 @@ def picker(
     event_handler.on_dom_event(update_display)
 
     if slice_slider is not None:
-        return ipywidgets.VBox([_no_resize(view), slice_slider, label], stretch=False)
+        return MyVBox([_no_resize(view), slice_slider, label], stretch=False)
     else:
-        return ipywidgets.VBox([_no_resize(view), label])
+        return MyVBox([_no_resize(view), label])
 
 def _no_resize(widget):
     import ipywidgets
-    return ipywidgets.HBox([ipywidgets.VBox([widget])])
+    return MyHBox([MyVBox([widget])])
