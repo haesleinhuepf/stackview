@@ -1,0 +1,233 @@
+import numpy as np
+
+import numpy as np
+from typing import Callable
+from functools import wraps
+from toolz import curry
+from napari_tools_menu import register_function
+from napari_time_slicer import time_slicer
+from napari_skimage_regionprops._all_frames import analyze_all_frames
+from napari_skimage_regionprops import relabel as _relabel
+
+
+@curry
+def jupyter_displayable_output(
+        function: Callable,
+        library_name:str = None,
+        help_url:str = None
+) -> Callable:
+    """Wraps a given function so that it outputs a nice image view in jupyter notebooks
+    The view will contain a link to the specified library to guide users to read more.
+    """
+    @wraps(function)
+    def worker_function(*args, **kwargs):
+        # call the decorated function
+        result = function(*args, **kwargs)
+
+        # Attach _repr_html_ function
+        result = StackViewNDArray(result, library_name, help_url)
+
+        return result
+
+    return worker_function
+
+
+class StackViewNDArray(np.ndarray):
+
+    def __new__(cls, input_array, library_name=None, help_url=None):
+        obj = np.asarray(input_array).view(cls)
+        obj.library_name = library_name
+        obj.help_url = help_url
+        return obj
+
+    def __array_finalize__(self, obj):
+        if obj is None: return
+        self.library_name = getattr(obj, 'library_name', None)
+        self.help_url = getattr(obj, 'help_url', None)
+
+    def _repr_html_(self):
+        """HTML representation of the image object for IPython.
+                Returns
+                -------
+                HTML text with the image and some properties.
+                """
+
+        import numpy as np
+        size_in_pixels = np.prod(self.shape)
+        size_in_bytes = size_in_pixels * self.dtype.itemsize
+
+        from ._image_widget import _is_label_image
+        labels = _is_label_image(self)
+
+        # In case the image is 2D, 3D and larger than 100 pixels, turn on fancy view
+        if len(self.shape) in (2, 3) and size_in_pixels >= 100:
+            import matplotlib.pyplot as plt
+            _imshow(self,
+                    labels=labels,
+                    continue_drawing=True,
+                    colorbar=not labels)
+            image = _png_to_html(_plt_to_png())
+        else:
+            return "<pre>numpy.ndarray(" + str(np.asarray(self)) + ", dtype=" + str(self.dtype) + ")</pre>"
+
+        if size_in_bytes > 1024:
+            size_in_bytes = size_in_bytes / 1024
+            if size_in_bytes > 1024:
+                size_in_bytes = size_in_bytes / 1024
+                if size_in_bytes > 1024:
+                    size_in_bytes = size_in_bytes / 1024
+                    size = "{:.1f}".format(size_in_bytes) + " GB"
+                else:
+                    size = "{:.1f}".format(size_in_bytes) + " MB"
+            else:
+                size = "{:.1f}".format(size_in_bytes) + " kB"
+        else:
+            size = "{:.1f}".format(size_in_bytes) + " B"
+
+        histogram = ""
+
+        if size_in_bytes < 100 * 1024 * 1024:
+            if not labels:
+                import numpy as np
+
+                num_bins = 32
+                h, _ = np.histogram(self, bins=num_bins)
+
+                plt.figure(figsize=(1.8, 1.2))
+                plt.bar(range(0, len(h)), h)
+
+                # hide axis text
+                # https://stackoverflow.com/questions/2176424/hiding-axis-text-in-matplotlib-plots
+                # https://pythonguides.com/matplotlib-remove-tick-labels
+                frame1 = plt.gca()
+                frame1.axes.xaxis.set_ticklabels([])
+                frame1.axes.yaxis.set_ticklabels([])
+                plt.tick_params(left=False, bottom=False)
+
+                histogram = _png_to_html(_plt_to_png())
+
+            min_max = "<tr><td>min</td><td>" + str(self.min()) + "</td></tr>" + \
+                      "<tr><td>max</td><td>" + str(self.max()) + "</td></tr>"
+
+        else:
+
+            min_max = ""
+
+        if self.library_name is not None and len(self.library_name) > 0:
+            self.library_name = self.library_name + " made "
+        all = [
+            "<table>",
+            "<tr>",
+            "<td>",
+            image,
+            "</td>",
+            "<td style=\"text-align: center; vertical-align: top;\">",
+            "<b><a href=\"" + self.help_url + "\" target=\"_blank\">" + self.library_name + "</a>image</b><br/>",
+            "<table>",
+            "<tr><td>shape</td><td>" + str(self.shape).replace(" ", "&nbsp;") + "</td></tr>",
+            "<tr><td>dtype</td><td>" + str(self.dtype) + "</td></tr>",
+            "<tr><td>size</td><td>" + size + "</td></tr>",
+            min_max,
+            "</table>",
+            histogram,
+            "</td>",
+            "</tr>",
+            "</table>",
+        ]
+
+        return "\n".join(all)
+
+
+def _png_to_html(png):
+    import base64
+    url = 'data:image/png;base64,' + base64.b64encode(png).decode('utf-8')
+    return f'<img src="{url}"></img>'
+
+
+# adapted from https://github.com/napari/napari/blob/d6bc683b019c4a3a3c6e936526e29bbd59cca2f4/napari/utils/notebook_display.py#L54-L73
+def _plt_to_png():
+    """PNG representation of the image object for IPython.
+    Returns
+    -------
+    In memory binary stream containing a PNG matplotlib image.
+    """
+    import matplotlib.pyplot as plt
+    from io import BytesIO
+
+    with BytesIO() as file_obj:
+        plt.savefig(file_obj, format='png')
+        plt.close() # supress plot output
+        file_obj.seek(0)
+        png = file_obj.read()
+    return png
+
+
+def _imshow(image, title: str = None, labels: bool = False, min_display_intensity: float = None,
+            max_display_intensity: float = None, plot=None, colorbar: bool = False, colormap=None,
+            alpha: float = None, continue_drawing: bool = False):
+    """Visualize an image, e.g. in Jupyter notebooks.
+
+    Parameters
+    ----------
+    image: np.ndarray
+        numpy or OpenCL-backed image to visualize
+    title: str
+        Obsolete (kept for ImageJ-compatibility)
+    labels: bool
+        True: integer labels will be visualized with colors
+        False: Specified or default colormap will be used to display intensities.
+    min_display_intensity: float
+        lower limit for display range
+    max_display_intensity: float
+        upper limit for display range
+    color_map: str
+        deprecated, use colormap instead
+    plot: matplotlib axis
+        Plot object where the image should be shown. Useful for putting multiple images in subfigures.
+    colorbar: bool
+        True puts a colorbar next to the image. Will not work with label images and when visualizing multiple
+        images (continue_drawing=True).
+    colormap: str or matplotlib colormap
+    alpha: float
+        alpha blending value
+    continue_drawing: float
+        True: the next shown image can be visualized on top of the current one, e.g. with alpha = 0.5
+    """
+    import numpy as np
+
+    if len(image.shape) == 3:
+        image = np.asarray(image).max(axis=0)
+
+    image = np.asarray(image)
+    if len(image.shape) == 1:
+        image = image[np.newaxis]
+
+    if colormap is None:
+        colormap = "Greys_r"
+
+    cmap = colormap
+    if labels:
+        import matplotlib
+        import numpy as np
+
+        if not hasattr(_imshow, "labels_cmap"):
+            from ._image_widget import _labels_lut
+            _imshow.labels_cmap = matplotlib.colors.ListedColormap(_labels_lut())
+        cmap = _imshow.labels_cmap
+
+        if min_display_intensity is None:
+            min_display_intensity = 0
+
+    if plot is None:
+        import matplotlib.pyplot as plt
+        plt.imshow(image, cmap=cmap, vmin=min_display_intensity, vmax=max_display_intensity,
+                   interpolation='nearest', alpha=alpha)
+        if colorbar:
+            plt.colorbar()
+        if not continue_drawing:
+            plt.show()
+    else:
+        plot.imshow(image, cmap=cmap, vmin=min_display_intensity, vmax=max_display_intensity,
+                    interpolation='nearest', alpha=alpha)
+        if colorbar:
+            plot.colorbar()
