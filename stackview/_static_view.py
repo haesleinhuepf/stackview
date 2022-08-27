@@ -4,10 +4,6 @@ import numpy as np
 from typing import Callable
 from functools import wraps
 from toolz import curry
-from napari_tools_menu import register_function
-from napari_time_slicer import time_slicer
-from napari_skimage_regionprops._all_frames import analyze_all_frames
-from napari_skimage_regionprops import relabel as _relabel
 
 
 @curry
