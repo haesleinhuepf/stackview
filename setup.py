@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/haesleinhuepf/stackview/",
     packages=setuptools.find_packages(),
     include_package_data=True,
-    install_requires=["numpy!=1.19.4", "ipycanvas", "ipywidgets", "scikit-image", "ipyevents"],
+    install_requires=["numpy!=1.19.4", "ipycanvas", "ipywidgets", "scikit-image", "ipyevents", "toolz"],
     python_requires='>=3.6',
     classifiers=[
         "Programming Language :: Python :: 3",
