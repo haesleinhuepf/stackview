@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="stackview",
-    version="0.3.0",
+    version="0.3.1",
     author="Robert Haase",
     author_email="robert.haase@tu-dresden.de",
     description="Interactive image stack viewing in jupyter notebooks",
@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/haesleinhuepf/stackview/",
     packages=setuptools.find_packages(),
     include_package_data=True,
-    install_requires=["numpy!=1.19.4", "ipycanvas", "ipywidgets", "scikit-image", "ipyevents", "toolz"],
+    install_requires=["numpy!=1.19.4", "ipycanvas", "ipywidgets", "scikit-image", "ipyevents", "toolz", "matplotlib"],
     python_requires='>=3.6',
     classifiers=[
         "Programming Language :: Python :: 3",
