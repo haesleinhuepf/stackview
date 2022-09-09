@@ -2,6 +2,7 @@ __version__ = "0.3.2"
 
 import warnings
 from ._static_view import jupyter_displayable_output
+from ._utilities import merge_rgb
 
 class _SliceViewer():
     def __init__(self,
@@ -367,7 +368,11 @@ def side_by_side(
         return ipywidgets.HBox([_no_resize(view1), _no_resize(view2), _no_resize(view3)])
 
 
-def interact(func, image, *args, **kwargs):
+def interact(func,
+             image,
+             *args,
+             continuous_update: bool = False,
+             **kwargs):
     """Takes a function which has an image as first parameter and additional parameters.
     It will build a user interface consisting of sliders for numeric parameters and parameters
     that are called "footprint" or "selem".
@@ -376,6 +381,7 @@ def interact(func, image, *args, **kwargs):
     ----------
     func : function
     image : Image
+    continuous_update : bool
     args
     kwargs
 
@@ -394,20 +400,20 @@ def interact(func, image, *args, **kwargs):
             default_value = sig.parameters[key].default
 
         if sig.parameters[key].annotation is int:
-            default_value = ipywidgets.IntSlider(min=0, max=20, step=1, value=default_value, continuous_update=False)
+            default_value = ipywidgets.IntSlider(min=0, max=20, step=1, value=default_value, continuous_update=continuous_update)
             exposable = True
         elif sig.parameters[key].annotation is float:
-            default_value = ipywidgets.FloatSlider(min=-20, max=20, step=1, value=default_value, continuous_update=False)
+            default_value = ipywidgets.FloatSlider(min=-20, max=20, step=1, value=default_value, continuous_update=continuous_update)
             exposable = True
         elif key == 'sigma' or key == 'radius':
-            default_value = ipywidgets.FloatSlider(min=-20, max=20, step=1, value=default_value, continuous_update=False)
+            default_value = ipywidgets.FloatSlider(min=-20, max=20, step=1, value=default_value, continuous_update=continuous_update)
             exposable = True
         elif key.startswith("is_") or sig.parameters[key].annotation is bool:
             default_value = ipywidgets.Checkbox(value=default_value)
             exposable = True
         elif key == 'footprint' or key == 'selem' or key == 'structuring_element':
             footprint_parameters.append(key)
-            default_value = ipywidgets.IntSlider(min=0, max=20, step=1, value=default_value)
+            default_value = ipywidgets.IntSlider(min=0, max=20, step=1, value=default_value, continuous_update=continuous_update)
             exposable = True
 
         if exposable:
@@ -447,18 +453,22 @@ def interact(func, image, *args, **kwargs):
 
 
     worker_function.__signature__ = inspect.Signature(exposable_parameters)
-
     ipywidgets.interact(worker_function)
+
+    #inter = ipywidgets.interactive(worker_function, dict(manual=False, auto_display=False))
+    #inter.update()
 
     if viewer.slice_slider is not None:
         return ipywidgets.VBox([
             _no_resize(viewer.view),
+            #ipywidgets.VBox(inter.result),
             viewer.slice_slider,
             command_label
         ])
     else:
         return ipywidgets.VBox([
             _no_resize(viewer.view),
+            #ipywidgets.VBox(inter.result),
             command_label
         ])
 
