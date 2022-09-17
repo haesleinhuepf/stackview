@@ -213,6 +213,8 @@ def _imshow(image, title: str = None, labels: bool = False, min_display_intensit
 
         if min_display_intensity is None:
             min_display_intensity = 0
+        if max_display_intensity is None:
+            max_display_intensity = 65537
 
     if plot is None:
         import matplotlib.pyplot as plt
