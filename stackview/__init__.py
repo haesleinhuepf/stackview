@@ -1,4 +1,4 @@
-__version__ = "0.3.3"
+__version__ = "0.3.4"
 
 import warnings
 from ._static_view import jupyter_displayable_output
