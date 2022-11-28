@@ -115,7 +115,8 @@ def curtain(
         axis: int = 0,
         display_width: int = None,
         display_height: int = None,
-        continuous_update: bool = False
+        continuous_update: bool = False,
+        alpha: float = 1
 ):
     """Show two images and allow with a slider to show either the one or the other image.
 
@@ -135,7 +136,9 @@ def curtain(
         Size of the displayed image in pixels
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
-
+    alpha: float, optional
+        sets the transperancy of the curtain
+        
     Returns
     -------
     An ipywidget with an image display and a slider.
@@ -188,7 +191,7 @@ def curtain(
             image_slice = _img_to_rgb(np.take(image, slice_slider.value, axis=axis))
             image_slice_curtain = _img_to_rgb(np.take(image_curtain, slice_slider.value, axis=axis))
 
-        image_slice[curtain_slider.value:] = image_slice_curtain[curtain_slider.value:]
+        image_slice[curtain_slider.value:] = (1 - alpha) * image_slice[curtain_slider.value:] + alpha * image_slice_curtain[curtain_slider.value:]
         return image_slice
 
     # event handler when the user changed something:
