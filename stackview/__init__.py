@@ -115,8 +115,8 @@ def curtain(
         axis: int = 0,
         display_width: int = None,
         display_height: int = None,
-        continuous_update: bool = False
-        alpha: float = 1,
+        continuous_update: bool = False,
+        alpha: float = 1
 ):
     """Show two images and allow with a slider to show either the one or the other image.
 
