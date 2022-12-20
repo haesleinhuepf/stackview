@@ -110,6 +110,17 @@ stackview.interact(my_custom_code, slice_image)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_interact3.gif)
 
+If you want to use a pulldown for selecting input image(s), you need to pass a dictionary of `(name, image)` pairs as `context`, e.g. `context=globals()`:
+
+```python
+image1 = imread("data/Haase_MRT_tfl3d1.tif")
+image2 = image1[:,:,::-1]
+
+stackview.interact(gaussian, context=globals(), continuous_update=True)
+```
+
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_interact4.gif)
+
 ## Contributing
 
 Contributions, bug-reports and ideas for further development are very welcome.

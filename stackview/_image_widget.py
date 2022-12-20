@@ -32,6 +32,8 @@ class ImageWidget(Canvas):
 
         self._data = np.asarray(new_data).swapaxes(0, 1)
         self._update_image()
+        self.width = self._data.shape[1]
+        self.height = self._data.shape[0]
 
     def _update_image(self):
         self.put_image_data(_img_to_rgb(self._data), 0, 0)
