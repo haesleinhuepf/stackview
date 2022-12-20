@@ -377,7 +377,7 @@ def interact(func,
              image = None,
              *args,
              continuous_update: bool = False,
-             globals = None,
+             context:dict = None,
              **kwargs):
     """Takes a function which has an image as first parameter and additional parameters.
     It will build a user interface consisting of sliders for numeric parameters and parameters
@@ -389,7 +389,8 @@ def interact(func,
     image : Image
     args
     continuous_update : bool
-    globals
+    context:dict
+        dictionary of name, value pairs that can be selected from pulldowns, e.g.: globals()
     kwargs
 
     """
@@ -402,7 +403,8 @@ def interact(func,
     footprint_parameters = []
     image_parameters = []
 
-    context = Context(globals) if globals is not None else None
+    if context is not None:
+        context = Context(context)
 
     image_passed = image is not None
     if context is not None and image is None:
