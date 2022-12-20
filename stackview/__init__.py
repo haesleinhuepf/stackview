@@ -417,22 +417,27 @@ def interact(func,
         default_value = 0
         if isinstance(sig.parameters[key].default, int) or isinstance(sig.parameters[key].default, float):
             default_value = sig.parameters[key].default
+        min_value, max_value, step = guess_range(key, sig.parameters[key].annotation)
+
+        if min_value is not None:
+            int_slider = ipywidgets.IntSlider
+            float_slider = ipywidgets.FloatSlider
+        else:
+            int_slider = ipywidgets.IntText
+            float_slider = ipywidgets.FloatText
 
         if sig.parameters[key].annotation is int:
-            default_value = ipywidgets.IntSlider(min=0, max=20, step=1, value=default_value, continuous_update=continuous_update)
+            default_value = int_slider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
             exposable = True
-        elif sig.parameters[key].annotation is float:
-            default_value = ipywidgets.FloatSlider(min=-20, max=20, step=1, value=default_value, continuous_update=continuous_update)
-            exposable = True
-        elif key == 'sigma' or key == 'radius':
-            default_value = ipywidgets.FloatSlider(min=-20, max=20, step=1, value=default_value, continuous_update=continuous_update)
+        elif sig.parameters[key].annotation is float or 'sigma' in key or 'radius' in key:
+            default_value = float_slider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
             exposable = True
         elif key.startswith("is_") or sig.parameters[key].annotation is bool:
             default_value = ipywidgets.Checkbox(value=default_value)
             exposable = True
         elif key == 'footprint' or key == 'selem' or key == 'structuring_element':
             footprint_parameters.append(key)
-            default_value = ipywidgets.IntSlider(min=0, max=20, step=1, value=default_value, continuous_update=continuous_update)
+            default_value = ipywidgets.IntSlider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
             exposable = True
         elif parameter_is_image_parameter(sig.parameters[key]) and "destination" not in key and key != "out"  and key != "output":
             if context is not None:
@@ -458,7 +463,7 @@ def interact(func,
     def worker_function(*otherargs, **kwargs):
 
         command = func.__name__ + "("
-        if not image_passed:
+        if image_passed:
             command = command + "..."
 
         for key in [e.name for e in exposable_parameters]:
@@ -507,6 +512,18 @@ def interact(func,
             command_label
         ])
 
+def guess_range(name, annotation):
+    if name == 'footprint' or name == 'selem' or name == 'structuring_element':
+        return 0, 100, 1
+    if 'sigma' in name:
+        return 0, 10, 1
+    if 'radius' in name:
+        return 0, 100, 1
+    if 'factor' in name:
+        return 0, 100, 1
+    if name == 'angle' or "degrees" in name:
+        return 0, 360, 15
+    return None, None, None
 
 def picker(
         image,
