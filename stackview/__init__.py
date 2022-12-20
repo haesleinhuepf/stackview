@@ -3,7 +3,7 @@ __version__ = "0.3.6"
 import warnings
 from ._static_view import jupyter_displayable_output
 from ._utilities import merge_rgb
-from ._assistant import nop
+from ._context import nop
 
 class _SliceViewer():
     def __init__(self,
@@ -396,7 +396,7 @@ def interact(func,
     import inspect
     import ipywidgets
     from ._utilities import parameter_is_image_parameter
-    from ._assistant import Context
+    from ._context import Context
 
     exposable_parameters = []
     footprint_parameters = []
