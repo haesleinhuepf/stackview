@@ -26,8 +26,7 @@ If you run the installation from within a notebook, you need to restart Jupyter 
 
 ## Usage
 You can use `stackview` from within jupyter notebooks as shown below.
-Also check out the [demo notebook on google colab](https://colab.research.google.com/github/haesleinhuepf/stackview/blob/master/docs/demo.ipynb) or in
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/haesleinhuepf/stackview/HEAD?filepath=docs%2Fdemo.ipynb)
+Also check out the demo in [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/haesleinhuepf/stackview/HEAD?filepath=docs%2Fdemo.ipynb)
 
 Starting point is a 3D image dataset provided as numpy array. 
 ```python
