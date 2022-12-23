@@ -120,6 +120,37 @@ stackview.interact(gaussian, context=globals(), continuous_update=True)
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_interact4.gif)
 
+### Static views
+
+The `insight` function turns a numpy-array into a numpy-compatible array that has an image-display in jupyter notebooks.
+
+```python
+insight(image[60])
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/insight_demo.png)
+
+Images of 32-bit and 64-bit type integer are displayed as labels. 
+
+```python
+blobs = imread('data/blobs.tif')
+labels = label(blobs > 120)
+
+insight(labels)
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/labels_demo.png)
+
+```python
+@jupyter_displayable_output
+def my_gaussian(image, sigma):
+    return gaussian(image, sigma)
+
+my_gaussian(image[60], 2)
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/jupyter_displayable_output.png)
+
 ## Contributing
 
 Contributions, bug-reports and ideas for further development are very welcome.

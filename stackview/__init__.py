@@ -1,7 +1,7 @@
 __version__ = "0.3.7"
 
 import warnings
-from ._static_view import jupyter_displayable_output
+from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
 from ._context import nop
 
