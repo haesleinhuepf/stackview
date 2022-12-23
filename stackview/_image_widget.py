@@ -3,19 +3,20 @@ import numpy as np
 from functools import lru_cache
 
 class ImageWidget(Canvas):
-    def __init__(self, image):
+    def __init__(self, image, zoom_factor:float=1.0, zoom_spline_order:int=0):
         if not ((len(image.shape) == 2) or (len(image.shape) == 3 and image.shape[-1] == 3)):
             raise NotImplementedError("Only 2D images are supported" + str(image.shape))
 
         width = image.shape[1]
         height = image.shape[0]
-        super().__init__(width=width, height=height)
+        self.zoom_factor = zoom_factor
+        self.zoom_spline_order = zoom_spline_order
+        super().__init__(width=width * zoom_factor, height=height * zoom_factor)
         self.fill_style = "red"
         self.stroke_style = "blue"
         self.stroke_rect(0, 0, width=width, height=height)
         self.data = np.asarray(image)
         self.layout.stretch = False
-
 
     @property
     def data(self):
@@ -32,11 +33,32 @@ class ImageWidget(Canvas):
 
         self._data = np.asarray(new_data).swapaxes(0, 1)
         self._update_image()
-        self.width = self._data.shape[1]
-        self.height = self._data.shape[0]
+        self.width = self._data.shape[1] * self.zoom_factor
+        self.height = self._data.shape[0] * self.zoom_factor
 
     def _update_image(self):
-        self.put_image_data(_img_to_rgb(self._data), 0, 0)
+        if self.zoom_factor == 1.0:
+            self.put_image_data(_img_to_rgb(self._data), 0, 0)
+        else:
+            zoomed = self._zoom(self._data)
+            self.put_image_data(_img_to_rgb(zoomed), 0, 0)
+
+    def _zoom(self, data):
+        if len(data.shape) == 3:
+            # handle RGB images
+            return np.asarray([self._zoom(data[:,:,i]) for i in range(data.shape[2])]).swapaxes(0, 2).swapaxes(1, 0)
+
+        from scipy.ndimage import affine_transform
+        matrix = np.asarray([[1.0 / self.zoom_factor, 0, -0.5],
+                             [0, 1.0 / self.zoom_factor, -0.5],
+                             [0, 0, 1],
+                             ])
+        zoomed = affine_transform(data,
+                                  matrix,
+                                  output_shape=np.asarray(data.shape) * self.zoom_factor,
+                                  order=self.zoom_spline_order,
+                                  mode='nearest')
+        return zoomed
 
 
 def _is_label_image(image):
