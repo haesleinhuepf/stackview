@@ -85,11 +85,15 @@ def slice(
     axis : int, optional
         Axis in case we are slicing a stack
     display_width : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
 
     Returns
     -------
@@ -141,13 +145,17 @@ def curtain(
     axis : int, optional
         Axis in case we are slicing a stack
     display_width : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
     alpha: float, optional
         sets the transperancy of the curtain
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
         
     Returns
     -------
@@ -236,11 +244,15 @@ def orthogonal(
     image : image
         Image to be displayed
     display_width : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
 
     Returns
     -------
@@ -285,11 +297,15 @@ def side_by_side(
     axis : int, optional
         Axis in case we are slicing a stack
     display_width : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
 
     Returns
     -------
@@ -400,9 +416,17 @@ def interact(func,
     Parameters
     ----------
     func : function
-    image : Image
+    image : Image, optional
+        If not provided, context must be provided instead.
     args
-    continuous_update : bool
+    continuous_update : bool, optioonal
+        Update the image while dragging the mouse, default: False
+    context:dict, optional
+        A dictionary of (name:image), allows showing a pulldown of available images.
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
     context:dict
         dictionary of name, value pairs that can be selected from pulldowns, e.g.: globals()
     kwargs
@@ -558,11 +582,15 @@ def picker(
     slice_number : int, optional
         Slice-position in the stack
     display_width : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
 
     Returns
     -------

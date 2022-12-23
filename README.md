@@ -1,4 +1,4 @@
-# stackview
+# stackview 🧊👀
 Interactive image stack viewing in jupyter notebooks based on 
 [ipycanvas](https://ipycanvas.readthedocs.io/) and 
 [ipywidgets](https://ipywidgets.readthedocs.io/en/latest/). 
@@ -166,6 +166,7 @@ If you encounter any problems, please create a thread on [image.sc] along with a
 
 ## See also
 There are other libraries doing similar stuff
+* [ipyannotations](https://github.com/janfreyberg/ipyannotations)
 * [napari](https://github.com/napari/napari)
 * [JNI's Volume Viewer based on Matplotlib](https://github.com/jni/mpl-volume-viewer)
 * [Holoviz hvPlot](https://hvplot.holoviz.org/user_guide/Gridded_Data.html#n-d-plots)
