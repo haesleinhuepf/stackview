@@ -6,9 +6,8 @@ class ImageWidget(Canvas):
     def __init__(self, image, zoom_factor:float=1.0, zoom_spline_order:int=0):
         if not ((len(image.shape) == 2) or (len(image.shape) == 3 and image.shape[-1] == 3)):
             raise NotImplementedError("Only 2D images are supported" + str(image.shape))
-
-        width = image.shape[1]
-        height = image.shape[0]
+        width = image.shape[1] * zoom_factor
+        height = image.shape[0] * zoom_factor
         self.zoom_factor = zoom_factor
         self.zoom_spline_order = zoom_spline_order
         super().__init__(width=width * zoom_factor, height=height * zoom_factor)
@@ -53,9 +52,10 @@ class ImageWidget(Canvas):
                              [0, 1.0 / self.zoom_factor, -0.5],
                              [0, 0, 1],
                              ])
+        zoomed_shape = (np.asarray(data.shape) * self.zoom_factor).astype(int)
         zoomed = affine_transform(data,
                                   matrix,
-                                  output_shape=np.asarray(data.shape) * self.zoom_factor,
+                                  output_shape=zoomed_shape,
                                   order=self.zoom_spline_order,
                                   mode='nearest')
         return zoomed
