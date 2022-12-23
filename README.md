@@ -28,11 +28,15 @@ If you run the installation from within a notebook, you need to restart Jupyter 
 You can use `stackview` from within jupyter notebooks as shown below.
 Also check out the demo in [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/haesleinhuepf/stackview/HEAD?filepath=docs%2Fdemo.ipynb)
 
+There are also example notebooks in [this folder](https://github.com/haesleinhuepf/stackview/tree/main/docs).
+
 Starting point is a 3D image dataset provided as numpy array. 
 ```python
 from skimage.io import imread
 image = imread('data/Haase_MRT_tfl3d1.tif', plugin='tifffile')
 ```
+
+### Slice view
 
 You can then view it slice-by-slice:
 ```python
@@ -41,17 +45,44 @@ stackview.slice(image, continuous_update=True)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_slice.gif)
 
+### Static insight views
+
+The `insight` function turns a numpy-array into a numpy-compatible array that has an image-display in jupyter notebooks.
+
+```python
+insight(image[60])
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/insight_demo.png)
+
+Images of 32-bit and 64-bit type integer are displayed as labels. 
+
+```python
+blobs = imread('data/blobs.tif')
+labels = label(blobs > 120)
+
+insight(labels)
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/labels_demo.png)
+
+### Pick intensities
+
 To read the intensity of pixels where the mouse is moving, use the picker.
 ```python
 stackview.picker(image, continuous_update=True)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_picker.gif)
 
+### Orthogonal view
+
 Orthogonal views are also available:
 ```python
 stackview.orthogonal(image, continuous_update=True)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_orthogonal.gif)
+
+### Curtain
 
 Furthermore, to visualize an original image in combination with a processed version, a curtain view may be helpful:
 ```python
@@ -77,12 +108,16 @@ stackview.curtain(slice_image, labels, continuous_update=True)
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain3.gif)
 
+### Side-by-side view
+
 A side-by-side view for colocalization visualization is also available.
 If you're working with time-lapse data, you can also use this view for visualizing differences between timepoints:
 ```python
 stackview.side_by_side(image_stack[1:], image_stack[:-1], continuous_update=True, display_width=300)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_side_by_side.gif)
+
+### Interact
 
 Exploration of the parameter space of image processing functions is available using `interact`:
 ```python
@@ -120,26 +155,7 @@ stackview.interact(gaussian, context=globals(), continuous_update=True)
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_interact4.gif)
 
-### Static views
-
-The `insight` function turns a numpy-array into a numpy-compatible array that has an image-display in jupyter notebooks.
-
-```python
-insight(image[60])
-```
-
-![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/insight_demo.png)
-
-Images of 32-bit and 64-bit type integer are displayed as labels. 
-
-```python
-blobs = imread('data/blobs.tif')
-labels = label(blobs > 120)
-
-insight(labels)
-```
-
-![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/labels_demo.png)
+To add an `insight`-view automatically to results of functions, you can add this.
 
 ```python
 @jupyter_displayable_output
