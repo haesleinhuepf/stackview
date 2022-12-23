@@ -1,7 +1,7 @@
-__version__ = "0.3.7"
+__version__ = "0.3.8"
 
 import warnings
-from ._static_view import jupyter_displayable_output
+from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
 from ._context import nop
 
@@ -13,7 +13,9 @@ class _SliceViewer():
                  display_width: int = None,
                  display_height: int = None,
                  continuous_update: bool = False,
-                 slider_text: str = "Slice"
+                 slider_text: str = "Slice",
+                 zoom_factor:float = 1.0,
+                 zoom_spline_order:int = 0
                  ):
         import ipywidgets
         from ._image_widget import ImageWidget
@@ -25,9 +27,9 @@ class _SliceViewer():
             slice_number = int(image.shape[axis] / 2)
 
         if len(image.shape) <= 2:
-            self.view = ImageWidget(image)
+            self.view = ImageWidget(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
         else:
-            self.view = ImageWidget(np.take(image, slice_number, axis=axis))
+            self.view = ImageWidget(np.take(image, slice_number, axis=axis), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
         if display_width is not None:
             self.view.width = display_width
         if display_height is not None:
@@ -68,7 +70,9 @@ def slice(
         display_width : int = None,
         display_height : int = None,
         continuous_update:bool=False,
-        slider_text:str="Slice"
+        slider_text:str="Slice",
+        zoom_factor:float = 1.0,
+        zoom_spline_order:int = 0
 ):
     """Shows an image with a slider to go through a stack.
 
@@ -81,11 +85,15 @@ def slice(
     axis : int, optional
         Axis in case we are slicing a stack
     display_width : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
 
     Returns
     -------
@@ -99,7 +107,9 @@ def slice(
         display_width,
         display_height,
         continuous_update,
-        slider_text
+        slider_text,
+        zoom_factor=zoom_factor,
+        zoom_spline_order=zoom_spline_order
     )
     view = viewer.view
     slice_slider = viewer.slice_slider
@@ -118,7 +128,9 @@ def curtain(
         display_width: int = None,
         display_height: int = None,
         continuous_update: bool = False,
-        alpha: float = 1
+        alpha: float = 1,
+        zoom_factor:float = 1.0,
+        zoom_spline_order:int = 0
 ):
     """Show two images and allow with a slider to show either the one or the other image.
 
@@ -133,13 +145,17 @@ def curtain(
     axis : int, optional
         Axis in case we are slicing a stack
     display_width : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
     alpha: float, optional
         sets the transperancy of the curtain
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
         
     Returns
     -------
@@ -175,9 +191,9 @@ def curtain(
     )
 
     if len(image.shape) <= 2:
-        view = ImageWidget(image)
+        view = ImageWidget(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
     else:
-        view = ImageWidget(np.take(image, slice_number, axis=axis))
+        view = ImageWidget(np.take(image, slice_number, axis=axis), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
     if display_width is not None:
         view.width = display_width
     if display_height is not None:
@@ -217,7 +233,9 @@ def orthogonal(
         image,
         display_width : int = None,
         display_height : int = None,
-        continuous_update:bool=False
+        continuous_update:bool=False,
+        zoom_factor:float = 1.0,
+        zoom_spline_order:int = 0
 ):
     """Show three viewers slicing the image stack in Z,Y and X.
 
@@ -226,11 +244,15 @@ def orthogonal(
     image : image
         Image to be displayed
     display_width : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
 
     Returns
     -------
@@ -243,9 +265,9 @@ def orthogonal(
     import ipywidgets
 
     return ipywidgets.HBox([
-        slice(image, axis=0, slider_text="Z", display_width=display_width, display_height=display_height, continuous_update=continuous_update),
-        slice(image, axis=1, slider_text="Y", display_width=display_width, display_height=display_height, continuous_update=continuous_update),
-        slice(image, axis=2, slider_text="X", display_width=display_width, display_height=display_height, continuous_update=continuous_update),
+        slice(image, axis=0, slider_text="Z", display_width=display_width, display_height=display_height, continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order),
+        slice(image, axis=1, slider_text="Y", display_width=display_width, display_height=display_height, continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order),
+        slice(image, axis=2, slider_text="X", display_width=display_width, display_height=display_height, continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order),
     ])
 
 
@@ -257,7 +279,9 @@ def side_by_side(
         display_width: int = None,
         display_height: int = None,
         continuous_update: bool = False,
-        slider_text: str = "Slice"
+        slider_text: str = "Slice",
+        zoom_factor:float = 1.0,
+        zoom_spline_order:int = 0
 ):
     """Shows two images in magenta and green plus a third with their colocalization / overlap view and
     a slider to go through a stack.
@@ -273,11 +297,15 @@ def side_by_side(
     axis : int, optional
         Axis in case we are slicing a stack
     display_width : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
 
     Returns
     -------
@@ -297,9 +325,9 @@ def side_by_side(
         slice_image = np.take(image1, slice_number, axis=axis)
 
     zeros_image = np.zeros(slice_image.shape)
-    view1 = ImageWidget(slice_image)
-    view2 = ImageWidget(slice_image)
-    view3 = ImageWidget(slice_image)
+    view1 = ImageWidget(slice_image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+    view2 = ImageWidget(slice_image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+    view3 = ImageWidget(slice_image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
 
     if display_width is not None:
         view1.display = display_width
@@ -378,6 +406,8 @@ def interact(func,
              *args,
              continuous_update: bool = False,
              context:dict = None,
+             zoom_factor:float = 1.0,
+             zoom_spline_order:int = 0,
              **kwargs):
     """Takes a function which has an image as first parameter and additional parameters.
     It will build a user interface consisting of sliders for numeric parameters and parameters
@@ -386,9 +416,17 @@ def interact(func,
     Parameters
     ----------
     func : function
-    image : Image
+    image : Image, optional
+        If not provided, context must be provided instead.
     args
-    continuous_update : bool
+    continuous_update : bool, optioonal
+        Update the image while dragging the mouse, default: False
+    context:dict, optional
+        A dictionary of (name:image), allows showing a pulldown of available images.
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
     context:dict
         dictionary of name, value pairs that can be selected from pulldowns, e.g.: globals()
     kwargs
@@ -453,7 +491,7 @@ def interact(func,
                 default_value = kwargs[key]
             exposable_parameters.append(inspect.Parameter(key, inspect.Parameter.KEYWORD_ONLY, default=default_value))
 
-    viewer = _SliceViewer(image)
+    viewer = _SliceViewer(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
     if viewer.slice_slider is not None:
         viewer.slice_slider.continuous_update=continuous_update
     command_label = ipywidgets.Label(value=func.__name__ + "()")
@@ -531,7 +569,9 @@ def picker(
         display_width: int = None,
         display_height: int = None,
         continuous_update: bool = False,
-        slider_text: str = "Slice"
+        slider_text: str = "Slice",
+        zoom_factor:float = 1.0,
+        zoom_spline_order:int = 0
 ):
     """Shows an image with a slider to go through a stack plus a label with the current mouse position and intensity at that position.
 
@@ -542,11 +582,15 @@ def picker(
     slice_number : int, optional
         Slice-position in the stack
     display_width : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
-        Size of the displayed image in pixels
+        This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    zoom_spline_order: int, optional
+        Spline order used for interpolation (default=0, nearest-neighbor)
 
     Returns
     -------
@@ -559,7 +603,9 @@ def picker(
                           display_width=display_width,
                           display_height=display_height,
                           continuous_update=continuous_update,
-                          slider_text=slider_text
+                          slider_text=slider_text,
+                          zoom_factor=zoom_factor,
+                          zoom_spline_order=zoom_spline_order
                           )
     view = viewer.view
     slice_slider = viewer.slice_slider
@@ -569,8 +615,8 @@ def picker(
     event_handler = Event(source=view, watched_events=['mousemove'])
 
     def update_display(event):
-        relative_position_x = event['relativeX']
-        relative_position_y = event['relativeY']
+        relative_position_x = event['relativeX'] / zoom_factor
+        relative_position_y = event['relativeY'] / zoom_factor
         absolute_position_x = int(relative_position_x)
         absolute_position_y = int(relative_position_y)
 

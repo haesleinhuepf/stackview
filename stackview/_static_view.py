@@ -5,6 +5,12 @@ from typing import Callable
 from functools import wraps
 from toolz import curry
 
+def insight(image, library_name=None, help_url=None):
+    """
+    Converts a numpy-array-like image to numpy-compatible array with a convenient display in Jupyter notebooks
+    including shape, min/max intensity, histogram and viewing 32-bit and 64-bit integer images as coloured labels.
+    """
+    return StackViewNDArray(image, library_name, help_url)
 
 @curry
 def jupyter_displayable_output(
@@ -109,8 +115,12 @@ class StackViewNDArray(np.ndarray):
 
             min_max = ""
 
+        help_text = ""
         if self.library_name is not None and len(self.library_name) > 0:
             self.library_name = self.library_name + " made "
+            if self.help_url is not None:
+                help_text = "<b><a href=\"" + self.help_url + "\" target=\"_blank\">" + self.library_name + "</a>image</b><br/>"
+
         all = [
             "<table>",
             "<tr>",
@@ -118,7 +128,7 @@ class StackViewNDArray(np.ndarray):
             image,
             "</td>",
             "<td style=\"text-align: center; vertical-align: top;\">",
-            "<b><a href=\"" + self.help_url + "\" target=\"_blank\">" + self.library_name + "</a>image</b><br/>",
+            help_text,
             "<table>",
             "<tr><td>shape</td><td>" + str(self.shape).replace(" ", "&nbsp;") + "</td></tr>",
             "<tr><td>dtype</td><td>" + str(self.dtype) + "</td></tr>",
