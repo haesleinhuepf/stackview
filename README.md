@@ -68,6 +68,23 @@ insight(labels)
 
 ![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/labels_demo.png)
 
+### Annotate regions
+
+To create label images interactively, e.g. for machine learning training, the `stackview.annotate` function offers basic label drawing tools. 
+Annotations are drawn into a `labels` image you need to create before drawing.
+
+```python
+import numpy as np
+labels = np.zeros(image.shape).astype(np.uint32)
+
+stackview.annotate(image, labels)
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_annotate.png)
+
+
+Note: In case the interface is slow, consider using smaller images, e.g. using cropping or resampling.
+
 ### Pick intensities
 
 To read the intensity of pixels where the mouse is moving, use the picker.
