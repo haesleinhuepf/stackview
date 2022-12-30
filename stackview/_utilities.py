@@ -54,3 +54,7 @@ def parameter_is_image_parameter(parameter):
             "image" in name.lower() or \
             "label" in name.lower()
             )
+
+def _no_resize(widget):
+    import ipywidgets
+    return ipywidgets.HBox([ipywidgets.VBox([widget])])
