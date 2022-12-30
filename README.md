@@ -81,7 +81,7 @@ labels = np.zeros(image.shape).astype(np.uint32)
 stackview.annotate(image, labels)
 ```
 
-![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_annotate.png)
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_annotate.gif)
 
 Note: In case the interface is slow, consider using smaller images, e.g. by cropping or resampling.
 
