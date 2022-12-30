@@ -158,7 +158,6 @@ def annotate(
         # compare position and label with last known postion. If equal, don't update / redraw
         position.append(label_id_to_draw)
         if np.array_equal(former_drawn_position, position):
-            label.value = 'skip'
             return
 
         # draw one circle
