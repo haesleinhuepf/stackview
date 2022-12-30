@@ -28,7 +28,7 @@ If you run the installation from within a notebook, you need to restart Jupyter 
 You can use `stackview` from within jupyter notebooks as shown below.
 Also check out the demo in [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/haesleinhuepf/stackview/HEAD?filepath=docs%2Fdemo.ipynb)
 
-There is also a notebook demonstrating [how to use stack in Google Colab](https://colab.research.google.com/github/haesleinhuepf/stackview/blob/master/docs/colab_clesperanto_demo.ipynb).
+There is also a notebook demonstrating [how to use stackview in Google Colab](https://colab.research.google.com/github/haesleinhuepf/stackview/blob/master/docs/colab_clesperanto_demo.ipynb).
 
 More example notebooks can be found in [this folder](https://github.com/haesleinhuepf/stackview/tree/main/docs).
 
