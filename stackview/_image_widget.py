@@ -6,8 +6,8 @@ class ImageWidget(Canvas):
     def __init__(self, image, zoom_factor:float=1.0, zoom_spline_order:int=0):
         if not ((len(image.shape) == 2) or (len(image.shape) == 3 and image.shape[-1] == 3)):
             raise NotImplementedError("Only 2D images are supported" + str(image.shape))
-        width = image.shape[1] * zoom_factor
         height = image.shape[0] * zoom_factor
+        width = image.shape[1] * zoom_factor
         self.zoom_factor = zoom_factor
         self.zoom_spline_order = zoom_spline_order
         super().__init__(width=width * zoom_factor, height=height * zoom_factor)
@@ -21,7 +21,7 @@ class ImageWidget(Canvas):
     def data(self):
         """Image data as numpy array
         """
-        return self._data.swapaxes(0, 1)
+        return self._data
 
     @data.setter
     def data(self, new_data):
@@ -30,10 +30,10 @@ class ImageWidget(Canvas):
         if new_data is None:
             return
 
-        self._data = np.asarray(new_data).swapaxes(0, 1)
+        self._data = np.asarray(new_data)
         self._update_image()
-        self.height = self._data.shape[1] * self.zoom_factor
-        self.width = self._data.shape[0] * self.zoom_factor
+        self.height = self._data.shape[0] * self.zoom_factor
+        self.width = self._data.shape[1] * self.zoom_factor
 
     def _update_image(self):
         if self.zoom_factor == 1.0:
@@ -78,7 +78,7 @@ def _img_to_rgb(image,
 
     if _is_label_image(image):
         lut = _labels_lut()
-        return np.asarray([lut[:, c].take(image) for c in range(0, 3)]).swapaxes(0, 2) * 255
+        return np.asarray([lut[:, c].take(image) for c in range(0, 3)]).swapaxes(0, 2).swapaxes(1, 0) * 255
 
     if display_min is None:
         display_min = image.min()
@@ -90,7 +90,7 @@ def _img_to_rgb(image,
         img_range = 1
 
     image = (image - display_min) / img_range * 255
-    return np.asarray([image, image, image]).swapaxes(0, 2)
+    return np.asarray([image, image, image]).swapaxes(0, 2).swapaxes(1, 0)
 
 @lru_cache(maxsize=1)
 def _labels_lut():

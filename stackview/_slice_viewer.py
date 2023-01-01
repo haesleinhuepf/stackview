@@ -20,10 +20,11 @@ class _SliceViewer():
         if slice_number is None:
             slice_number = int(image.shape[axis] / 2)
 
-        if len(image.shape) <= 2:
-            self.view = ImageWidget(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
-        else:
+        if len(self.image.shape) == 3 and self.image.shape[-1] != 3:
             self.view = ImageWidget(np.take(image, slice_number, axis=axis), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+        else:
+            self.view = ImageWidget(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+
         if display_width is not None:
             self.view.width = display_width
         if display_height is not None:
@@ -41,7 +42,7 @@ class _SliceViewer():
 
         # event handler when the user changed something:
         def configuration_updated(event):
-            if len(self.image.shape) > 2:
+            if len(self.image.shape) == 3 and self.image.shape[-1] != 3:
                 self.slice_slider.layout.display = None
                 self.view.data = np.take(self.image, self.slice_slider.value, axis=axis)
             else:

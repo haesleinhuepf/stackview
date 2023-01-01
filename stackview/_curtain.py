@@ -72,17 +72,7 @@ def curtain(
         description="Curtain"
     )
 
-    if len(image.shape) <= 2:
-        view = ImageWidget(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
-    else:
-        view = ImageWidget(np.take(image, slice_number, axis=axis), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
-    if display_width is not None:
-        view.width = display_width
-    if display_height is not None:
-        view.height = display_height
-
     from ._image_widget import _img_to_rgb
-
     def transform_image():
         if len(image.shape) < 3:
             image_slice = _img_to_rgb(image.copy())
@@ -90,10 +80,14 @@ def curtain(
         else:
             image_slice = _img_to_rgb(np.take(image, slice_slider.value, axis=axis))
             image_slice_curtain = _img_to_rgb(np.take(image_curtain, slice_slider.value, axis=axis))
-
-        image_slice[curtain_slider.value:] = (1 - alpha) * image_slice[curtain_slider.value:] + \
-                                             alpha * image_slice_curtain[curtain_slider.value:]
+        image_slice[:,curtain_slider.value:] = (1 - alpha) * image_slice[:,curtain_slider.value:] + \
+                                             alpha * image_slice_curtain[:,curtain_slider.value:]
         return image_slice
+    view = ImageWidget(transform_image(), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+    if display_width is not None:
+        view.width = display_width
+    if display_height is not None:
+        view.height = display_height
 
     # event handler when the user changed something:
     def configuration_updated(event):
