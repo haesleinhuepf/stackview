@@ -32,8 +32,8 @@ class ImageWidget(Canvas):
 
         self._data = np.asarray(new_data).swapaxes(0, 1)
         self._update_image()
-        self.width = self._data.shape[1] * self.zoom_factor
-        self.height = self._data.shape[0] * self.zoom_factor
+        self.height = self._data.shape[1] * self.zoom_factor
+        self.width = self._data.shape[0] * self.zoom_factor
 
     def _update_image(self):
         if self.zoom_factor == 1.0:
