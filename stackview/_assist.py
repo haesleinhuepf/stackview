@@ -45,19 +45,6 @@ def assist(what: str,
     if not isinstance(context, Context):
         context = Context(context)
 
-    # progress bar
-    progress_bar = ipywidgets.IntProgress(
-        value=0,
-        min=0,
-        max=len(context._functions.keys()),
-        step=1,
-        description='Loading:',
-        bar_style='',  # 'success', 'info', 'warning', 'danger' or ''
-        orientation='horizontal'
-    )
-    from IPython.display import display
-    #display(progress_bar)
-
     # GUI: The image viewer for all function widgets is this one:
     viewer = _SliceViewer(logo, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, continuous_update=continuous_update)
 
@@ -66,30 +53,22 @@ def assist(what: str,
     search_index = {}
     count = 0
     for index, (name, func) in enumerate(context._functions.items()):
-        progress_bar.value = index
         if hasattr(func, "categories"):
             if func.categories is None or "in assistant" not in func.categories:
                 continue
-        #print(name)
         try:
-            #print("testing " + name)
             widget = interact((func, name), context=context, viewer=viewer, continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
-            #print("yes")
             search_text = (func.__name__ + str(func.__doc__)).lower()
         except:
-            #print("no")
             del widget
             continue
         if search_string(what, search_text):
             count = count + 1
             search_index[search_text] = name
             available_widgets[name] = widget
-            progress_bar.description = f"Loaded {name} ({count})"
             import inspect
             sig = inspect.signature(func)
-            print("\n", name, sig)
         else:
-            #print("no2")
             del widget
 
     # GUI: documentation output
@@ -143,12 +122,7 @@ def assist(what: str,
 
     hide_all()
 
-    progress_bar.layout.display = 'none'
-
-    print("done", count)
-
     return ipywidgets.VBox(widgets_to_show)
-    #display(ipywidgets.VBox(widgets_to_show))
 
 
 def text2html(text):
