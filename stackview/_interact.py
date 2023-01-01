@@ -137,7 +137,6 @@ def interact(func,
         command_label.value = command.replace("(,", "(")
 
         if not execution_blocked:
-            print("executing ", str(func))
             if image_passed:
                 viewer.image = func(image, *args, **kwargs)
             else:
