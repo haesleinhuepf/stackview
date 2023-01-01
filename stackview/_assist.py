@@ -1,5 +1,5 @@
-def assist(what: str,
-           context:dict,
+def assist(what: str = "",
+           context:dict = None,
            continuous_update: bool = False,
            zoom_factor: float = 1.0,
            zoom_spline_order: int = 0,
