@@ -1,3 +1,5 @@
+from ._slice_viewer import _SliceViewer
+
 def interact(func,
              image = None,
              *args,
@@ -5,6 +7,7 @@ def interact(func,
              context:dict = None,
              zoom_factor:float = 1.0,
              zoom_spline_order:int = 0,
+             viewer: _SliceViewer = None,
              **kwargs):
     """Takes a function which has an image as first parameter and additional parameters.
     It will build a user interface consisting of sliders for numeric parameters and parameters
@@ -16,36 +19,43 @@ def interact(func,
     image : Image, optional
         If not provided, context must be provided instead.
     args
-    continuous_update : bool, optioonal
+    continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
     context:dict, optional
-        A dictionary of (name:image), allows showing a pulldown of available images.
+        A dictionary of (name:image), allows showing a pulldown of available images, e.g.: globals()
     zoom_factor: float, optional
         Allows showing the image larger (> 1) or smaller (<1)
     zoom_spline_order: int, optional
         Spline order used for interpolation (default=0, nearest-neighbor)
-    context:dict
-        dictionary of name, value pairs that can be selected from pulldowns, e.g.: globals()
+    viewer: _SliceViewer, optional
+        The viewer where the result image should be shown.
     kwargs
 
     """
     import inspect
     import ipywidgets
-    from ._utilities import parameter_is_image_parameter, _no_resize
+    from ._utilities import parameter_is_image_parameter
     from ._context import Context
+    from ._utilities import _no_resize
     from ._slice_viewer import _SliceViewer
+
+    # hidden feature: func can be a tuple of (function, alias_name)
+    if isinstance(func, tuple):
+        func_name = func[1]
+        func = func[0]
+    else:
+        func_name = func.__name__
 
     exposable_parameters = []
     footprint_parameters = []
     image_parameters = []
 
-    if context is not None:
+    if context is not None and not isinstance(context, Context):
         context = Context(context)
 
     image_passed = image is not None
     if context is not None and image is None:
         image = next(iter(context._images.values()))
-
 
     sig = inspect.signature(func)
     for key in sig.parameters.keys():
@@ -55,12 +65,16 @@ def interact(func,
             default_value = sig.parameters[key].default
         min_value, max_value, step = guess_range(key, sig.parameters[key].annotation)
 
-        if min_value is not None:
-            int_slider = ipywidgets.IntSlider
-            float_slider = ipywidgets.FloatSlider
-        else:
-            int_slider = ipywidgets.IntText
-            float_slider = ipywidgets.FloatText
+        #if min_value is not None:
+        int_slider = ipywidgets.IntSlider
+        float_slider = ipywidgets.FloatSlider
+        #else:
+        #    int_slider = ipywidgets.IntText
+        #    float_slider = ipywidgets.FloatText
+        if min_value is None:
+            min_value = 0
+        if max_value is None:
+            max_value = 100
 
         if sig.parameters[key].annotation is int:
             default_value = int_slider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
@@ -89,16 +103,19 @@ def interact(func,
                 default_value = kwargs[key]
             exposable_parameters.append(inspect.Parameter(key, inspect.Parameter.KEYWORD_ONLY, default=default_value))
 
-    viewer = _SliceViewer(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
-    if viewer.slice_slider is not None:
-        viewer.slice_slider.continuous_update=continuous_update
-    command_label = ipywidgets.Label(value=func.__name__ + "()")
+    viewer_was_none = viewer is None
+    if viewer_was_none:
+        viewer = _SliceViewer(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+    viewer.slice_slider.continuous_update=continuous_update
+    command_label = ipywidgets.Label(value=func_name + "()")
+    command_label.style.font_family = "Courier"
 
     from skimage import morphology
+    execution_blocked = True
 
     def worker_function(*otherargs, **kwargs):
 
-        command = func.__name__ + "("
+        command = func_name + "("
         if image_passed:
             command = command + "..."
 
@@ -119,40 +136,38 @@ def interact(func,
         command = command + ")"
         command_label.value = command.replace("(,", "(")
 
-        if image_passed:
-            viewer.image = func(image, *args, **kwargs)
-        else:
-            viewer.image = func(*args, **kwargs)
-        if viewer.slice_slider is not None:
-            viewer.slice_slider.max = viewer.image.shape[0] - 1
+        if not execution_blocked:
+            print("executing ", str(func))
+            if image_passed:
+                viewer.image = func(image, *args, **kwargs)
+            else:
+                viewer.image = func(*args, **kwargs)
+
+        viewer.slice_slider.max = viewer.image.shape[0] - 1
         viewer.configuration_updated(None)
 
 
     worker_function.__signature__ = inspect.Signature(exposable_parameters)
-    ipywidgets.interact(worker_function)
+    inter = ipywidgets.interactive(worker_function, dict(manual=False, auto_display=False))
 
-    #inter = ipywidgets.interactive(worker_function, dict(manual=False, auto_display=False))
-    #inter.update()
+    execution_blocked = False
 
-    if viewer.slice_slider is not None:
-        return ipywidgets.VBox([
-            _no_resize(viewer.view),
-            #ipywidgets.VBox(inter.result),
-            viewer.slice_slider,
-            command_label
-        ])
-    else:
-        return ipywidgets.VBox([
-            _no_resize(viewer.view),
-            #ipywidgets.VBox(inter.result),
-            command_label
-        ])
+    output_widgets = []
+    output_widgets.append(inter)
+    output_widgets.append(command_label)
+
+    if viewer_was_none:
+        output_widgets.append(_no_resize(viewer.view))
+        output_widgets.append(viewer.slice_slider)
+
+    return ipywidgets.VBox(output_widgets)
+
 
 def guess_range(name, annotation):
     if name == 'footprint' or name == 'selem' or name == 'structuring_element':
         return 0, 100, 1
     if 'sigma' in name:
-        return 0, 10, 1
+        return 0, 25, 1
     if 'radius' in name:
         return 0, 100, 1
     if 'factor' in name:

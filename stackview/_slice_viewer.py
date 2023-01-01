@@ -28,30 +28,29 @@ class _SliceViewer():
             self.view.width = display_width
         if display_height is not None:
             self.view.height = display_height
-        if len(image.shape) <= 2:
-            self.slice_slider = None
-        else:
-            # setup user interface for changing the slice
-            self.slice_slider = ipywidgets.IntSlider(
-                value=slice_number,
-                min=0,
-                max=image.shape[axis] - 1,
-                continuous_update=continuous_update,
-                description=slider_text,
-            )
-            # widgets.link((sliders1, 'value'), (slider2, 'value'))
+
+        # setup user interface for changing the slice
+        self.slice_slider = ipywidgets.IntSlider(
+            value=slice_number,
+            min=0,
+            max=image.shape[axis] - 1,
+            continuous_update=continuous_update,
+            description=slider_text,
+        )
+        # widgets.link((sliders1, 'value'), (slider2, 'value'))
 
         # event handler when the user changed something:
         def configuration_updated(event):
-            if self.slice_slider is not None:
+            if len(self.image.shape) > 2:
+                self.slice_slider.layout.display = None
                 self.view.data = np.take(self.image, self.slice_slider.value, axis=axis)
             else:
                 self.view.data = self.image
+                self.slice_slider.layout.display = 'none'
 
         self.configuration_updated = configuration_updated
 
-        if self.slice_slider is not None:
-            # connect user interface with event
-            self.slice_slider.observe(configuration_updated)
+        # connect user interface with event
+        self.slice_slider.observe(configuration_updated)
 
         configuration_updated(None)

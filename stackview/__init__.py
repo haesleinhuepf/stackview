@@ -13,6 +13,7 @@ from ._curtain import curtain
 from ._orthogonal import orthogonal
 from ._side_by_side import side_by_side
 from ._picker import picker
+from ._assist import assist
 
 
 
