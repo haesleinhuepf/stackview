@@ -59,15 +59,6 @@ def side_by_side(
     view2 = ImageWidget(slice_image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
     view3 = ImageWidget(slice_image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
 
-    if display_width is not None:
-        view1.display = display_width
-        view2.display = display_width
-        view3.display = display_width
-    if display_height is not None:
-        view1.display = display_height
-        view2.display = display_height
-        view3.display = display_height
-
     # setup user interface for changing the slice
     slice_slider = None
     if len(image1.shape) > 2:

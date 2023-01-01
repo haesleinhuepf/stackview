@@ -84,10 +84,6 @@ def curtain(
                                              alpha * image_slice_curtain[:,curtain_slider.value:]
         return image_slice
     view = ImageWidget(transform_image(), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
-    if display_width is not None:
-        view.width = display_width
-    if display_height is not None:
-        view.height = display_height
 
     # event handler when the user changed something:
     def configuration_updated(event):

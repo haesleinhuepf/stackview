@@ -39,8 +39,6 @@ def picker(
 
     viewer = _SliceViewer(image,
                           slice_number=slice_number,
-                          display_width=display_width,
-                          display_height=display_height,
                           continuous_update=continuous_update,
                           slider_text=slider_text,
                           zoom_factor=zoom_factor,

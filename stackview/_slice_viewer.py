@@ -25,11 +25,6 @@ class _SliceViewer():
         else:
             self.view = ImageWidget(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
 
-        if display_width is not None:
-            self.view.width = display_width
-        if display_height is not None:
-            self.view.height = display_height
-
         # setup user interface for changing the slice
         self.slice_slider = ipywidgets.IntSlider(
             value=slice_number,
