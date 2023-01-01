@@ -82,7 +82,7 @@ def curtain(
     from ._image_widget import _img_to_rgb
 
     def transform_image():
-        if slice_slider is None:
+        if len(image.shape) < 3:
             image_slice = _img_to_rgb(image.copy())
             image_slice_curtain = _img_to_rgb(image_curtain)
         else:
@@ -102,10 +102,6 @@ def curtain(
     # connect user interface with event
     curtain_slider.observe(configuration_updated)
 
-    if slice_slider is not None:
-        # connect user interface with event
-        slice_slider.observe(configuration_updated)
-
-        return ipywidgets.VBox([_no_resize(view), slice_slider, curtain_slider])
-    else:
-        return ipywidgets.VBox([_no_resize(view), curtain_slider])
+    # connect user interface with event
+    slice_slider.observe(configuration_updated)
+    return ipywidgets.VBox([_no_resize(view), slice_slider, curtain_slider])

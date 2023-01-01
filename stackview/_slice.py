@@ -51,7 +51,4 @@ def slice(
     view = viewer.view
     slice_slider = viewer.slice_slider
 
-    if slice_slider is None:
-        return _no_resize(view)
-    else:
-        return ipywidgets.VBox([_no_resize(view), slice_slider])
+    return ipywidgets.VBox([_no_resize(view), slice_slider])

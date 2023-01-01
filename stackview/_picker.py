@@ -59,7 +59,7 @@ def picker(
         absolute_position_x = int(relative_position_x)
         absolute_position_y = int(relative_position_y)
 
-        if slice_slider is not None:
+        if len(image.shape) > 2:
             absolute_position_z = slice_slider.value
             intensity = image[absolute_position_z, absolute_position_y, absolute_position_x]
             label.value = "[z=" + str(absolute_position_z) + ", y=" + str(absolute_position_y) + ", x=" + str(
@@ -70,8 +70,4 @@ def picker(
 
     event_handler.on_dom_event(update_display)
 
-    if slice_slider is not None:
-        return ipywidgets.VBox([_no_resize(view), slice_slider, label], stretch=False)
-    else:
-        return ipywidgets.VBox([_no_resize(view), label])
-
+    return ipywidgets.VBox([_no_resize(view), slice_slider, label], stretch=False)
