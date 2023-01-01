@@ -52,9 +52,26 @@ def parameter_is_image_parameter(parameter):
             "LabelsData" in type_annotation or \
             "LayerData" in type_annotation or \
             "image" in name.lower() or \
-            "label" in name.lower()
+            "label" in name.lower() or \
+            "mask" in name.lower()
             )
 
 def _no_resize(widget):
     import ipywidgets
     return ipywidgets.HBox([ipywidgets.VBox([widget])])
+
+
+logo = np.asarray([
+        [3,3,3,3,3,3,3,3,3,3,3],
+        [3,3,3,3,3,3,3,3,3,3,3],
+        [3,3,3,3,3,3,3,3,3,3,3],
+        [3,3,4,4,4,2,3,3,3,2,3],
+        [3,4,3,3,3,2,3,3,3,2,3],
+        [3,3,4,4,3,3,2,3,2,3,3],
+        [3,3,3,3,4,3,2,3,2,3,3],
+        [3,4,4,4,3,3,3,2,3,3,3],
+        [3,3,3,3,3,3,3,3,3,3,3],
+        [3,3,3,3,3,3,3,3,3,3,3],
+        [3,3,3,3,3,3,3,3,3,3,3],
+    ]).astype(np.uint32)
+
