@@ -11,9 +11,6 @@ class ImageWidget(Canvas):
         self.zoom_factor = zoom_factor
         self.zoom_spline_order = zoom_spline_order
         super().__init__(width=width * zoom_factor, height=height * zoom_factor)
-        self.fill_style = "red"
-        self.stroke_style = "blue"
-        self.stroke_rect(0, 0, width=width, height=height)
         self.data = np.asarray(image)
         self.layout.stretch = False
 
