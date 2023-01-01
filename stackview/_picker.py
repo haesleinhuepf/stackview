@@ -34,6 +34,9 @@ def picker(
     """
 
     import ipywidgets
+    from ._slice_viewer import _SliceViewer
+    from ._utilities import _no_resize
+
     viewer = _SliceViewer(image,
                           slice_number=slice_number,
                           display_width=display_width,

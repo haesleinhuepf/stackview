@@ -33,6 +33,7 @@ def interact(func,
     import ipywidgets
     from ._utilities import parameter_is_image_parameter, _no_resize
     from ._context import Context
+    from ._slice_viewer import _SliceViewer
 
     exposable_parameters = []
     footprint_parameters = []
