@@ -46,18 +46,20 @@ def curtain(
     from ._utilities import _no_resize
 
     slice_slider = None
-    if len(image.shape) > 2:
-        if slice_number is None:
-            slice_number = int(image.shape[axis] / 2)
 
-        # setup user interface for changing the slice
-        slice_slider = ipywidgets.IntSlider(
-            value=slice_number,
-            min=0,
-            max=image.shape[axis ] -1,
-            continuous_update=continuous_update,
-            description="Slice"
-        )
+    if slice_number is None:
+        slice_number = int(image.shape[axis] / 2)
+
+    # setup user interface for changing the slice
+    slice_slider = ipywidgets.IntSlider(
+        value=slice_number,
+        min=0,
+        max=image.shape[axis ] -1,
+        continuous_update=continuous_update,
+        description="Slice"
+    )
+    if not len(image.shape) > 2:
+        slice_slider.layout.display = 'none'
 
     # setup user interface for changing the curtain position
     slice_shape = list(image.shape)
