@@ -59,16 +59,12 @@ class StackViewNDArray(np.ndarray):
         from ._image_widget import _is_label_image
         labels = _is_label_image(self)
 
-        # In case the image is 2D, 3D and larger than 100 pixels, turn on fancy view
-        if len(self.shape) in (2, 3) and size_in_pixels >= 100:
-            import matplotlib.pyplot as plt
-            _imshow(self,
-                    labels=labels,
-                    continue_drawing=True,
-                    colorbar=not labels)
-            image = _png_to_html(_plt_to_png())
-        else:
-            return "<pre>numpy.ndarray(" + str(np.asarray(self)) + ", dtype=" + str(self.dtype) + ")</pre>"
+        import matplotlib.pyplot as plt
+        _imshow(self,
+                labels=labels,
+                continue_drawing=True,
+                colorbar=not labels)
+        image = _png_to_html(_plt_to_png())
 
         if size_in_bytes > 1024:
             size_in_bytes = size_in_bytes / 1024
