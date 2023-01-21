@@ -1,9 +1,9 @@
 __version__ = "0.5.0"
 
-import warnings
 from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
 from ._context import nop
+from ._crop import crop
 from ._slice_viewer import _SliceViewer
 from ._annotate import annotate
 from ._utilities import _no_resize
