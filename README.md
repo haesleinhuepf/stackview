@@ -136,6 +136,35 @@ stackview.side_by_side(image_stack[1:], image_stack[:-1], continuous_update=True
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_side_by_side.gif)
 
+### Crop
+
+You can crop images interactively:
+```python
+crop_widget = stackview.crop(image_stack, continuous_update=True)
+crop_widget
+```
+
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/crop.gif)
+
+... and retrieve the crop range as a tuple of `slice` objects:
+```python
+r = crop_widget.range
+r
+```
+Output:
+```
+(slice(0, 40, 1), slice(40, 80, 1), slice(80, 120, 1))
+```
+... or you can crop the image directly:
+```python
+cropped_image = crop_widget.crop()
+cropped_image.shape
+```
+Output:
+```
+(40, 40, 40)
+```
+
 ### Interact
 
 Exploration of the parameter space of image processing functions is available using `interact`:
