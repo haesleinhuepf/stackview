@@ -1,7 +1,7 @@
 from ipywidgets import VBox
 
 def crop(image,
-         slice_number: int = 0,
+         slice_number: int = None,
          axis: int = 0,
          continuous_update: bool = False,
          slider_text: str = "Slice",
@@ -49,7 +49,7 @@ class _Cropper(VBox):
     """
     def __init__(self,
                  image,
-                 slice_number: int = 0,
+                 slice_number: int = None,
                  axis: int = 0,
                  continuous_update: bool = False,
                  slider_text: str = "Slice",
