@@ -136,6 +136,20 @@ stackview.side_by_side(image_stack[1:], image_stack[:-1], continuous_update=True
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_side_by_side.gif)
 
+### Switch
+
+The `switch` function allows to switch between a list or dictionary of images.
+
+```
+stackview.switch([
+    slice_image,
+    binary,
+    labels
+])
+```
+
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_switch.gif)
+
 ### Crop
 
 You can crop images interactively:

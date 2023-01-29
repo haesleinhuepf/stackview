@@ -36,7 +36,7 @@ class _SliceViewer():
         # widgets.link((sliders1, 'value'), (slider2, 'value'))
 
         # event handler when the user changed something:
-        def configuration_updated(event):
+        def configuration_updated(event=None):
             if len(self.image.shape) == 3 and self.image.shape[-1] != 3:
                 self.slice_slider.layout.display = None
                 self.view.data = np.take(self.image, self.slice_slider.value, axis=axis)
