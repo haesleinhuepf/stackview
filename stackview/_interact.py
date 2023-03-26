@@ -151,6 +151,8 @@ def interact(func,
 
     execution_blocked = False
 
+    inter.update()
+
     output_widgets = []
     output_widgets.append(inter)
     output_widgets.append(command_label)
