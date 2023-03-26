@@ -3,7 +3,7 @@ from ._slice_viewer import _SliceViewer
 def interact(func,
              image = None,
              *args,
-             continuous_update: bool = False,
+             continuous_update: bool = True,
              context:dict = None,
              zoom_factor:float = 1.0,
              zoom_spline_order:int = 0,
@@ -150,6 +150,8 @@ def interact(func,
     inter = ipywidgets.interactive(worker_function, dict(manual=False, auto_display=False))
 
     execution_blocked = False
+
+    inter.update()
 
     output_widgets = []
     output_widgets.append(inter)

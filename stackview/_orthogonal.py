@@ -3,7 +3,7 @@ def orthogonal(
         image,
         display_width : int = None,
         display_height : int = None,
-        continuous_update:bool=False,
+        continuous_update:bool=True,
         zoom_factor:float = 1.0,
         zoom_spline_order:int = 0
 ):

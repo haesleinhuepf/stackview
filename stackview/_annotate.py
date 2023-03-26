@@ -24,7 +24,7 @@ def annotate(
         slice_number: int = None,
         alpha: float = 0.5,
         axis: int = 0,
-        continuous_update: bool = False,
+        continuous_update: bool = True,
         slider_text: str = "Slice",
         zoom_factor: float = 1.0,
         zoom_spline_order: int = 0
