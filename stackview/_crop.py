@@ -3,7 +3,7 @@ from ipywidgets import VBox
 def crop(image,
          slice_number: int = None,
          axis: int = 0,
-         continuous_update: bool = False,
+         continuous_update: bool = True,
          slider_text: str = "Slice",
          axis_names=None,
          zoom_factor: float = 1.0,

@@ -4,7 +4,7 @@ def picker(
         slice_number: int = None,
         display_width: int = None,
         display_height: int = None,
-        continuous_update: bool = False,
+        continuous_update: bool = True,
         slider_text: str = "Slice",
         zoom_factor:float = 1.0,
         zoom_spline_order:int = 0

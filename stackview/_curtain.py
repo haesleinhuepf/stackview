@@ -6,7 +6,7 @@ def curtain(
         axis: int = 0,
         display_width: int = None,
         display_height: int = None,
-        continuous_update: bool = False,
+        continuous_update: bool = True,
         alpha: float = 1,
         zoom_factor :float = 1.0,
         zoom_spline_order :int = 0

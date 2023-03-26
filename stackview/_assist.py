@@ -1,6 +1,6 @@
 def assist(what: str = "",
            context:dict = None,
-           continuous_update: bool = False,
+           continuous_update: bool = True,
            zoom_factor: float = 1.0,
            zoom_spline_order: int = 0,
            ):
