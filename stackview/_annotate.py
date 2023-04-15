@@ -27,7 +27,10 @@ def annotate(
         continuous_update: bool = True,
         slider_text: str = "Slice",
         zoom_factor: float = 1.0,
-        zoom_spline_order: int = 0
+        zoom_spline_order: int = 0,
+        colormap:str = None,
+        display_min:float = None,
+        display_max:float = None
 ):
     """Shows an image with a slider to go through a stack plus a label with the current mouse position and intensity at that position.
 
@@ -49,6 +52,12 @@ def annotate(
         Allows showing the image larger (> 1) or smaller (<1)
     zoom_spline_order: int, optional
         Spline order used for interpolation (default=0, nearest-neighbor)
+    colormap: str, optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ...
+    display_min: float, optional
+        Lower bound of properly shown intensities
+    display_max: float, optional
+        Upper bound of properly shown intensities
 
     Returns
     -------
@@ -101,8 +110,8 @@ def annotate(
             # necessary to display the labels in colour correctly
             slice_image2 = slice_image2.astype(np.uint64)
 
-        rgb_image1 = _img_to_rgb(slice_image1)
-        rgb_image2 = _img_to_rgb(slice_image2)
+        rgb_image1 = _img_to_rgb(slice_image1, colormap=colormap, display_min=display_min, display_max=display_max)
+        rgb_image2 = _img_to_rgb(slice_image2, colormap=colormap, display_min=display_min, display_max=display_max)
 
         factor1 = 1.0 - alpha
         factor2 = alpha
