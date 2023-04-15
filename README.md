@@ -150,6 +150,27 @@ stackview.switch([
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_switch.gif)
 
+### Switch toggleable
+
+You can also view multiple channels with different colormaps at the same time using the `toggleable` parameter of `switch`. 
+It is recommended to also pass a list of colormaps. Colormap names can be taken from [Matplotlib](https://matplotlib.org/stable/tutorials/colors/colormaps.html) and stackview aims at compatibility with [microfilm](https://github.com/guiwitz/microfilm).
+
+```
+hela_cells = imread("data/hela-cells.tif")
+
+stackview.switch(
+    {"lysosomes":   hela_cells[:,:,0],
+     "mitochondria":hela_cells[:,:,1],
+     "nuclei":      hela_cells[:,:,2]
+    },
+    colormap=["pure_magenta", "pure_green", "pure_blue"],
+    toggleable=True
+)
+```
+
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_switch_toggleable.gif)
+
+
 ### Crop
 
 You can crop images interactively:
