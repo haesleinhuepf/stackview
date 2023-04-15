@@ -1,4 +1,4 @@
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 
 from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
@@ -15,7 +15,6 @@ from ._side_by_side import side_by_side
 from ._picker import picker
 from ._assist import assist
 from ._switch import switch
-
-
+from ._colormaps import create_colormap
 
 

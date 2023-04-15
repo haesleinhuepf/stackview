@@ -1,4 +1,4 @@
-
+import warnings
 
 def side_by_side(
         image1,
@@ -10,7 +10,10 @@ def side_by_side(
         continuous_update: bool = True,
         slider_text: str = "Slice",
         zoom_factor:float = 1.0,
-        zoom_spline_order:int = 0
+        zoom_spline_order:int = 0,
+        colormap:str = None,
+        display_min:float = None,
+        display_max:float = None
 ):
     """Shows two images in magenta and green plus a third with their colocalization / overlap view and
     a slider to go through a stack.
@@ -35,6 +38,12 @@ def side_by_side(
         Allows showing the image larger (> 1) or smaller (<1)
     zoom_spline_order: int, optional
         Spline order used for interpolation (default=0, nearest-neighbor)
+    colormap: str, optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ...
+    display_min: float, optional
+        Lower bound of properly shown intensities
+    display_max: float, optional
+        Upper bound of properly shown intensities
 
     Returns
     -------
@@ -83,8 +92,8 @@ def side_by_side(
             slice_image2 = image2
 
         if _is_label_image(slice_image1) or _is_label_image(slice_image2):
-            rgb_image1 = _img_to_rgb(slice_image1)
-            rgb_image2 = _img_to_rgb(slice_image2)
+            rgb_image1 = _img_to_rgb(slice_image1, colormap=colormap, display_min=display_min, display_max=display_max)
+            rgb_image2 = _img_to_rgb(slice_image2, colormap=colormap, display_min=display_min, display_max=display_max)
 
             if _is_label_image(slice_image1) and _is_label_image(slice_image2):
                 warnings.warn("Side-by-side mixing two label images may look weird." +
