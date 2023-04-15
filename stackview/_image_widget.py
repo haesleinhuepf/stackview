@@ -1,5 +1,6 @@
 from ipycanvas import Canvas
 import numpy as np
+from ._colormaps import _labels_lut # for internal backwards compatibility
 
 class ImageWidget(Canvas):
     def __init__(self, image, zoom_factor:float=1.0, zoom_spline_order:int=0, colormap:str=None, display_min:float=None, display_max:float=None):
