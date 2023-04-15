@@ -56,7 +56,8 @@ def create_colormap(cmap_name, num_colors=256):
     from matplotlib.colors import ListedColormap
 
     if cmap_name in plt.colormaps():
-        cmap = plt.get_cmap(cmap_name, num_colors)
+        flip_map = False
+        cmap = _convert_to_listed_colormap(plt.get_cmap(cmap_name, num_colors), num_colors)
     else:
         flip_map = cmap_name.endswith("_r")
         if flip_map:
@@ -116,3 +117,11 @@ def _labels_lut():
     lut[3] = [0.17254901960784313, 0.6274509803921569, 0.17254901960784313]
     lut[4] = [0.8392156862745098, 0.15294117647058825, 0.1568627450980392]
     return lut
+
+
+def _convert_to_listed_colormap(colormap, num_samples):
+    import numpy as np
+    from matplotlib.colors import ListedColormap
+    samples = np.linspace(0, 1, num_samples)
+    colors = colormap(samples)
+    return ListedColormap(colors)

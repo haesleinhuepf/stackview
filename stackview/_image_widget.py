@@ -87,11 +87,13 @@ def _img_to_rgb(image,
     if display_max is None:
         display_max = image.max()
 
-    img_range = (display_max - display_min)
-    if img_range == 0:
-        img_range = 1
+    diplay_range_width = (display_max - display_min)
+    if diplay_range_width == 0:
+        diplay_range_width = 1
 
-    image = (image - display_min) / img_range * 255
+    image = (image.astype(float) - display_min) / diplay_range_width * 255
+    image = np.minimum(image, 255)
+    image = np.maximum(image, 0)
 
     if colormap is None:
         return np.asarray([image, image, image]).swapaxes(0, 2).swapaxes(1, 0)
