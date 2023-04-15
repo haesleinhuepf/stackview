@@ -7,6 +7,9 @@ def interact(func,
              context:dict = None,
              zoom_factor:float = 1.0,
              zoom_spline_order:int = 0,
+             colormap:str = None,
+             display_min:float = None,
+             display_max:float = None,
              viewer: _SliceViewer = None,
              **kwargs):
     """Takes a function which has an image as first parameter and additional parameters.
@@ -27,6 +30,12 @@ def interact(func,
         Allows showing the image larger (> 1) or smaller (<1)
     zoom_spline_order: int, optional
         Spline order used for interpolation (default=0, nearest-neighbor)
+    colormap: str, optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ...
+    display_min: float, optional
+        Lower bound of properly shown intensities
+    display_max: float, optional
+        Upper bound of properly shown intensities
     viewer: _SliceViewer, optional
         The viewer where the result image should be shown.
     kwargs
@@ -105,7 +114,7 @@ def interact(func,
 
     viewer_was_none = viewer is None
     if viewer_was_none:
-        viewer = _SliceViewer(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+        viewer = _SliceViewer(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min, display_max=display_max)
     viewer.slice_slider.continuous_update=continuous_update
     command_label = ipywidgets.Label(value=func_name + "()")
     command_label.style.font_family = "Courier"
@@ -138,9 +147,10 @@ def interact(func,
 
         if not execution_blocked:
             if image_passed:
-                viewer.image = func(image, *args, **kwargs)
+                viewer.view.data = func(image, *args, **kwargs)
             else:
-                viewer.image = func(*args, **kwargs)
+                viewer.view.data = func(*args, **kwargs)
+            viewer.image = viewer.view.data
 
         viewer.slice_slider.max = viewer.image.shape[0] - 1
         viewer.configuration_updated(None)
