@@ -195,7 +195,8 @@ def annotate(
 
         # store position
         for i in range(4):
-            former_drawn_position[i] = position[i]
+            if i < len(position):
+                former_drawn_position[i] = position[i]
         update_display()
 
     # draw everything once
