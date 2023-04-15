@@ -1,12 +1,15 @@
 def switch(images,
-slice_number : int = None,
-        axis : int = 0,
-        display_width : int = None,
-        display_height : int = None,
-        continuous_update:bool = True,
-        slider_text:str="Slice",
-        zoom_factor:float = 1.0,
-        zoom_spline_order:int = 0
+           slice_number : int = None,
+           axis : int = 0,
+           display_width : int = None,
+           display_height : int = None,
+           continuous_update:bool = True,
+           slider_text:str="Slice",
+           zoom_factor:float = 1.0,
+           zoom_spline_order:int = 0,
+           colormap:str = None,
+           display_min:float = None,
+           display_max:float = None
 ):
     """Allows switching between multiple images.
 
@@ -28,6 +31,12 @@ slice_number : int = None,
         Allows showing the image larger (> 1) or smaller (<1)
     zoom_spline_order: int, optional
         Spline order used for interpolation (default=0, nearest-neighbor)
+    colormap: str, or list of str optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ...
+    display_min: float or list of float, optional
+        Lower bound of properly shown intensities
+    display_max: float of list of float, optional
+        Upper bound of properly shown intensities
 
     Returns
     -------
@@ -36,6 +45,12 @@ slice_number : int = None,
     from ._utilities import _no_resize
     from ._slice_viewer import _SliceViewer
     import ipywidgets
+    if not isinstance(colormap, list):
+        colormap = [colormap] * len(images)
+    if not isinstance(display_min, list):
+        display_min = [display_min] * len(images)
+    if not isinstance(display_max, list):
+        display_max = [display_max] * len(images)
 
     if isinstance(images, dict):
         names = list(images.keys())
@@ -53,19 +68,23 @@ slice_number : int = None,
                           continuous_update,
                           slider_text,
                           zoom_factor=zoom_factor,
-                          zoom_spline_order=zoom_spline_order
+                          zoom_spline_order=zoom_spline_order,
+                          colormap=colormap[0],
+                          display_min=display_min[0],
+                          display_max=display_max[0]
                           )
     view = viewer.view
     slice_slider = viewer.slice_slider
 
     buttons = []
-    for name, image in zip(names, images):
-        button = _make_button(name, image, layout, viewer)
+    for name, image, colormap_, display_min_, display_max_ in zip(names, images, colormap, display_min, display_max):
+        button = _make_button(name, image, colormap_, display_min_, display_max_, layout, viewer)
         buttons.append(button)
 
     return ipywidgets.VBox([_no_resize(view), ipywidgets.HBox(buttons), slice_slider])
 
-def _make_button(name, image, layout, viewer):
+
+def _make_button(name, image, colormap, display_min, display_max, layout, viewer):
     import ipywidgets
     if layout is None:
         button = ipywidgets.Button(description=name)
@@ -73,6 +92,9 @@ def _make_button(name, image, layout, viewer):
         button = ipywidgets.Button(description=name, layout=layout)
 
     def act(event=None):
+        viewer.view.colormap = colormap
+        viewer.view.display_min = display_min
+        viewer.view.display_max = display_max
         viewer.image = image
         viewer.configuration_updated()
 
