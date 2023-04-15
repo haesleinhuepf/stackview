@@ -7,7 +7,10 @@ def picker(
         continuous_update: bool = True,
         slider_text: str = "Slice",
         zoom_factor:float = 1.0,
-        zoom_spline_order:int = 0
+        zoom_spline_order:int = 0,
+        colormap:str = None,
+        display_min:float = None,
+        display_max:float = None
 ):
     """Shows an image with a slider to go through a stack plus a label with the current mouse position and intensity at that position.
 
@@ -27,6 +30,12 @@ def picker(
         Allows showing the image larger (> 1) or smaller (<1)
     zoom_spline_order: int, optional
         Spline order used for interpolation (default=0, nearest-neighbor)
+    colormap: str, optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ...
+    display_min: float, optional
+        Lower bound of properly shown intensities
+    display_max: float, optional
+        Upper bound of properly shown intensities
 
     Returns
     -------
@@ -42,7 +51,10 @@ def picker(
                           continuous_update=continuous_update,
                           slider_text=slider_text,
                           zoom_factor=zoom_factor,
-                          zoom_spline_order=zoom_spline_order
+                          zoom_spline_order=zoom_spline_order,
+                          colormap=colormap,
+                          display_min=display_min,
+                          display_max=display_max
                           )
     view = viewer.view
     slice_slider = viewer.slice_slider

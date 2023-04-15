@@ -1,9 +1,9 @@
 from ipycanvas import Canvas
 import numpy as np
-from functools import lru_cache
+from ._colormaps import _labels_lut # for internal backwards compatibility
 
 class ImageWidget(Canvas):
-    def __init__(self, image, zoom_factor:float=1.0, zoom_spline_order:int=0):
+    def __init__(self, image, zoom_factor:float=1.0, zoom_spline_order:int=0, colormap:str=None, display_min:float=None, display_max:float=None):
         if not ((len(image.shape) == 2) or (len(image.shape) == 3 and image.shape[-1] == 3)):
             raise NotImplementedError("Only 2D images are supported" + str(image.shape))
         height = image.shape[0] * zoom_factor
@@ -11,6 +11,9 @@ class ImageWidget(Canvas):
         self.zoom_factor = zoom_factor
         self.zoom_spline_order = zoom_spline_order
         super().__init__(width=width * zoom_factor, height=height * zoom_factor)
+        self.colormap = colormap
+        self.display_min = display_min
+        self.display_max = display_max
         self.data = np.asarray(image)
         self.layout.stretch = False
 
@@ -34,10 +37,10 @@ class ImageWidget(Canvas):
 
     def _update_image(self):
         if self.zoom_factor == 1.0:
-            self.put_image_data(_img_to_rgb(self._data), 0, 0)
+            self.put_image_data(_img_to_rgb(self._data, colormap=self.colormap, display_min=self.display_min, display_max=self.display_max), 0, 0)
         else:
             zoomed = self._zoom(self._data)
-            self.put_image_data(_img_to_rgb(zoomed), 0, 0)
+            self.put_image_data(_img_to_rgb(zoomed, colormap=self.colormap, display_min=self.display_min, display_max=self.display_max), 0, 0)
 
     def _zoom(self, data):
         if len(data.shape) == 3:
@@ -64,8 +67,10 @@ def _is_label_image(image):
 
 
 def _img_to_rgb(image,
+                colormap=None,
                 display_min=None,
                 display_max=None):
+    from ._colormaps import _labels_lut, create_colormap
 
     if len(image.shape) == 3 and image.shape[2] == 3:
         return image
@@ -82,23 +87,16 @@ def _img_to_rgb(image,
     if display_max is None:
         display_max = image.max()
 
-    img_range = (display_max - display_min)
-    if img_range == 0:
-        img_range = 1
+    diplay_range_width = (display_max - display_min)
+    if diplay_range_width == 0:
+        diplay_range_width = 1
 
-    image = (image - display_min) / img_range * 255
-    return np.asarray([image, image, image]).swapaxes(0, 2).swapaxes(1, 0)
+    image = (image.astype(float) - display_min) / diplay_range_width * 255
+    image = np.minimum(image, 255)
+    image = np.maximum(image, 0)
 
-@lru_cache(maxsize=1)
-def _labels_lut():
-    from numpy.random import MT19937
-    from numpy.random import RandomState, SeedSequence
-    rs = RandomState(MT19937(SeedSequence(3)))
-    lut = rs.rand(65537, 3)
-    lut[0, :] = 0
-    # these are the first four colours from matplotlib's default
-    lut[1] = [0.12156862745098039, 0.4666666666666667, 0.7058823529411765]
-    lut[2] = [1.0, 0.4980392156862745, 0.054901960784313725]
-    lut[3] = [0.17254901960784313, 0.6274509803921569, 0.17254901960784313]
-    lut[4] = [0.8392156862745098, 0.15294117647058825, 0.1568627450980392]
-    return lut
+    if colormap is None:
+        return np.asarray([image, image, image]).swapaxes(0, 2).swapaxes(1, 0)
+    else:
+        lut = np.asarray(create_colormap(colormap).colors)
+        return np.asarray([lut[:, c].take(image.astype(int)) for c in range(0, 3)]).swapaxes(0, 2).swapaxes(1, 0) * 255

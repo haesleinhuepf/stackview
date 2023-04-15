@@ -9,7 +9,10 @@ class _SliceViewer():
                  continuous_update: bool = True,
                  slider_text: str = "Slice",
                  zoom_factor:float = 1.0,
-                 zoom_spline_order:int = 0
+                 zoom_spline_order:int = 0,
+                 colormap:str = None,
+                 display_min:float = None,
+                 display_max:float = None
                  ):
         import ipywidgets
         from ._image_widget import ImageWidget
@@ -21,9 +24,15 @@ class _SliceViewer():
             slice_number = int(image.shape[axis] / 2)
 
         if len(self.image.shape) == 3 and self.image.shape[-1] != 3:
-            self.view = ImageWidget(np.take(image, slice_number, axis=axis), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+            sliced_image = np.take(image, slice_number, axis=axis)
         else:
-            self.view = ImageWidget(image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+            sliced_image = image
+        self.view = ImageWidget(sliced_image,
+                                zoom_factor=zoom_factor,
+                                zoom_spline_order=zoom_spline_order,
+                                colormap=colormap,
+                                display_min=display_min,
+                                display_max=display_max)
 
         # setup user interface for changing the slice
         self.slice_slider = ipywidgets.IntSlider(

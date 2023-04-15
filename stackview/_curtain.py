@@ -9,7 +9,13 @@ def curtain(
         continuous_update: bool = True,
         alpha: float = 1,
         zoom_factor :float = 1.0,
-        zoom_spline_order :int = 0
+        zoom_spline_order :int = 0,
+        colormap:str = None,
+        display_min:float = None,
+        display_max:float = None,
+        curtain_colormap:str = None,
+        curtain_display_min:float = None,
+        curtain_display_max:float = None
 ):
     """Show two images and allow with a slider to show either the one or the other image.
 
@@ -35,6 +41,18 @@ def curtain(
         Allows showing the image larger (> 1) or smaller (<1)
     zoom_spline_order: int, optional
         Spline order used for interpolation (default=0, nearest-neighbor)
+    colormap: str, optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ...
+    display_min: float, optional
+        Lower bound of properly shown intensities
+    display_max: float, optional
+        Upper bound of properly shown intensities
+    curtain_colormap: str, optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ...
+    curtain_display_min: float, optional
+        Lower bound of properly shown intensities
+    curtain_display_max: float, optional
+        Upper bound of properly shown intensities
 
     Returns
     -------
@@ -75,11 +93,11 @@ def curtain(
     from ._image_widget import _img_to_rgb
     def transform_image():
         if len(image.shape) < 3:
-            image_slice = _img_to_rgb(image.copy())
-            image_slice_curtain = _img_to_rgb(image_curtain)
+            image_slice = _img_to_rgb(image.copy(), colormap=colormap, display_min=display_min, display_max=display_max)
+            image_slice_curtain = _img_to_rgb(image_curtain, colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
         else:
-            image_slice = _img_to_rgb(np.take(image, slice_slider.value, axis=axis))
-            image_slice_curtain = _img_to_rgb(np.take(image_curtain, slice_slider.value, axis=axis))
+            image_slice = _img_to_rgb(np.take(image, slice_slider.value, axis=axis), colormap=colormap, display_min=display_min, display_max=display_max)
+            image_slice_curtain = _img_to_rgb(np.take(image_curtain, slice_slider.value, axis=axis), colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
         image_slice[:,curtain_slider.value:] = (1 - alpha) * image_slice[:,curtain_slider.value:] + \
                                              alpha * image_slice_curtain[:,curtain_slider.value:]
         return image_slice
