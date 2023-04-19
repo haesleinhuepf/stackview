@@ -147,10 +147,9 @@ def interact(func,
 
         if not execution_blocked:
             if image_passed:
-                viewer.view.data = func(image, *args, **kwargs)
+                viewer.image = func(image, *args, **kwargs)
             else:
-                viewer.view.data = func(*args, **kwargs)
-            viewer.image = viewer.view.data
+                viewer.image = func(*args, **kwargs)
 
         viewer.slice_slider.max = viewer.image.shape[0] - 1
         viewer.configuration_updated(None)
