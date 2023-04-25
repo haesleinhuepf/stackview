@@ -51,6 +51,8 @@ class StackViewNDArray(np.ndarray):
                 -------
                 HTML text with the image and some properties.
                 """
+        if len(self.shape) < 2:
+            return str(self)
 
         import numpy as np
         size_in_pixels = np.prod(self.shape)
