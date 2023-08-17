@@ -1,10 +1,10 @@
-python -m pip install --user --upgrade setuptools wheel
+call python -m pip install --user --upgrade setuptools wheel
 
-python setup.py sdist bdist_wheel
+call python setup.py sdist bdist_wheel
 
-python -m pip install --user --upgrade twine
+call python -m pip install --user --upgrade twine
 
-python -m twine upload --repository pypi dist/*
+call python -m twine upload --repository pypi dist/*
 
 
 
