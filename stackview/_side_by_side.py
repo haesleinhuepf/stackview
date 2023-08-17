@@ -55,6 +55,12 @@ def side_by_side(
     import numpy as np
     from ._utilities import _no_resize
 
+    if 'cupy.ndarray' in str(type(image1)):
+        image1 = image1.get()
+
+    if 'cupy.ndarray' in str(type(image2)):
+        image2 = image2.get()
+
     if slice_number is None:
         slice_number = int(image1.shape[axis] / 2)
 

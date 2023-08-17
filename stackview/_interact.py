@@ -48,6 +48,10 @@ def interact(func,
     from ._utilities import _no_resize
     from ._slice_viewer import _SliceViewer
 
+    if 'cupy.ndarray' in str(type(image)):
+        image = image.get()
+
+
     # hidden feature: func can be a tuple of (function, alias_name)
     if isinstance(func, tuple):
         func_name = func[1]

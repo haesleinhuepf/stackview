@@ -46,6 +46,9 @@ def slice(
     from ._utilities import _no_resize
     from ._slice_viewer import _SliceViewer
 
+    if 'cupy.ndarray' in str(type(image)):
+        image = image.get()
+
     import ipywidgets
     viewer = _SliceViewer(image,
         slice_number,
