@@ -35,6 +35,8 @@ def jupyter_displayable_output(
 class StackViewNDArray(np.ndarray):
 
     def __new__(cls, input_array, library_name=None, help_url=None):
+        if 'cupy.ndarray' in str(type(input_array)):
+            input_array = input_array.get()
         obj = np.asarray(input_array).view(cls)
         obj.library_name = library_name
         obj.help_url = help_url

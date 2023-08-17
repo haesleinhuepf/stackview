@@ -71,6 +71,12 @@ def annotate(
     from ipyevents import Event
     from ._uint_field import UIntField
 
+    if 'cupy.ndarray' in str(type(image)):
+        image = image.get()
+
+    if 'cupy.ndarray' in str(type(labels)):
+        labels = labels.get()
+
     if not _is_label_image(labels):
         warnings.warn("Labels are not an image of type uint32 or uint64. Consider converting to this type for best performance.")
 

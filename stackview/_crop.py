@@ -40,6 +40,10 @@ def crop(image,
         Upper bound of properly shown intensities
 
     """
+
+    if 'cupy.ndarray' in str(type(image)):
+        image = image.get()
+
     return _Cropper(image,
                     slice_number=slice_number,
                     axis=axis,

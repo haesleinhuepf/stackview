@@ -68,6 +68,8 @@ def switch(images,
         names = [str(i) for i in range(len(images))]
         layout = ipywidgets.Layout(min_width='10px', max_width='30px')
 
+    images = [image.get() if 'cupy.ndarray' in str(type(image)) else image for image in images]
+
     viewer = _SliceViewer(images[0],
                           slice_number,
                           axis,

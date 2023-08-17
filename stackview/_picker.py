@@ -46,6 +46,9 @@ def picker(
     from ._slice_viewer import _SliceViewer
     from ._utilities import _no_resize
 
+    if 'cupy.ndarray' in str(type(image)):
+        image = image.get()
+
     viewer = _SliceViewer(image,
                           slice_number=slice_number,
                           continuous_update=continuous_update,

@@ -63,6 +63,12 @@ def curtain(
     import numpy as np
     from ._utilities import _no_resize
 
+    if 'cupy.ndarray' in str(type(image)):
+        image = image.get()
+
+    if 'cupy.ndarray' in str(type(image_curtain)):
+        image_curtain = image_curtain.get()
+
     slice_slider = None
 
     if slice_number is None:
