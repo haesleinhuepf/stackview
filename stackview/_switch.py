@@ -94,10 +94,10 @@ def switch(images,
             for button, image, colormap_, display_min_, display_max_ in zip(buttons, images, colormap,
                                                                              display_min, display_max):
                 if button.value:
-                    if len(image.shape) == 2:
-                        display_image_to_add = _img_to_rgb(image, display_min=display_min_, display_max=display_max_, colormap=colormap_)
-                    elif len(image.shape) == 3:
+                    if len(image.shape) == 3 and image.shape[-1] != 3:
                         display_image_to_add = np.asarray([_img_to_rgb(i, display_min=display_min_, display_max=display_max_, colormap=colormap_) for i in image])
+                    else:
+                        display_image_to_add = _img_to_rgb(image, display_min=display_min_, display_max=display_max_, colormap=colormap_)
                         
                     if display_image is None:
                         display_image = display_image_to_add

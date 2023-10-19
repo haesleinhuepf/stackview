@@ -46,10 +46,14 @@ class _SliceViewer():
 
         # event handler when the user changed something:
         def configuration_updated(event=None):
-            if len(self.image.shape) > 2: # and self.image.shape[-1] != 3:
-                if len(self.image.shape) == 3:
-                    self.slice_slider.layout.display = None
+            if len(self.image.shape) == 3 and self.image.shape[-1] != 3:
+                self.slice_slider.layout.display = None
                 self.view.data = np.take(self.image, self.slice_slider.value, axis=axis)
+            elif len(self.image.shape) == 4 and self.image.shape[-1] == 3:
+                self.slice_slider.layout.display = None
+                self.view.data = np.take(self.image, self.slice_slider.value, axis=axis)
+            elif len(self.image.shape) == 4:
+                raise NotImplementedError("Only 2D and 3D images are supported" + str(image.shape))
             else:
                 self.view.data = self.image
                 self.slice_slider.layout.display = 'none'
