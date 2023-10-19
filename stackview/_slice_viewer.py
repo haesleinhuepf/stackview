@@ -23,7 +23,7 @@ class _SliceViewer():
         if slice_number is None:
             slice_number = int(image.shape[axis] / 2)
 
-        if len(self.image.shape) == 3 and self.image.shape[-1] != 3:
+        if len(self.image.shape) > 2: # and self.image.shape[-1] != 3:
             sliced_image = np.take(image, slice_number, axis=axis)
         else:
             sliced_image = image
@@ -49,6 +49,11 @@ class _SliceViewer():
             if len(self.image.shape) == 3 and self.image.shape[-1] != 3:
                 self.slice_slider.layout.display = None
                 self.view.data = np.take(self.image, self.slice_slider.value, axis=axis)
+            elif len(self.image.shape) == 4 and self.image.shape[-1] == 3:
+                self.slice_slider.layout.display = None
+                self.view.data = np.take(self.image, self.slice_slider.value, axis=axis)
+            elif len(self.image.shape) == 4:
+                raise NotImplementedError("Only 2D and 3D images are supported" + str(image.shape))
             else:
                 self.view.data = self.image
                 self.slice_slider.layout.display = 'none'

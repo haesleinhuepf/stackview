@@ -4,7 +4,7 @@ from ._colormaps import _labels_lut # for internal backwards compatibility
 
 class ImageWidget(Canvas):
     def __init__(self, image, zoom_factor:float=1.0, zoom_spline_order:int=0, colormap:str=None, display_min:float=None, display_max:float=None):
-        if not ((len(image.shape) == 2) or (len(image.shape) == 3 and image.shape[-1] == 3)):
+        if not ((len(image.shape) == 2) or (len(image.shape) in [3, 4] and image.shape[-1] == 3)):
             raise NotImplementedError("Only 2D images are supported" + str(image.shape))
         height = image.shape[0] * zoom_factor
         width = image.shape[1] * zoom_factor
@@ -43,7 +43,7 @@ class ImageWidget(Canvas):
             self.put_image_data(_img_to_rgb(zoomed, colormap=self.colormap, display_min=self.display_min, display_max=self.display_max), 0, 0)
 
     def _zoom(self, data):
-        if len(data.shape) == 3:
+        if len(data.shape) > 2 and data.shape[-1] == 3:
             # handle RGB images
             return np.asarray([self._zoom(data[:,:,i]) for i in range(data.shape[2])]).swapaxes(0, 2).swapaxes(1, 0)
 
@@ -72,7 +72,7 @@ def _img_to_rgb(image,
                 display_max=None):
     from ._colormaps import _labels_lut, create_colormap
 
-    if len(image.shape) == 3 and image.shape[2] == 3:
+    if len(image.shape) > 2 and image.shape[-1] == 3:
         return image
 
     if image.dtype == bool:

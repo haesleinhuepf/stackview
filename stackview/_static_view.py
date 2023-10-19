@@ -199,6 +199,14 @@ def _imshow(image, title: str = None, labels: bool = False, min_display_intensit
     """
     import numpy as np
 
+    if len(image.shape) == 3 and image.shape[2] == 3: # RGB image
+        import matplotlib.pyplot as plt
+        plt.imshow(image, vmin=min_display_intensity, vmax=max_display_intensity,
+                   interpolation='nearest', alpha=alpha)
+        if not continue_drawing:
+            plt.show()
+        return
+
     if len(image.shape) == 3:
         image = np.asarray(image).max(axis=0)
 
