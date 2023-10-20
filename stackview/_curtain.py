@@ -82,23 +82,29 @@ def curtain(
         continuous_update=continuous_update,
         description="Slice"
     )
-    if not len(image.shape) > 2:
+    if len(image.shape) < 3 or (len(image.shape) == 3 and image.shape[-1] == 3):
         slice_slider.layout.display = 'none'
 
     # setup user interface for changing the curtain position
     slice_shape = list(image.shape)
     slice_shape.pop(axis)
+
+    max_curtain_position = slice_shape[-1]
+    if image.shape[-1] == 3:
+        # RGB image
+        max_curtain_position = slice_shape[-2]
+
     curtain_slider = ipywidgets.IntSlider(
-        value=slice_shape[-1] / 2,
+        value=max_curtain_position / 2,
         min=0,
-        max=slice_shape[-1],
+        max=max_curtain_position,
         continuous_update=continuous_update,
         description="Curtain"
     )
 
     from ._image_widget import _img_to_rgb
     def transform_image():
-        if len(image.shape) < 3 or image.shape[2] == 3:
+        if len(image.shape) < 3 or (len(image.shape) == 3 and image.shape[-1] == 3):
             image_slice = _img_to_rgb(image.copy(), colormap=colormap, display_min=display_min, display_max=display_max)
             image_slice_curtain = _img_to_rgb(image_curtain, colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
         else:
