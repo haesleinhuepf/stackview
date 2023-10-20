@@ -82,7 +82,7 @@ def curtain(
         continuous_update=continuous_update,
         description="Slice"
     )
-    if len(image.shape) < 3 or image.shape[-1] == 3:
+    if len(image.shape) < 3 or (len(image.shape) == 3 and image.shape[-1] == 3):
         slice_slider.layout.display = 'none'
 
     # setup user interface for changing the curtain position
@@ -104,7 +104,7 @@ def curtain(
 
     from ._image_widget import _img_to_rgb
     def transform_image():
-        if len(image.shape) < 3 or image.shape[-1] == 3:
+        if len(image.shape) < 3 or (len(image.shape) == 3 and image.shape[-1] == 3):
             image_slice = _img_to_rgb(image.copy(), colormap=colormap, display_min=display_min, display_max=display_max)
             image_slice_curtain = _img_to_rgb(image_curtain, colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
         else:
