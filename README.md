@@ -284,6 +284,7 @@ There are other libraries doing similar stuff
 * [Holoviz hvPlot](https://hvplot.holoviz.org/user_guide/Gridded_Data.html#n-d-plots)
 * [magicgui](https://github.com/napari/magicgui)
 * [ipywidgets interact](https://ipywidgets.readthedocs.io/en/latest/examples/Using%20Interact.html)
+* [ipyvolume](https://github.com/widgetti/ipyvolume/)
 
 [BSD-3]: http://opensource.org/licenses/BSD-3-Clause
 [image.sc]: https://image.sc
