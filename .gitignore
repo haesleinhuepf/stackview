@@ -141,3 +141,5 @@ cython_debug/
 .vscode/settings.json
 /.idea/
 .DS_STORE
+deploy.bat
+*Untitled*
