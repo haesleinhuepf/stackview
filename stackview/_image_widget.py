@@ -80,7 +80,7 @@ def _img_to_rgb(image,
 
     if _is_label_image(image):
         lut = _labels_lut()
-        return np.asarray([lut[:, c].take(image) for c in range(0, 3)]).swapaxes(0, 2).swapaxes(1, 0) * 255
+        return np.asarray([lut[:, c].take(image.astype(np.int64)) for c in range(0, 3)]).swapaxes(0, 2).swapaxes(1, 0) * 255
 
     if display_min is None:
         display_min = image.min()
