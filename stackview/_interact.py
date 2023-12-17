@@ -74,7 +74,7 @@ def interact(func,
     for key in sig.parameters.keys():
         exposable = False
         default_value = 0
-        if isinstance(sig.parameters[key].default, int) or isinstance(sig.parameters[key].default, float):
+        if isinstance(sig.parameters[key].default, int) or isinstance(sig.parameters[key].default, float) or isinstance(sig.parameters[key].default, str):
             default_value = sig.parameters[key].default
         min_value, max_value, step = guess_range(key, sig.parameters[key].annotation)
 
@@ -89,7 +89,11 @@ def interact(func,
         if max_value is None:
             max_value = 100
 
-        if sig.parameters[key].annotation is int:
+        if sig.parameters[key].annotation is str:
+            default_value = ipywidgets.Text(value=default_value,
+                                       continuous_update=continuous_update)
+            exposable = True
+        elif sig.parameters[key].annotation is int:
             default_value = int_slider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
             exposable = True
         elif sig.parameters[key].annotation is float or 'sigma' in key or 'radius' in key:
