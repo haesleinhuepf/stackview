@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="stackview",
-    version="0.7.3",
+    version="0.7.4",
     author="Robert Haase",
     author_email="robert.haase@tu-dresden.de",
     description="Interactive image stack viewing in jupyter notebooks",
@@ -23,4 +23,9 @@ setuptools.setup(
         "Intended Audience :: Science/Research",
         "Development Status :: 3 - Alpha",
     ],
+    entry_points={
+        'bia_bob_plugins': [
+            'stackview_plugins = stackview._bia_bob_plugins:list_bia_bob_plugins',
+        ]
+    }
 )
