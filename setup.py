@@ -23,4 +23,9 @@ setuptools.setup(
         "Intended Audience :: Science/Research",
         "Development Status :: 3 - Alpha",
     ],
+    entry_points={
+        'bia_bob_plugins': [
+            'stackview_plugins = stackview._bia_bob_plugins:list_bia_bob_plugins',
+        ]
+    }
 )
