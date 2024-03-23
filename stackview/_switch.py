@@ -131,7 +131,9 @@ def switch(images,
         buttons.append(button)
     if toggleable:
         display_function()
-    return ipywidgets.VBox([_no_resize(view), ipywidgets.HBox(buttons), slice_slider])
+    result = ipywidgets.VBox([_no_resize(view), ipywidgets.HBox(buttons), slice_slider])
+    result.update = display_function
+    return result
 
 
 def _make_button(name, layout, display_function):

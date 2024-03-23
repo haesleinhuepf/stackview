@@ -47,8 +47,16 @@ def orthogonal(
     if 'cupy.ndarray' in str(type(image)):
         image = image.get()
 
-    return ipywidgets.HBox([
+    widgets = [
         slice(image, axis=0, slider_text="Z", continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min, display_max=display_max),
         slice(image, axis=1, slider_text="Y", continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min, display_max=display_max),
         slice(image, axis=2, slider_text="X", continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min, display_max=display_max),
-    ])
+    ]
+
+    def update(event=None):
+        for widget in widgets:
+            widget.update()
+
+    result = ipywidgets.HBox(widgets)
+    result.update = update
+    return result

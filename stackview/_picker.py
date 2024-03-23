@@ -83,4 +83,6 @@ def picker(
 
     event_handler.on_dom_event(update_display)
 
-    return ipywidgets.VBox([_no_resize(view), slice_slider, label], stretch=False)
+    result = ipywidgets.VBox([_no_resize(view), slice_slider, label], stretch=False)
+    result.update = update_display
+    return result

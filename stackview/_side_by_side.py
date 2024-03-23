@@ -88,7 +88,7 @@ def side_by_side(
     from ._image_widget import _is_label_image, _img_to_rgb
 
     # event handler when the user changed something:
-    def configuration_updated(event):
+    def configuration_updated(event=None):
         if slice_slider is not None:
             z = slice_slider.value
             slice_image1 = np.take(image1, z, axis=axis)
@@ -129,9 +129,12 @@ def side_by_side(
         # connect user interface with event
         slice_slider.observe(configuration_updated)
 
-        return ipywidgets.VBox([
+        result = ipywidgets.VBox([
             ipywidgets.HBox([_no_resize(view1), _no_resize(view2), _no_resize(view3)]),
             slice_slider
         ])
     else:
-        return ipywidgets.HBox([_no_resize(view1), _no_resize(view2), _no_resize(view3)])
+        result = ipywidgets.HBox([_no_resize(view1), _no_resize(view2), _no_resize(view3)])
+
+    result.update = configuration_updated
+    return result

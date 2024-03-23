@@ -162,7 +162,6 @@ def interact(func,
         viewer.slice_slider.max = viewer.image.shape[0] - 1
         viewer.configuration_updated(None)
 
-
     worker_function.__signature__ = inspect.Signature(exposable_parameters)
     inter = ipywidgets.interactive(worker_function, dict(manual=False, auto_display=False))
 
@@ -178,7 +177,9 @@ def interact(func,
         output_widgets.append(_no_resize(viewer.view))
         output_widgets.append(viewer.slice_slider)
 
-    return ipywidgets.VBox(output_widgets)
+    result = ipywidgets.VBox(output_widgets)
+    result.update = viewer.configuration_updated
+    return result
 
 
 def guess_range(name, annotation):
