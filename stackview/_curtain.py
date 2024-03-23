@@ -116,7 +116,7 @@ def curtain(
     view = ImageWidget(transform_image(), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
 
     # event handler when the user changed something:
-    def configuration_updated(event):
+    def configuration_updated(event=None):
         view.data = transform_image()
 
     configuration_updated(None)
@@ -126,4 +126,6 @@ def curtain(
 
     # connect user interface with event
     slice_slider.observe(configuration_updated)
-    return ipywidgets.VBox([_no_resize(view), slice_slider, curtain_slider])
+    result = ipywidgets.VBox([_no_resize(view), slice_slider, curtain_slider])
+    result.update = configuration_updated
+    return result

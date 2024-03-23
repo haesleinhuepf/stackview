@@ -57,6 +57,8 @@ def crop(image,
                     display_max=display_max)
 
 
+
+
 class _Cropper(VBox):
     """
     See also
@@ -104,13 +106,9 @@ class _Cropper(VBox):
             elif len(image.shape) == 3:
                 axis_names = ["Z", "Y", "X"]
 
+        self._viewer = viewer
         view = viewer.view
         slice_slider = viewer.slice_slider
-
-        def configuration_updated(event):
-            viewer.image = image[self.range]
-            viewer.slice_slider.max = viewer.image.shape[0] - 1
-            viewer.configuration_updated(None)
 
         self._range_sliders = []
         for dim in range(len(image.shape)):
@@ -124,7 +122,7 @@ class _Cropper(VBox):
                 description=axis_names[dim],
                 continuous_update=continuous_update,
             )
-            range_slider.observe(configuration_updated)
+            range_slider.observe(self.update)
             self._range_sliders.append(range_slider)
 
         widgets = []
@@ -134,6 +132,11 @@ class _Cropper(VBox):
             widgets.append(slice_slider)
 
         super(_Cropper, self).__init__(widgets)
+
+    def update(self, event=None):
+        self._viewer.image = self._image[self.range]
+        self._viewer.slice_slider.max = self._viewer.image.shape[0] - 1
+        self._viewer.update(None)
 
     @property
     def range(self):

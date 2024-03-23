@@ -262,6 +262,11 @@ stackview.assist(context=globals(), continuous_update=True)
 
 ![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_assist.gif)
 
+## Voila
+
+If you combine stackview with [voila](https://voila.readthedocs.io/en/stable/), you can build powerful, interactive, browser-based image processing apps and demonstrators. Just build a graphical user interface in a Jupyter notebook and then start it using
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/voila.png)
 
 ## Contributing
 
