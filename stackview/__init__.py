@@ -16,5 +16,5 @@ from ._picker import picker
 from ._assist import assist
 from ._switch import switch
 from ._colormaps import create_colormap
-
+from ._imshow import imshow
 
