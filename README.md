@@ -73,7 +73,10 @@ insight(labels)
 To visualize images with more flexibility, there is `imshow`, which works similar like matplotlib's imshow and yet adds more flexibily, e.g. when it comes to colormaps. It supports `pure...` colormaps introduced in [microfilm](https://github.com/guiwitz/microfilm).
 
 ```python
+stackview.imshow(image, axes=True, colorbar=True, colormap='pure_magenta')
+```
 
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/imshow_pure_magenta.png)
 
 ... or drawing label images. 
 
