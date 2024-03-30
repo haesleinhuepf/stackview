@@ -110,7 +110,7 @@ def switch(images,
             viewer.view.display_min = None
             viewer.view.display_max = None
             viewer.image = display_image
-            viewer.configuration_updated()
+            viewer.update()
 
         display_function = partial(display_, buttons, images, colormap, display_min, display_max)
     else:
@@ -119,7 +119,7 @@ def switch(images,
             viewer.view.display_min = display_min
             viewer.view.display_max = display_max
             viewer.image = image
-            viewer.configuration_updated()
+            viewer.update()
 
     for i, name, image, colormap_, display_min_, display_max_ in zip(range(len(names)), names, images, colormap, display_min, display_max):
         if toggleable:
