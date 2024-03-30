@@ -68,6 +68,28 @@ insight(labels)
 
 ![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/labels_demo.png)
 
+### matplotlib-like imshow
+
+To visualize images with more flexibility, there is `imshow`, which works similar like matplotlib's imshow and yet adds more flexibily, e.g. when it comes to colormaps. It supports `pure...` colormaps introduced in [microfilm](https://github.com/guiwitz/microfilm).
+
+```python
+
+
+... or drawing label images. 
+
+```python
+import matplotlib.pyplot as plt
+fig, axs = plt.subplots(1, 3, figsize=(15,15))
+
+stackview.imshow(image, plot=axs[0], title='image', axes=True)
+stackview.imshow(labels, plot=axs[1], title='labels')
+
+stackview.imshow(image, plot=axs[2], continue_drawing=True)
+stackview.imshow(labels, plot=axs[2], alpha=0.4, title='image + labels')
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/imshow.png)
+
 ### Annotate regions
 
 To create label images interactively, e.g. for machine learning training, the `stackview.annotate` function offers basic label drawing tools. 
