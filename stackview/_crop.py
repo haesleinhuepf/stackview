@@ -131,6 +131,47 @@ class _Cropper(VBox):
         if len(image.shape) > 2:
             widgets.append(slice_slider)
 
+        from ipyevents import Event
+
+        event_handler_top_left = Event(source=view, watched_events=["click"])
+        event_handler_bottom_right = Event(source=view, watched_events=["auxclick"])
+
+        def update_rec_top_left(event=None):
+            relative_position_x = event["relativeX"] / zoom_factor
+            relative_position_y = event["relativeY"] / zoom_factor
+            positions = [int(relative_position_y), int(relative_position_x)]
+
+            for i in [-1, -2]:
+                cmin, cmax = self._range_sliders[i].value
+                cvalue = positions[i] + cmin  # Adjust position for current crop
+                self._range_sliders[i].value = (cvalue, cmax)
+
+            if len(self._image.shape) > 2:
+                cvalue = slice_slider.value
+                cmin, cmax = self._range_sliders[0].value
+                self._range_sliders[0].value = (cvalue, cmax)
+            self.update()
+
+        def update_rec_bottom_right(event=None):
+            relative_position_x = event["relativeX"] / zoom_factor
+            relative_position_y = event["relativeY"] / zoom_factor
+            positions = [int(relative_position_y), int(relative_position_x)]
+
+            for i in [-1, -2]:
+                cmin, cmax = self._range_sliders[i].value
+                cvalue = positions[i] + cmin  # Adjust position for current crop
+                self._range_sliders[i].value = (cmin, cvalue)
+
+            if len(self._image.shape) > 2:
+                cvalue = slice_slider.value
+                cmin, cmax = self._range_sliders[0].value
+
+                self._range_sliders[0].value = (cmin, cvalue)
+            self.update()
+
+        event_handler_top_left.on_dom_event(update_rec_top_left)
+        event_handler_bottom_right.on_dom_event(update_rec_bottom_right)
+
         super(_Cropper, self).__init__(widgets)
 
     def update(self, event=None):
