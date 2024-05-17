@@ -147,9 +147,10 @@ class _Cropper(VBox):
                 self._range_sliders[i].value = (cvalue, cmax)
 
             if len(self._image.shape) > 2:
-                cvalue = slice_slider.value
                 cmin, cmax = self._range_sliders[0].value
+                cvalue = slice_slider.value + cmin
                 self._range_sliders[0].value = (cvalue, cmax)
+                slice_slider.value = 0
             self.update()
 
         def update_rec_bottom_right(event=None):
@@ -163,10 +164,10 @@ class _Cropper(VBox):
                 self._range_sliders[i].value = (cmin, cvalue)
 
             if len(self._image.shape) > 2:
-                cvalue = slice_slider.value
                 cmin, cmax = self._range_sliders[0].value
-
+                cvalue = slice_slider.value + cmin  + 1
                 self._range_sliders[0].value = (cmin, cvalue)
+                slice_slider.value = cvalue - cmin + 1
             self.update()
 
         event_handler_top_left.on_dom_event(update_rec_top_left)
