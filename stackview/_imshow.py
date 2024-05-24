@@ -66,6 +66,9 @@ def imshow(image,
     if len(image.shape) == 3 and image.shape[-1] > 4:
         image = image.max(axis=0)
 
+    if 'cupy.ndarray' in str(type(image)):
+        image = image.get()
+
     image = np.asarray(image)
     if len(image.shape) == 1:
         image = image[np.newaxis]
