@@ -93,6 +93,23 @@ stackview.imshow(labels, plot=axs[2], alpha=0.4, title='image + labels')
 
 ![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/imshow.png)
 
+
+### Static animations
+
+The `animate` and `animate_curtain` functions can be used to store animations of image stacks / images blended over each other as gif to disk.
+
+´´´
+stackview.animate(blobs_images, filename="images/timelapse2.gif", frame_delay_ms=50)
+´´´
+
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/timelapse2.gif)
+
+```python
+stackview.animate_curtain(blobs, blobs > 128, filename="images/timelapse3.gif")
+```
+
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/timelapse3.gif)
+
 ### Annotate regions
 
 To create label images interactively, e.g. for machine learning training, the `stackview.annotate` function offers basic label drawing tools. 
