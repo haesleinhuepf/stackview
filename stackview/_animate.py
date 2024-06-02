@@ -1,5 +1,5 @@
 
-def animate(timelapse, filename:str=None, overwrite_file:bool=None, frame_delay_ms:int=150, num_loops:int=1000):
+def animate(timelapse, filename:str=None, overwrite_file:bool=True, frame_delay_ms:int=150, num_loops:int=1000, colormap=None, display_min=None, display_max=None):
     """
     Create an animated GIF from a list of 2D images and return it as Markdown object, that can be shown in Jupyter notebooks.
     RGB images are supported as well, but no 3D image stacks.
@@ -13,46 +13,53 @@ def animate(timelapse, filename:str=None, overwrite_file:bool=None, frame_delay_
     filename: str, optional
         Name of the file where the animation will be saved
     overwrite_file: bool, optional
-        Overwrite the file if it already exists. Default: True if filename is given, False otherwise
+        Overwrite the file if it already exists. Default: True
     frame_delay_ms: int, optional
         Delay between frames in milliseconds
     num_loops: int, optional
         Number of loops in the animation
-
+    colormap: str, optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ...
+    display_min: float, optional
+        Lower bound of properly shown intensities
+    display_max: float, optional
+        Upper bound of properly shown intensities
     """
     import os
     import imageio
-    from IPython.display import Markdown
+    from IPython.display import HTML
     import numpy as np
     import warnings
-
-    if overwrite_file is None:
-        overwrite_file = filename is not None
-
-    if filename is None:
-        filename = "animation.gif"
-
-    if not filename.endswith(".gif"):
-        filename += ".gif"
+    from stackview._image_widget import _img_to_rgb
+    from ._utilities import numpy_to_gif_bytestream, _gif_to_html
 
     if 0 <= timelapse.min() <= 1 and 0 <= timelapse.max() <= 1:
         warnings.warn("The timelapse has a small intensity range between 0 and 1. Consider normalizing it to the range between 0 and 255.")
     if timelapse.min() < 0 or timelapse.max() > 255:
         warnings.warn("The timelapse has an intensity range exceeding 0..255. Consider normalizing it to the range between 0 and 255.")
 
-    if not overwrite_file:
-        i = 0
-        original_filename = filename
-        while os.path.exists(filename):
-            i += 1
-            filename = original_filename.replace(".gif", f"_{i:02}.gif")
+    image_rgb = np.asarray([_img_to_rgb(i, colormap=colormap, display_min=display_min, display_max=display_max) for i in timelapse]).astype(np.uint8)
 
-    with imageio.get_writer(filename, mode='I', duration=frame_delay_ms, loop=num_loops) as writer:
-        for frame in timelapse:
-            writer.append_data(frame.astype(np.uint8))
+    if filename is not None:
+        if not filename.endswith(".gif"):
+            filename += ".gif"
+        if not overwrite_file:
+            i = 0
+            original_filename = filename
+            while os.path.exists(filename):
+                i += 1
+                filename = original_filename.replace(".gif", f"_{i:02}.gif")
 
-    return Markdown(f"![]({filename})")
+        with imageio.get_writer(filename, mode='I', duration=frame_delay_ms, loop=num_loops) as writer:
+            for frame in image_rgb:
+                writer.append_data(frame)
 
+
+    if np.prod(image_rgb.shape) > 1024 * 1024 * 10:
+        warnings.warn("The image is quite large (> 10 MByte) and might not be properly shown in the notebook when rendered over the internet. Consider subsampling or cropping the image for visualization purposes.")
+
+    bytestream = numpy_to_gif_bytestream(image_rgb)
+    return HTML(_gif_to_html(bytestream))
 
 def animate_curtain(timelapse, timelapse_curtain, colormap=None, display_min=None, display_max=None,
                     axis: int = 0,

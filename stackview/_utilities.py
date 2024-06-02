@@ -75,3 +75,32 @@ logo = np.asarray([
         [3,3,3,3,3,3,3,3,3,3,3],
     ]).astype(np.uint32)
 
+
+def numpy_to_gif_bytestream(timelapse, frame_delay_ms=100, num_loops=1000):
+    """Turn a NumPy array into a bytestream"""
+    import numpy as np
+    import imageio
+    import io
+
+    # Convert the NumPy array to a PIL Image
+    # image = Image.fromarray(data.astype(np.uint8)).convert("RGBA")
+
+    # Create a BytesIO object
+    bytes_io = io.BytesIO()
+
+    # Save the PIL image to the BytesIO object as a PNG
+    # image.save(bytes_io, format='GIF')
+
+    with imageio.get_writer(bytes_io, mode='I', duration=frame_delay_ms, loop=num_loops, format="GIF") as writer:
+        for frame in timelapse:
+            writer.append_data(frame.astype(np.uint8))
+
+    # return the beginning of the file as a bytestream
+    bytes_io.seek(0)
+    return bytes_io.read()
+
+
+def _gif_to_html(gif):
+    import base64
+    url = 'data:image/gif;base64,' + base64.b64encode(gif).decode('utf-8')
+    return f'<img src="{url}"></img>'
