@@ -1,4 +1,4 @@
-__version__ = "0.7.7"
+__version__ = "0.7.8"
 
 from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
@@ -17,4 +17,5 @@ from ._assist import assist
 from ._switch import switch
 from ._colormaps import create_colormap
 from ._imshow import imshow
+from ._animate import animate
 
