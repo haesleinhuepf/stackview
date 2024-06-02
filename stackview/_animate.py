@@ -102,7 +102,7 @@ def animate_curtain(timelapse, timelapse_curtain, colormap=None, display_min=Non
     import numpy as np
     from ._image_widget import _img_to_rgb
 
-    max_size = timelapse.shape[axis]
+    max_size = timelapse.shape[1]
 
     images = []
     steps = list(range(0, max_size + 1, int(max_size / num_steps * 2)))
