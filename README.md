@@ -142,7 +142,7 @@ To adjust the minimum and maximum intensity shown when displaying an image, use 
 stackview.display_range(image)
 ```
 
-![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/display_range.gif)
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_display_range.gif)
 
 
 ### Orthogonal view
