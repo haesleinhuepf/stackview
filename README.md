@@ -135,6 +135,16 @@ stackview.picker(image)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_picker.gif)
 
+### Display range
+
+To adjust the minimum and maximum intensity shown when displaying an image, use the `display_range` function.
+```python
+stackview.display_range(image)
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/display_range.gif)
+
+
 ### Orthogonal view
 
 Orthogonal views are also available:
