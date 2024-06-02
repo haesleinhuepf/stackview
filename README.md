@@ -98,14 +98,14 @@ stackview.imshow(labels, plot=axs[2], alpha=0.4, title='image + labels')
 
 The `animate` and `animate_curtain` functions can be used to store animations of image stacks / images blended over each other as gif to disk.
 
-´´´
-stackview.animate(blobs_images, filename="images/timelapse2.gif", frame_delay_ms=50)
-´´´
+```python
+stackview.animate(blobs_images, frame_delay_ms=50)
+```
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/timelapse2.gif)
 
 ```python
-stackview.animate_curtain(blobs, blobs > 128, filename="images/timelapse3.gif")
+stackview.animate_curtain(blobs, blobs > 128)
 ```
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/timelapse3.gif)
@@ -131,7 +131,7 @@ Note: In case the interface is slow, consider using smaller images, e.g. by crop
 
 To read the intensity of pixels where the mouse is moving, use the picker.
 ```python
-stackview.picker(image, continuous_update=True)
+stackview.picker(image)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_picker.gif)
 
@@ -139,7 +139,7 @@ stackview.picker(image, continuous_update=True)
 
 Orthogonal views are also available:
 ```python
-stackview.orthogonal(image, continuous_update=True)
+stackview.orthogonal(image)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_orthogonal.gif)
 
@@ -147,7 +147,7 @@ stackview.orthogonal(image, continuous_update=True)
 
 Furthermore, to visualize an original image in combination with a processed version, a curtain view may be helpful:
 ```python
-stackview.curtain(image, modified_image * 65537, continuous_update=True)
+stackview.curtain(image, modified_image * 65537)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain.gif)
 
@@ -156,7 +156,7 @@ Btw. to visualize both images properly, you need adjust their grey value range y
 For example, multiply a binary image with 255 so that it visualizes nicely side-by-side with the original image in 8-bit range:
 ```python
 binary = (slice_image > threshold_otsu(slice_image)) * 255
-stackview.curtain(slice_image, binary, continuous_update=True)
+stackview.curtain(slice_image, binary)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain2.gif)
 
@@ -164,7 +164,7 @@ The same also works with label images
 ```python
 from skimage.measure import label
 labels = label(binary)
-stackview.curtain(slice_image, labels, continuous_update=True)
+stackview.curtain(slice_image, labels)
 ```
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain3.gif)
@@ -174,7 +174,7 @@ stackview.curtain(slice_image, labels, continuous_update=True)
 A side-by-side view for colocalization visualization is also available.
 If you're working with time-lapse data, you can also use this view for visualizing differences between timepoints:
 ```python
-stackview.side_by_side(image_stack[1:], image_stack[:-1], continuous_update=True, display_width=300)
+stackview.side_by_side(image_stack[1:], image_stack[:-1])
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_side_by_side.gif)
 
@@ -217,7 +217,7 @@ stackview.switch(
 
 You can crop images interactively:
 ```python
-crop_widget = stackview.crop(image_stack, continuous_update=True)
+crop_widget = stackview.crop(image_stack)
 crop_widget
 ```
 
@@ -275,7 +275,7 @@ If you want to use a pulldown for selecting input image(s), you need to pass a d
 image1 = imread("data/Haase_MRT_tfl3d1.tif")
 image2 = image1[:,:,::-1]
 
-stackview.interact(gaussian, context=globals(), continuous_update=True)
+stackview.interact(gaussian, context=globals())
 ```
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_interact4.gif)
@@ -296,10 +296,10 @@ my_gaussian(image[60], 2)
 
 The `stackview.assist()` function can guide you through all imported (and supported) image processing functions.
 Note: The interface may be slow or crash if you have many functions imported. Consider using it in an empty notebook 
-with only functions or library imported that might be relevant for the taks.
+with only functions or library imported that might be relevant for the tasks.
 
 ```python
-stackview.assist(context=globals(), continuous_update=True)
+stackview.assist(context=globals())
 ```
 
 ![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_assist.gif)
