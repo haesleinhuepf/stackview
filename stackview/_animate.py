@@ -1,5 +1,5 @@
 
-def animate(timelapse, filename:str=None, overwrite_file:bool=True, frame_delay_ms:int=150, num_loops:int=1000, colormap=None, display_min=None, display_max=None):
+def animate(timelapse, filename:str=None, overwrite_file:bool=True, frame_delay_ms:int=150, num_loops:int=1000, colormap=None, display_min=None, display_max=None, zoom_factor:float=1.0):
     """
     Create an animated GIF from a list of 2D images and return it as Markdown object, that can be shown in Jupyter notebooks.
     RGB images are supported as well, but no 3D image stacks.
@@ -18,6 +18,8 @@ def animate(timelapse, filename:str=None, overwrite_file:bool=True, frame_delay_
         Delay between frames in milliseconds
     num_loops: int, optional
         Number of loops in the animation
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
     colormap: str, optional
         Matplotlib colormap name or "pure_green", "pure_magenta", ...
     display_min: float, optional
@@ -59,12 +61,14 @@ def animate(timelapse, filename:str=None, overwrite_file:bool=True, frame_delay_
         warnings.warn("The image is quite large (> 10 MByte) and might not be properly shown in the notebook when rendered over the internet. Consider subsampling or cropping the image for visualization purposes.")
 
     bytestream = numpy_to_gif_bytestream(image_rgb, frame_delay_ms=frame_delay_ms, num_loops=num_loops)
-    return HTML(_gif_to_html(bytestream))
+    return HTML(_gif_to_html(bytestream, width=int(image_rgb.shape[-2] * zoom_factor)))
 
-def animate_curtain(timelapse, timelapse_curtain, colormap=None, display_min=None, display_max=None,
+def animate_curtain(timelapse, timelapse_curtain,
                     axis: int = 0,
                     alpha: float = 1,
                     num_steps:int = 20,
+                    zoom_factor: float = 1,
+                    colormap=None, display_min=None, display_max=None,
                     curtain_colormap:str = None,
                     curtain_display_min:float = None,
                     curtain_display_max:float = None,
@@ -78,18 +82,20 @@ def animate_curtain(timelapse, timelapse_curtain, colormap=None, display_min=Non
         2D image or 3D image stack
     timelapse_curtain: np.ndarray
         2D image or 3D image stack
-    colormap: str, optional
-        Matplotlib colormap name or "pure_green", "pure_magenta", ...
-    display_min: float, optional
-        Lower bound of properly shown intensities
-    display_max: float, optional
-        Upper bound of properly shown intensities
     axis: int, optional
         Axis in case we are slicing a stack
     alpha: float, optional
         sets the transparency of the curtain
     num_steps: int, optional
         number of steps in the animation, half of them the curtain will go left-right, the other half right-left
+    zoom_factor: float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    colormap: str, optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ...
+    display_min: float, optional
+        Lower bound of properly shown intensities
+    display_max: float, optional
+        Upper bound of properly shown intensities
     curtain_colormap: str, optional
         Matplotlib colormap name or "pure_green", "pure_magenta", ...
     curtain_display_min: float, optional
@@ -131,4 +137,4 @@ def animate_curtain(timelapse, timelapse_curtain, colormap=None, display_min=Non
 
         images.append(image_slice)
 
-    return animate(np.asarray(images), filename=filename, overwrite_file=overwrite_file, frame_delay_ms=frame_delay_ms, num_loops=num_loops)
+    return animate(np.asarray(images), filename=filename, overwrite_file=overwrite_file, frame_delay_ms=frame_delay_ms, num_loops=num_loops, zoom_factor=zoom_factor)

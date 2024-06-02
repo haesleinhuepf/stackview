@@ -100,7 +100,12 @@ def numpy_to_gif_bytestream(timelapse, frame_delay_ms=100, num_loops=1000):
     return bytes_io.read()
 
 
-def _gif_to_html(gif):
+def _gif_to_html(gif, width=None):
     import base64
+
+    style = ""
+    if width is not None:
+        style = f"style=\"width: {width}px;\""
+
     url = 'data:image/gif;base64,' + base64.b64encode(gif).decode('utf-8')
-    return f'<img src="{url}"></img>'
+    return f'<img src="{url}" {style}></img>'
