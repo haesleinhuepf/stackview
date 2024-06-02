@@ -58,7 +58,7 @@ def animate(timelapse, filename:str=None, overwrite_file:bool=True, frame_delay_
     if np.prod(image_rgb.shape) > 1024 * 1024 * 10:
         warnings.warn("The image is quite large (> 10 MByte) and might not be properly shown in the notebook when rendered over the internet. Consider subsampling or cropping the image for visualization purposes.")
 
-    bytestream = numpy_to_gif_bytestream(image_rgb)
+    bytestream = numpy_to_gif_bytestream(image_rgb, frame_delay_ms=frame_delay_ms, num_loops=num_loops)
     return HTML(_gif_to_html(bytestream))
 
 def animate_curtain(timelapse, timelapse_curtain, colormap=None, display_min=None, display_max=None,
