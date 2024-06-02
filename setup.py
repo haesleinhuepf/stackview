@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="stackview",
-    version="0.7.8",
+    version="0.7.9",
     author="Robert Haase",
     author_email="robert.haase@uni-leipzig.de",
     description="Interactive image stack viewing in jupyter notebooks",
