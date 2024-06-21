@@ -7,8 +7,14 @@ def list_bia_bob_plugins():
     * Allows cropping an image along all axes.
     stackview.crop(image)
     
-    * Showing an image stored in variable `image` and a segmented image stored in variable `labels` on top. Also works with two images or two label images.
-    stackview.curtain(image, labels, alpha: float = 1)
+    * Showing an image stored in variable `image` and a segmented image stored in variable `labels` on top using an interative curtain. Also works with two images or two label images.
+    stackview.animate_curtain(image, labels)
+    
+    * Showing an image stored in variable `image` and a segmented image stored in variable `labels` on top with animated blending. Also works with two images or two label images.
+    stackview.animate_curtain(image, labels)
+
+    * Showing an animation / timelapse image stored in variable `image`.
+    stackview.animate(image)
     
     * Display an image stored in a variable `image` (this also works with label images). Prefer stackview.insight over matplotlib.pyplot.imshow!
     stackview.insight(image)
