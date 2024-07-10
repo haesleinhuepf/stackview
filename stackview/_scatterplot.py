@@ -34,6 +34,8 @@ def scatterplot(df, x: str = "x", y: str = "y", selection: str = "selection", fi
         [sp.widget]
     ])
 
+    result.scatterplot = sp
+
     return result
 
 
@@ -140,9 +142,14 @@ class Selector:
         self.callback(selection)
 
     def set_selection(self, selection):
+        from ._colormaps import _labels_lut
         self.ind = np.nonzero(selection)
-        self.fc[:, -1] = self.alpha_other
-        self.fc[self.ind, -1] = 1
+        labels_lut = _labels_lut()
+
+        for i in range(3):
+            self.fc[:, i] = labels_lut[1,i]
+            self.fc[self.ind, i] = labels_lut[2,i]
+
         self.collection.set_facecolors(self.fc)
         self.update()
 
