@@ -1,6 +1,6 @@
 import numpy as np
 
-def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: str = "selection", figsize=(5, 5), selection_changed_callback=None):
+def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: str = "selection", figsize=(4, 4), selection_changed_callback=None):
     """
     Create a scatterplot of a pandas dataframe while interactively choosing the columns and using a lasso tool for selecting data points
 

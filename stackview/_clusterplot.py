@@ -1,5 +1,5 @@
 def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection:str="selection", image=None,
-                     zoom_factor:float=1, zoom_spline_order:int=0, figsize=(5, 5)):
+                     zoom_factor:float=1, zoom_spline_order:int=0, figsize=(4, 4), alpha:float=0.5):
     """
     Visualizes a scatter plot of columns in a given dataframe next to a segmented image.
 
@@ -12,11 +12,11 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
         The dataframe to plot
     labels: np.ndarray
         The labels to overlay
-    column_x: str
+    column_x: str, optional
         The column to use for the x-axis
-    column_y: str
+    column_y: str, optional
         The column to use for the y-axis
-    column_selection: str
+    column_selection: str, optional
         The column to use for the selection
     image: np.ndarray, optional
         The image to overlay
@@ -24,8 +24,10 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
         Allows showing the image larger (> 1) or smaller (<1)
     zoom_spline_order: int, optional
         Spline order used for interpolation (default=0, nearest-neighbor)
-    figsize: tuple
+    figsize: tuple, optional
         The size of the scatter plot figure
+    alpha: float, optional
+        sets the transparency of the curtain
 
     Returns
     -------
@@ -46,9 +48,9 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
         selected_image = ((labels > 0) * 1).astype(np.uint32)
 
     if image is None:
-        image_display = slice(labels)
+        image_display = slice(selected_image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
     else:
-        image_display = curtain(image, selected_image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+        image_display = curtain(image, selected_image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, alpha=alpha)
 
     def update(selection, label_image, selected_image, widget):
 
