@@ -252,6 +252,31 @@ Output:
 (40, 40, 40)
 ```
 
+### scatterplot and clusterplot
+
+Using `stackview.scatterplot()` you can create interactive plots for pandas DataFrames.
+
+```python
+stackview.scatterplot(df, 'area', 'feret_diameter_max', "selection", figsize=(5,4))
+```
+
+If you want to visualize such a DataFrame side-by-side with the label image its measurements belong to, you can use the 
+`clusterplot`:
+
+```python
+stackview.clusterplot(image=image,
+                     labels=labeled_image,
+                     df=df,
+                     column_x="area",
+                     column_y="aspect_ratio", 
+                     zoom_factor=1.6,
+                     alpha=0.7)
+``` 
+
+This functionality is inspired from the [napari-clusters-plotter](https://github.com/BiAPoL/napari-clusters-plotter).
+
+![clusterplot.gif](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/clusterplot.gif)
+
 ### Interact
 
 Exploration of the parameter space of image processing functions is available using `interact`:

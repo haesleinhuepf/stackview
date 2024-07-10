@@ -37,4 +37,6 @@ def list_bia_bob_plugins():
     * Allows switching between multiple images and displaying them with a slider.
     stackview.switch(images:list)
     
+    * Allows plotting a scatterplot of a pandas dataframe while interactively choosing the columns and using a lasso tool for selecting data points
+    stackview.scatterplot(dataframe, x_column, y_column, selection_column)
     """
