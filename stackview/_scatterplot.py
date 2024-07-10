@@ -1,9 +1,40 @@
 import numpy as np
 
 def scatterplot(df, x: str = "x", y: str = "y", selection: str = "selection", figsize=(5, 5), selection_changed_callback=None):
+
+    from ._grid import grid
+
     sp = ScatterPlot(df, x, y, selection, figsize, selection_changed_callback=selection_changed_callback)
     sp.widget.scatterplot = sp
-    return sp.widget
+
+    import ipywidgets
+    x_pulldown = ipywidgets.Dropdown(
+        options=list(df.columns),
+        value=x,
+        description="X"
+    )
+    y_pulldown = ipywidgets.Dropdown(
+        options=list(df.columns),
+        value=y,
+        description="Y"
+    )
+
+    def on_change(event):
+
+        if event['type'] == 'change' and event['name'] == 'value':
+            sp.set_data(df, x_pulldown.value, y_pulldown.value)
+            sp.update()
+
+    x_pulldown.observe(on_change)
+    y_pulldown.observe(on_change)
+
+    result = grid([
+        [x_pulldown],
+        [y_pulldown],
+        [sp.widget]
+    ])
+
+    return result
 
 
 class ScatterPlot():
@@ -73,6 +104,9 @@ class ScatterPlot():
         self.ax.set_xlabel(self.x)
         self.ax.set_ylabel(self.y)
         self.selector = Selector(self.fig, self.ax, self.pts, callback=self.set_selection)
+        if self.selection_column in self.dataframe.columns:
+            self.selector.set_selection(self.dataframe[self.selection_column])
+
         self.selector.update()
 
 
