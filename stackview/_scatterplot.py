@@ -1,68 +1,103 @@
 import numpy as np
 
-def scatterplot(df, x: str = "x", y: str = "y", selection: str = "selection", figsize=(5, 5), selection_changed_callback=None):
+def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: str = "selection", figsize=(5, 5), selection_changed_callback=None):
+    """
+    Create a scatterplot of a pandas dataframe while interactively choosing the columns and using a lasso tool for selecting data points
+
+    Parameters
+    ----------
+    df: pandas.DataFrame
+        The dataframe to plot
+    column_x: str
+        The column to use for the x-axis
+    column_y: str
+        The column to use for the y-axis
+    column_selection: str
+        The column to use for the selection
+    figsize: tuple
+        The size of the figure
+    selection_changed_callback: function
+        The function to call when the selection changes
+
+    Returns
+    -------
+    An ipywidgets widget
+    """
 
     from ipywidgets import VBox, HBox
 
-    sp = ScatterPlot(df, x, y, selection, figsize, selection_changed_callback=selection_changed_callback)
+    plotter = ScatterPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback=selection_changed_callback)
 
     import ipywidgets
     x_pulldown = ipywidgets.Dropdown(
         options=list(df.columns),
-        value=x,
+        value=column_x,
         description="X"
     )
     y_pulldown = ipywidgets.Dropdown(
         options=list(df.columns),
-        value=y,
+        value=column_y,
         description="Y"
     )
 
     def on_change(event):
-
+        """Executed when the user changes the pulldown selection."""
         if event['type'] == 'change' and event['name'] == 'value':
-            sp.set_data(df, x_pulldown.value, y_pulldown.value)
-            sp.update()
+            plotter.set_data(df, x_pulldown.value, y_pulldown.value)
+            plotter.update()
 
     x_pulldown.observe(on_change)
     y_pulldown.observe(on_change)
 
     result = VBox([
         HBox([x_pulldown, y_pulldown]),
-        sp.widget
+        plotter.widget
     ])
 
     return result
 
 
-class ScatterPlot():
-    def __init__(self, df, x, y, selection, figsize, selection_changed_callback):
+class ScatterPlotter():
+    def __init__(self, df, column_x, column_y, column_selection, figsize, selection_changed_callback):
+        """
+        An interactive scatter plotter for pandas dataframes.
+        Use `.widget` on this object to get access to the graphical user interface.
+
+        Parameters
+        ----------
+        df: pandas.DataFrame
+            The dataframe to plot
+        column_x: str
+            The column to use for the x-axis
+        column_y: str
+            The column to use for the y-axis
+        column_selection: str
+            The column to use for the selection
+        figsize: tuple
+            The size of the figure
+        selection_changed_callback: function
+            The function to call when the selection changes
+        """
         import matplotlib.pyplot as plt
         from matplotlib._pylab_helpers import Gcf
-
-        # print("A")
-
         from IPython import get_ipython
+
+        # switch to interactive mode if we are in a Jupyter notebook
         ipython = get_ipython()
         if ipython is not None:
             ipython.run_line_magic("matplotlib", "ipympl")
-
-        import ipywidgets as widgets
-        import numpy as np
-
-        self.set_data(df, x, y)
-        self.selection_column = selection
-        self.selection_changed_callback = selection_changed_callback
-        # np.random.random((2, 100))
-
-        # print("B")
-        # ensure we are interactive mode
         plt.ion()
 
+        # store variables
+        self.set_data(df, column_x, column_y)
+        self.selection_column = column_selection
+        self.selection_changed_callback = selection_changed_callback
+
+        # create figure
         self.fig = plt.figure(figsize=figsize)
         self.fig.tight_layout()
-        self.ax = self.fig.gca()
-
+        self.ax = None
+        self.plotted_points = None
         self.update()
 
         self.fig.canvas.toolbar_visible = False
@@ -74,20 +109,22 @@ class ScatterPlot():
         manager = Gcf.get_active()
         Gcf.figs.pop(manager.num, None)
 
-        self.selector = Selector(self.fig, self.ax, self.pts, callback=self.set_selection)
+        self.selector = Selector(self.fig, self.ax, self.plotted_points, callback=self.set_selection)
 
-        if selection in df.columns:
-            self.selector.set_selection(df[selection])
+        # show selection if defined
+        if column_selection in df.columns:
+            self.selector.set_selection(df[column_selection])
+            self.update()
 
         self.widget = self.fig.canvas
 
-        self.update()
 
-    def set_data(self, df, x, y):
+
+    def set_data(self, df, column_x, column_y):
         self.dataframe = df
-        self.x = x
-        self.y = y
-        self.data = np.asarray((df[x], df[y]))
+        self.column_x = column_x
+        self.column_y = column_y
+        self.data = np.asarray((df[column_x], df[column_y]))
 
     def set_selection(self, selection):
         self.dataframe[self.selection_column] = selection
@@ -98,10 +135,10 @@ class ScatterPlot():
     def update(self):
         self.fig.clf()
         self.ax = self.fig.gca()
-        self.pts = self.ax.scatter(self.data[0], self.data[1])
-        self.ax.set_xlabel(self.x)
-        self.ax.set_ylabel(self.y)
-        self.selector = Selector(self.fig, self.ax, self.pts, callback=self.set_selection)
+        self.plotted_points = self.ax.scatter(self.data[0], self.data[1])
+        self.ax.set_xlabel(self.column_x)
+        self.ax.set_ylabel(self.column_y)
+        self.selector = Selector(self.fig, self.ax, self.plotted_points, callback=self.set_selection)
         if self.selection_column in self.dataframe.columns:
             self.selector.set_selection(self.dataframe[self.selection_column])
 
@@ -115,38 +152,36 @@ class Selector:
         self.parent = parent
         self.ax = ax
         self.canvas = ax.figure.canvas
-        self.xys = collection.get_offsets()
-        self.Npts = len(self.xys)
+        self.offsets = collection.get_offsets()
+        self.num_points = len(self.offsets)
         self.collection = collection
 
-        self.lasso = LassoSelector(ax, onselect=self.onselect)
-        self.ind = []
-        self.ind_mask = []
+        self.lasso = LassoSelector(ax, onselect=self.on_select)
+        self.selected_indices = []
         self.callback = callback
 
-        self.alpha_other = 0.3
-        self.fc = collection.get_facecolors()
-        if len(self.fc) == 0:
-            raise ValueError('Collection must have a facecolor')
-        elif len(self.fc) == 1:
-            self.fc = np.tile(self.fc, (self.Npts, 1))
+        self.face_colors = collection.get_facecolors()
+        if len(self.face_colors) == 0:
+            raise ValueError('Collection must have a face color')
+        elif len(self.face_colors) == 1:
+            self.face_colors = np.tile(self.face_colors, (self.num_points, 1))
 
-    def onselect(self, verts):
+    def on_select(self, verts):
         from matplotlib.path import Path
-        self.path = Path(verts)
-        selection = self.path.contains_points(self.xys)
+        path = Path(verts)
+        selection = path.contains_points(self.offsets)
         self.callback(selection)
 
     def set_selection(self, selection):
         from ._colormaps import _labels_lut
-        self.ind = np.nonzero(selection)
+        self.selected_indices = np.nonzero(selection)
         labels_lut = _labels_lut()
 
         for i in range(3):
-            self.fc[:, i] = labels_lut[1,i]
-            self.fc[self.ind, i] = labels_lut[2,i]
+            self.face_colors[:, i] = labels_lut[1,i]
+            self.face_colors[self.selected_indices, i] = labels_lut[2,i]
 
-        self.collection.set_facecolors(self.fc)
+        self.collection.set_facecolors(self.face_colors)
         self.update()
 
     def update(self):
