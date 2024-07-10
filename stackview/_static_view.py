@@ -234,6 +234,7 @@ def _imshow(image, title: str = None, labels: bool = False, min_display_intensit
 
     if plot is None:
         import matplotlib.pyplot as plt
+        plt.clf()
         plt.imshow(image, cmap=cmap, vmin=min_display_intensity, vmax=max_display_intensity,
                    interpolation='nearest', alpha=alpha)
         if colorbar:
