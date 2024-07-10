@@ -15,7 +15,7 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
     column_selection: str
         The column to use for the selection
     figsize: tuple
-        The size of the figure
+        The size of the scatter plot figure
     selection_changed_callback: function
         The function to call when the selection changes
 
@@ -24,20 +24,22 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
     An ipywidgets widget
     """
 
-    from ipywidgets import VBox, HBox
+    from ipywidgets import VBox, HBox, Layout
+    from ._utilities import _no_resize
 
     plotter = ScatterPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback=selection_changed_callback)
+    small_layout = Layout(width='auto', padding='0px', margin='0px', align_items='center', justify_content='center')
 
     import ipywidgets
     x_pulldown = ipywidgets.Dropdown(
         options=list(df.columns),
         value=column_x,
-        description="X"
+        layout=small_layout
     )
     y_pulldown = ipywidgets.Dropdown(
         options=list(df.columns),
         value=column_y,
-        description="Y"
+        layout=small_layout
     )
 
     def on_change(event):
@@ -49,10 +51,10 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
     x_pulldown.observe(on_change)
     y_pulldown.observe(on_change)
 
-    result = VBox([
-        HBox([x_pulldown, y_pulldown]),
+    result = _no_resize(VBox([
+        HBox([ipywidgets.Label("Axes "), x_pulldown, y_pulldown], layout=small_layout),
         plotter.widget
-    ])
+    ]))
 
     return result
 
@@ -95,7 +97,9 @@ class ScatterPlotter():
 
         # create figure
         self.fig = plt.figure(figsize=figsize)
-        self.fig.tight_layout()
+        self.fig.tight_layout(pad=0, h_pad=0, w_pad=0)
+        plt.subplots_adjust(left=0.15, right=1, top=1, bottom=0.1)
+
         self.ax = None
         self.plotted_points = None
         self.update()

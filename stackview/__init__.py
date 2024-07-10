@@ -1,4 +1,4 @@
-__version__ = "0.7.10"
+__version__ = "0.7.11"
 
 from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
@@ -21,6 +21,7 @@ from ._animate import animate, animate_curtain
 from ._display_range import display_range
 from ._scatterplot import scatterplot
 from ._grid import grid
+from ._clusterplot import clusterplot
 
 
 
