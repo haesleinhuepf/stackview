@@ -254,7 +254,7 @@ Output:
 
 ### scatterplot and clusterplot
 
-Using `stackview.scatterplot()` you can create interactive plots for pandas DataFrames.
+Using `stackview.scatterplot()` you can create interactive plots for pandas DataFrames ([full example](https://github.com/haesleinhuepf/stackview/blob/main/docs/scatterplot.ipynb)).
 
 ```python
 stackview.scatterplot(df, 'area', 'feret_diameter_max', "selection", figsize=(5,4))
