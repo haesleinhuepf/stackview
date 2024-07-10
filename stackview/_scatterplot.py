@@ -2,10 +2,9 @@ import numpy as np
 
 def scatterplot(df, x: str = "x", y: str = "y", selection: str = "selection", figsize=(5, 5), selection_changed_callback=None):
 
-    from ._grid import grid
+    from ipywidgets import VBox, HBox
 
     sp = ScatterPlot(df, x, y, selection, figsize, selection_changed_callback=selection_changed_callback)
-    sp.widget.scatterplot = sp
 
     import ipywidgets
     x_pulldown = ipywidgets.Dropdown(
@@ -28,13 +27,10 @@ def scatterplot(df, x: str = "x", y: str = "y", selection: str = "selection", fi
     x_pulldown.observe(on_change)
     y_pulldown.observe(on_change)
 
-    result = grid([
-        [x_pulldown],
-        [y_pulldown],
-        [sp.widget]
+    result = VBox([
+        HBox([x_pulldown, y_pulldown]),
+        sp.widget
     ])
-
-    result.scatterplot = sp
 
     return result
 
