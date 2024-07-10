@@ -21,7 +21,6 @@ class ScatterPlot():
         import ipywidgets as widgets
         import numpy as np
 
-        self.dataframe = df
         self.set_data(df, x, y)
         self.selection_column = selection
         self.selection_changed_callback = selection_changed_callback
@@ -31,42 +30,50 @@ class ScatterPlot():
         # ensure we are interactive mode
         plt.ion()
 
-        fig = plt.figure(figsize=figsize)
-        fig.tight_layout()
-        ax = fig.gca()
-        pts = ax.scatter(self.data[0], self.data[1])
-        ax.set_xlabel(x)
-        ax.set_ylabel(y)
+        self.fig = plt.figure(figsize=figsize)
+        self.fig.tight_layout()
+        self.ax = self.fig.gca()
 
-        fig.canvas.toolbar_visible = False
-        fig.canvas.header_visible = False
-        fig.canvas.footer_visible = False
-        fig.canvas.resizable = False
+        self.update()
+
+        self.fig.canvas.toolbar_visible = False
+        self.fig.canvas.header_visible = False
+        self.fig.canvas.footer_visible = False
+        self.fig.canvas.resizable = False
 
         # prevent immediate display of the canvas
         manager = Gcf.get_active()
         Gcf.figs.pop(manager.num, None)
 
-        self.selector = Selector(fig, ax, pts, callback=self.set_selection)
+        self.selector = Selector(self.fig, self.ax, self.pts, callback=self.set_selection)
 
         if selection in df.columns:
             self.selector.set_selection(df[selection])
 
-        self.widget = fig.canvas
+        self.widget = self.fig.canvas
+
+        self.update()
 
     def set_data(self, df, x, y):
+        self.dataframe = df
+        self.x = x
+        self.y = y
         self.data = np.asarray((df[x], df[y]))
 
     def set_selection(self, selection):
         self.dataframe[self.selection_column] = selection
         self.selector.set_selection(selection)
-        self.hello = "sending callback"
         if self.selection_changed_callback is not None:
             self.selection_changed_callback(selection)
-            self.hello = "callback sent"
 
-    def update_display(self):
-        self.selector.update_display()
+    def update(self):
+        self.fig.clf()
+        self.ax = self.fig.gca()
+        self.pts = self.ax.scatter(self.data[0], self.data[1])
+        self.ax.set_xlabel(self.x)
+        self.ax.set_ylabel(self.y)
+        self.selector = Selector(self.fig, self.ax, self.pts, callback=self.set_selection)
+        self.selector.update()
 
 
 # modified from https://matplotlib.org/3.1.1/gallery/widgets/lasso_selector_demo_sgskip.html
@@ -103,9 +110,9 @@ class Selector:
         self.fc[:, -1] = self.alpha_other
         self.fc[self.ind, -1] = 1
         self.collection.set_facecolors(self.fc)
-        self.update_display()
+        self.update()
 
-    def update_display(self):
+    def update(self):
         self.canvas.draw_idle()
 
     def disconnect(self):
