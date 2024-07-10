@@ -49,6 +49,9 @@ class ScatterPlot():
 
         self.selector = Selector(fig, ax, pts, callback=self.set_selection)
 
+        if selection in df.columns:
+            self.selector.set_selection(df[selection])
+
         self.widget = fig.canvas
 
     def set_data(self, df, x, y):
