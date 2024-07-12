@@ -1,4 +1,4 @@
-__version__ = "0.7.11"
+__version__ = "0.8.0"
 
 from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
@@ -13,7 +13,6 @@ from ._curtain import curtain
 from ._orthogonal import orthogonal
 from ._side_by_side import side_by_side
 from ._picker import picker
-from ._assist import assist
 from ._switch import switch
 from ._colormaps import create_colormap
 from ._imshow import imshow
