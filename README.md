@@ -1,4 +1,12 @@
 # stackview 🧊👀
+[![PyPI](https://img.shields.io/pypi/v/stackview.svg?color=green)](https://pypi.org/project/stackview)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/stackview/badges/version.svg)](https://anaconda.org/conda-forge/stackview)
+[![Contributors](https://img.shields.io/github/contributors-anon/haesleinhuepf/stackview)](https://github.com/haesleinhuepf/stackview/graphs/contributors)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/stackview)](https://pypistats.org/packages/stackview)
+[![GitHub stars](https://img.shields.io/github/stars/haesleinhuepf/stackview?style=social)](https://github.com/haesleinhuepf/stackview/)
+[![GitHub forks](https://img.shields.io/github/forks/haesleinhuepf/stackview?style=social)](https://github.com/haesleinhuepf/stackview/)
+[![License](https://img.shields.io/pypi/l/stackview.svg?color=green)](https://github.com/haesleinhuepf/stackview/raw/main/LICENSE)
+
 Interactive image stack viewing in jupyter notebooks based on 
 [ipycanvas](https://ipycanvas.readthedocs.io/) and 
 [ipywidgets](https://ipywidgets.readthedocs.io/en/latest/). 
