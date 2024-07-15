@@ -335,18 +335,6 @@ my_gaussian(image[60], 2)
 
 ![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/jupyter_displayable_output.png)
 
-### Assist
-
-The `stackview.assist()` function can guide you through all imported (and supported) image processing functions.
-Note: The interface may be slow or crash if you have many functions imported. Consider using it in an empty notebook 
-with only functions or library imported that might be relevant for the tasks.
-
-```python
-stackview.assist(context=globals())
-```
-
-![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_assist.gif)
-
 ## Voila
 
 If you combine stackview with [voila](https://voila.readthedocs.io/en/stable/), you can build powerful, interactive, browser-based image processing apps and demonstrators. Just build a graphical user interface in a Jupyter notebook and then start it using
