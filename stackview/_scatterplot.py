@@ -102,7 +102,7 @@ class ScatterPlotter():
 
         # create figure
         self.fig = plt.figure(figsize=figsize)
-        self.fig.tight_layout(pad=0, h_pad=0, w_pad=0)
+        #self.fig.tight_layout(pad=0, h_pad=0, w_pad=0)
         plt.subplots_adjust(left=0.15, right=1, top=1, bottom=0.1)
 
         self.ax = None
@@ -165,7 +165,7 @@ class Selector:
         self.num_points = len(self.offsets)
         self.collection = collection
 
-        self.lasso = LassoSelector(ax, onselect=self.on_select)
+        self.lasso = LassoSelector(ax, onselect=self.on_select, props=dict(color='magenta'))
         self.selected_indices = []
         self.callback = callback
 
