@@ -28,7 +28,9 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
         The size of the scatter plot figure
     alpha: float, optional
         sets the transparency of the curtain
-
+    markersize: int
+        The size of the markers
+        
     Returns
     -------
     An ipywidgets widget

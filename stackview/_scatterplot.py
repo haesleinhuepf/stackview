@@ -18,6 +18,8 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
         The size of the scatter plot figure
     selection_changed_callback: function
         The function to call when the selection changes
+    markersize: int
+        The size of the markers
 
     Returns
     -------
