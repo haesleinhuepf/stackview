@@ -1,5 +1,5 @@
 def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection:str="selection", image=None,
-                     zoom_factor:float=1, zoom_spline_order:int=0, figsize=(4, 4), alpha:float=0.5):
+                     zoom_factor:float=1, zoom_spline_order:int=0, figsize=(4, 4), alpha:float=0.5, markersize=4):
     """
     Visualizes a scatter plot of columns in a given dataframe next to a segmented image.
 
@@ -28,7 +28,9 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
         The size of the scatter plot figure
     alpha: float, optional
         sets the transparency of the curtain
-
+    markersize: int
+        The size of the markers
+        
     Returns
     -------
     An ipywidgets widget
@@ -66,7 +68,7 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
                                          widget=image_display)
 
     scatterplot = scatterplot(df, column_x, column_y, column_selection, figsize=figsize,
-                                        selection_changed_callback=update_selection)
+                                        selection_changed_callback=update_selection, markersize=markersize)
 
     return grid([[
         image_display,

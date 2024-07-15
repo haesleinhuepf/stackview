@@ -1,6 +1,6 @@
 import numpy as np
 
-def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: str = "selection", figsize=(4, 4), selection_changed_callback=None):
+def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: str = "selection", figsize=(4, 4), selection_changed_callback=None, markersize:int=4):
     """
     Create a scatterplot of a pandas dataframe while interactively choosing the columns and using a lasso tool for selecting data points
 
@@ -18,6 +18,8 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
         The size of the scatter plot figure
     selection_changed_callback: function
         The function to call when the selection changes
+    markersize: int
+        The size of the markers
 
     Returns
     -------
@@ -27,7 +29,7 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
     from ipywidgets import VBox, HBox, Layout
     from ._utilities import _no_resize
 
-    plotter = ScatterPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback=selection_changed_callback)
+    plotter = ScatterPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback=selection_changed_callback, markersize=markersize)
     small_layout = Layout(width='auto', padding='0px', margin='0px', align_items='center', justify_content='center')
 
     import ipywidgets
@@ -56,11 +58,13 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
         plotter.widget
     ]))
 
+    result.update = plotter.update
+
     return result
 
 
 class ScatterPlotter():
-    def __init__(self, df, column_x, column_y, column_selection, figsize, selection_changed_callback):
+    def __init__(self, df, column_x, column_y, column_selection, figsize, selection_changed_callback, markersize):
         """
         An interactive scatter plotter for pandas dataframes.
         Use `.widget` on this object to get access to the graphical user interface.
@@ -79,6 +83,8 @@ class ScatterPlotter():
             The size of the figure
         selection_changed_callback: function
             The function to call when the selection changes
+        markersize: int
+            The size of the markers
         """
         import matplotlib.pyplot as plt
         from matplotlib._pylab_helpers import Gcf
@@ -94,10 +100,11 @@ class ScatterPlotter():
         self.set_data(df, column_x, column_y)
         self.selection_column = column_selection
         self.selection_changed_callback = selection_changed_callback
+        self.markersize = markersize
 
         # create figure
         self.fig = plt.figure(figsize=figsize)
-        self.fig.tight_layout(pad=0, h_pad=0, w_pad=0)
+        #self.fig.tight_layout(pad=0, h_pad=0, w_pad=0)
         plt.subplots_adjust(left=0.15, right=1, top=1, bottom=0.1)
 
         self.ax = None
@@ -139,7 +146,7 @@ class ScatterPlotter():
     def update(self):
         self.fig.clf()
         self.ax = self.fig.gca()
-        self.plotted_points = self.ax.scatter(self.data[0], self.data[1])
+        self.plotted_points = self.ax.scatter(self.data[0], self.data[1], s=self.markersize)
         self.ax.set_xlabel(self.column_x)
         self.ax.set_ylabel(self.column_y)
         self.selector = Selector(self.fig, self.ax, self.plotted_points, callback=self.set_selection)
@@ -160,7 +167,7 @@ class Selector:
         self.num_points = len(self.offsets)
         self.collection = collection
 
-        self.lasso = LassoSelector(ax, onselect=self.on_select)
+        self.lasso = LassoSelector(ax, onselect=self.on_select, props=dict(color='magenta'))
         self.selected_indices = []
         self.callback = callback
 
