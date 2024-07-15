@@ -38,5 +38,20 @@ def list_bia_bob_plugins():
     stackview.switch(images:list)
     
     * Allows plotting a scatterplot of a pandas dataframe while interactively choosing the columns and using a lasso tool for selecting data points
-    stackview.scatterplot(dataframe, x_column, y_column, selection_column)
+    stackview.scatterplot(dataframe, column_x, column_y, selection_column)
+    
+    * Allows plotting a scatterplot of a pandas dataframe in relation to a label image and optionally an image
+    stackview.clusterplot(image=image, labels=label_image, df=dataframe, labels, column_x, column_y, selection_column, image)
+    
+    * Draw two connected scatterplots of a pandas dataframe in relation to a label image and optionally an image
+    import ipywidgets as widgets
+    from ipywidgets import HBox
+    import stackview
+    def update2(e=None):
+        widget2.update()
+    def update1(e=None):
+        widget1.update()
+    widget1 = stackview.scatterplot(df=dataframe, column_x="column1", column_y="column2", selection_changed_callback=update2)
+    widget2 = stackview.scatterplot(df=dataframe, column_x="column3", column_y="column4", selection_changed_callback=update1)
+    display(HBox([widget1, widget2])) # Arrange the widgets side by side using HBox
     """
