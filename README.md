@@ -55,12 +55,31 @@ stackview.slice(image, continuous_update=True)
 ```
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_slice.gif)
 
+### Pick intensities
+
+To read the intensity of pixels where the mouse is moving, use the picker.
+```python
+stackview.picker(image)
+```
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_picker.gif)
+
+### Display range
+
+To adjust the minimum and maximum intensity shown when displaying an image, use the `display_range` function.
+```python
+stackview.display_range(image)
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_display_range.gif)
+
+
+
 ### Static insight views
 
 The `insight` function turns a numpy-array into a numpy-compatible array that has an image-display in jupyter notebooks.
 
 ```python
-insight(image[60])
+stackview.insight(image[60])
 ```
 
 ![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/insight_demo.png)
@@ -71,7 +90,7 @@ Images of 32-bit and 64-bit type integer are displayed as labels.
 blobs = imread('data/blobs.tif')
 labels = label(blobs > 120)
 
-insight(labels)
+stackview.insight(labels)
 ```
 
 ![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/labels_demo.png)
@@ -135,22 +154,6 @@ stackview.annotate(image, labels)
 
 Note: In case the interface is slow, consider using smaller images, e.g. by cropping or resampling.
 
-### Pick intensities
-
-To read the intensity of pixels where the mouse is moving, use the picker.
-```python
-stackview.picker(image)
-```
-![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_picker.gif)
-
-### Display range
-
-To adjust the minimum and maximum intensity shown when displaying an image, use the `display_range` function.
-```python
-stackview.display_range(image)
-```
-
-![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_display_range.gif)
 
 
 ### Orthogonal view
