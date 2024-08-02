@@ -1,0 +1,41 @@
+name: Respond to Issue
+
+on:
+  issues:
+    types: opened
+  issue_comment:
+    types:
+      - created
+
+jobs:
+  respond:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Print pull request number
+      run: |  
+        echo "Pull Request Number - ${{ github.event.pull_request.number }}"
+        echo "Organization - ${{ github.repository_owner }}"
+        echo "Repository Name - ${{ github.repository }}"
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install git-bob==0.1.0
+
+    - name: Run Python
+      env:
+        #ANTHROPIC_API_KEY: "${{ secrets.ANTHROPIC_API_KEY }}"
+        GIT_BOB_LLM_NAME: "gpt-4o-2024-05-13"
+        OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
+        GITHUB_API_KEY: "${{ secrets.GITHUB_TOKEN }}"
+      run: |
+        git-bob comment-on-issue-action ${{ github.repository }} ${{ github.event.pull_request.number }} ${{ github.event.issue.number }}
