@@ -118,6 +118,13 @@ def animate_curtain(timelapse, timelapse_curtain,
     import numpy as np
     from ._image_widget import _img_to_rgb
 
+
+    if isinstance(timelapse, list):
+        timelapse = np.asarray(timelapse)
+
+    if isinstance(timelapse_curtain, list):
+        timelapse_curtain = np.asarray(timelapse_curtain)
+
     max_size = timelapse.shape[1]
 
     images = []
