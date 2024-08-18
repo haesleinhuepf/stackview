@@ -1,4 +1,4 @@
-__version__ = "0.8.0"
+__version__ = "0.8.1"
 
 from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
