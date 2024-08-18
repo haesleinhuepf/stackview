@@ -72,7 +72,7 @@ def _img_to_rgb(image,
                 display_max=None):
     from ._colormaps import _labels_lut, create_colormap
 
-    if len(image.shape) > 2 and image.shape[-1] == 3:
+    if len(image.shape) > 2 and (image.shape[-1] == 3 or image.shape[-1] == 4):
         return image
 
     if image.dtype == bool:
