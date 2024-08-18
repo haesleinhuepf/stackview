@@ -35,6 +35,9 @@ def animate(timelapse, filename:str=None, overwrite_file:bool=True, frame_delay_
     from stackview._image_widget import _img_to_rgb
     from ._utilities import numpy_to_gif_bytestream, _gif_to_html
 
+    if isinstance(timelapse, list):
+        timelapse = np.asarray(timelapse)
+
     if 0 <= timelapse.min() <= 1 and 0 <= timelapse.max() <= 1:
         warnings.warn("The timelapse has a small intensity range between 0 and 1. Consider normalizing it to the range between 0 and 255.")
     if timelapse.min() < 0 or timelapse.max() > 255:
@@ -114,6 +117,13 @@ def animate_curtain(timelapse, timelapse_curtain,
     """
     import numpy as np
     from ._image_widget import _img_to_rgb
+
+
+    if isinstance(timelapse, list):
+        timelapse = np.asarray(timelapse)
+
+    if isinstance(timelapse_curtain, list):
+        timelapse_curtain = np.asarray(timelapse_curtain)
 
     max_size = timelapse.shape[1]
 
