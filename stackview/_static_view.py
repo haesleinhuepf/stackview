@@ -46,6 +46,10 @@ class StackViewNDArray(np.ndarray):
         if obj is None: return
         self.library_name = getattr(obj, 'library_name', None)
         self.help_url = getattr(obj, 'help_url', None)
+        self.obj = obj
+
+    def __getitem__(self, index):
+        return self.obj.__getitem__(index)
 
     def _repr_html_(self):
         """HTML representation of the image object for IPython.
