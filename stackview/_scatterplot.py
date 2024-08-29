@@ -120,7 +120,9 @@ class ScatterPlotter():
         manager = Gcf.get_active()
         Gcf.figs.pop(manager.num, None)
 
-        self.selector = Selector(self.fig, self.ax, self.plotted_points, callback=self.set_selection)
+        self.selector = None
+        #self.selector = Selector(self.fig, self.ax, self.plotted_points, callback=self.set_selection)
+        self.update()
 
         # show selection if defined
         if column_selection in df.columns:

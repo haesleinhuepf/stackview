@@ -42,6 +42,8 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
     from ._scatterplot import scatterplot
     import functools
 
+    labels = np.asarray(labels)
+
     if column_selection in df.columns:
         selection = df["selection"].tolist()
 
@@ -72,6 +74,7 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
 
     return grid([[
         image_display,
-        scatterplot
+        scatterplot,
+
     ]])
 

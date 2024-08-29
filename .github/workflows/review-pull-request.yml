@@ -20,6 +20,11 @@ jobs:
         echo "Organization - ${{ github.repository_owner }}"
         echo "Repository Name - ${{ github.repository }}"
 
+    - name: Print Job details
+      run: |  
+        echo "Run ID - ${{ github.run_id }}"
+        echo "Job ID - ${{ github.job }}"
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -32,10 +37,12 @@ jobs:
 
     - name: Run Python
       env:
-        #ANTHROPIC_API_KEY: "${{ secrets.ANTHROPIC_API_KEY }}"
-        GIT_BOB_LLM_NAME: "gpt-4o-2024-05-13"
+        ANTHROPIC_API_KEY: "${{ secrets.ANTHROPIC_API_KEY }}"
+        GOOGLE_API_KEY: "${{ secrets.GOOGLE_API_KEY }}"
+        GIT_BOB_LLM_NAME: "${{ secrets.GIT_BOB_LLM_NAME }}"
         OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
         GITHUB_API_KEY: "${{ secrets.GITHUB_TOKEN }}"
+        GITHUB_RUN_ID: "${{ github.run_id }}"
       run: |
         git-bob review-pull-request-action ${{ github.repository }} ${{ github.event.pull_request.number }}
 
