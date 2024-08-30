@@ -51,6 +51,9 @@ class StackViewNDArray(np.ndarray):
     def __getitem__(self, index):
         return self.obj.__getitem__(index)
 
+    def flatten(self):
+        return self.obj.flatten()
+
     def _repr_html_(self):
         """HTML representation of the image object for IPython.
                 Returns
