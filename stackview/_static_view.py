@@ -48,11 +48,10 @@ class StackViewNDArray(np.ndarray):
         self.help_url = getattr(obj, 'help_url', None)
         self.obj = obj
 
-    def __getitem__(self, index):
-        return self.obj.__getitem__(index)
-
-    def flatten(self):
-        return self.obj.flatten()
+    def __getattr__(self, name):
+        if name == "_repr_html_":
+            return self._repr_html_
+        return getattr(self.obj, name)
 
     def _repr_html_(self):
         """HTML representation of the image object for IPython.
@@ -60,18 +59,18 @@ class StackViewNDArray(np.ndarray):
                 -------
                 HTML text with the image and some properties.
                 """
-        if len(self.shape) < 2:
-            return str(self)
+        if len(self.obj.shape) < 2:
+            return str(self.obj)
 
         import numpy as np
-        size_in_pixels = np.prod(self.shape)
-        size_in_bytes = size_in_pixels * self.dtype.itemsize
+        size_in_pixels = np.prod(self.obj.shape)
+        size_in_bytes = size_in_pixels * self.obj.dtype.itemsize
 
         from ._image_widget import _is_label_image
-        labels = _is_label_image(self)
+        labels = _is_label_image(self.obj)
 
         import matplotlib.pyplot as plt
-        _imshow(self,
+        _imshow(self.obj,
                 labels=labels,
                 continue_drawing=True,
                 colorbar=not labels)
@@ -98,7 +97,7 @@ class StackViewNDArray(np.ndarray):
                 import numpy as np
 
                 num_bins = 32
-                h, _ = np.histogram(self, bins=num_bins)
+                h, _ = np.histogram(self.obj, bins=num_bins)
 
                 plt.figure(figsize=(1.8, 1.2))
                 plt.bar(range(0, len(h)), h)
@@ -113,8 +112,8 @@ class StackViewNDArray(np.ndarray):
 
                 histogram = _png_to_html(_plt_to_png())
 
-            min_max = "<tr><td>min</td><td>" + str(self.min()) + "</td></tr>" + \
-                      "<tr><td>max</td><td>" + str(self.max()) + "</td></tr>"
+            min_max = "<tr><td>min</td><td>" + str(self.obj.min()) + "</td></tr>" + \
+                      "<tr><td>max</td><td>" + str(self.obj.max()) + "</td></tr>"
 
         else:
 
