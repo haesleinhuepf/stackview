@@ -63,7 +63,7 @@ def imshow(image,
         warnings.warn("The parameter max_display_intensity is deprecated, use max_display_intensity instead.")
         max_display_intensity = vmax
 
-    if len(image.shape) == 3 and image.shape[-1] > 4:
+    while len(image.shape) > 2 and image.shape[-1] not in [3, 4]: #[3,4]: RGB, RGBA
         image = image.max(axis=0)
 
     if 'cupy.ndarray' in str(type(image)):
