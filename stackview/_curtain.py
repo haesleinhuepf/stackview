@@ -28,7 +28,7 @@ def curtain(
     slice_number : int, optional
         Slice-position in case we are looking at an image stack
     axis : int, optional
-        Axis in case we are slicing a stack
+        This parameter is obsolete. If you want to show any other axis than the first, you need to transpose the image before, e.g. using np.swapaxes().
     display_width : int, optional
         This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional

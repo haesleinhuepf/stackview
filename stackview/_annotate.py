@@ -43,7 +43,7 @@ def annotate(
     slice_number : int, optional
         Slice-position in the stack
     axis: int, optional
-        Axis where the slice-position can be modified interactively
+        This parameter is obsolete. If you want to show any other axis than the first, you need to transpose the image before, e.g. using np.swapaxes().
     alpha : float, optional
         Alpha blending value for the labels on top of the image
     continuous_update : bool, optional
