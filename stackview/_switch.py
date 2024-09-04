@@ -90,14 +90,11 @@ def switch(images,
 
     if toggleable:
         def display_(buttons, images, colormap, display_min, display_max):
-            display_image = np.zeros(list(images[0].shape) + [3])
+            display_image = None
             for button, image, colormap_, display_min_, display_max_ in zip(buttons, images, colormap,
                                                                              display_min, display_max):
                 if button.value:
-                    if len(image.shape) == 3 and image.shape[-1] != 3:
-                        display_image_to_add = np.asarray([_img_to_rgb(i, display_min=display_min_, display_max=display_max_, colormap=colormap_) for i in image])
-                    else:
-                        display_image_to_add = _img_to_rgb(image, display_min=display_min_, display_max=display_max_, colormap=colormap_)
+                    display_image_to_add = _image_stack_to_rgb(image, display_min=display_min_, display_max=display_max_, colormap=colormap_)
                         
                     if display_image is None:
                         display_image = display_image_to_add
@@ -161,3 +158,15 @@ def _make_toggle_button(name, layout, value, display_function):
 
     button.observe(act, 'value')
     return button
+
+def _image_stack_to_rgb(image, display_min, display_max, colormap):
+    import numpy as np
+    from ._image_widget import _img_to_rgb
+
+    dims = list(image.shape)
+    if 3 <= dims[-1] <= 4:
+        dims = dims[:-1]
+
+    if len(dims) > 2:
+        return np.asarray([_image_stack_to_rgb(i, display_min=display_min, display_max=display_max, colormap=colormap) for i in image])
+    return _img_to_rgb(image, display_min=display_min, display_max=display_max, colormap=colormap)
