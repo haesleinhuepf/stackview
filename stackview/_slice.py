@@ -5,7 +5,7 @@ def slice(
         display_width : int = None,
         display_height : int = None,
         continuous_update:bool = True,
-        slider_text:str="Slice",
+        slider_text:str="[{}]",
         zoom_factor:float = 1.0,
         zoom_spline_order:int = 0,
         colormap:str = None,
@@ -21,13 +21,15 @@ def slice(
     slice_number : int, optional
         Slice-position in the stack
     axis : int, optional
-        Axis in case we are slicing a stack
+        This parameter is obsolete. If you want to show any other axis than the first, you need to transpose the image before, e.g. using np.swapaxes().
     display_width : int, optional
         This parameter is obsolete. Use zoom_factor instead
     display_height : int, optional
         This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
+    slider_text: list or str, optional
+        Text shown next to the slider(s).
     zoom_factor: float, optional
         Allows showing the image larger (> 1) or smaller (<1)
     zoom_spline_order: int, optional

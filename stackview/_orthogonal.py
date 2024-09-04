@@ -48,9 +48,9 @@ def orthogonal(
         image = image.get()
 
     widgets = [
-        slice(image, axis=0, slider_text="Z", continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min, display_max=display_max),
-        slice(image, axis=1, slider_text="Y", continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min, display_max=display_max),
-        slice(image, axis=2, slider_text="X", continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min, display_max=display_max),
+        slice(image, slider_text="Z", continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min, display_max=display_max),
+        slice(image.swapaxes(-3,-2).swapaxes(-2,-1), slider_text="Y", continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min, display_max=display_max),
+        slice(image.swapaxes(-3,-1), slider_text="X", continuous_update=continuous_update, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min, display_max=display_max),
     ]
 
     def update(event=None):

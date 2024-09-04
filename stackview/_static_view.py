@@ -70,7 +70,8 @@ class StackViewNDArray(np.ndarray):
         labels = _is_label_image(self.obj)
 
         import matplotlib.pyplot as plt
-        _imshow(self.obj,
+        from ._imshow import imshow
+        imshow(self.obj,
                 labels=labels,
                 continue_drawing=True,
                 colorbar=not labels)

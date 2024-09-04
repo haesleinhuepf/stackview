@@ -21,7 +21,7 @@ def crop(image,
     slice_number : int, optional
         Slice-position in the stack to be shown (default: center plane)
     axis : int, optional
-        Axis along which we slice the shown stack (default: 0)
+        This parameter is obsolete. If you want to show any other axis than the first, you need to transpose the image before, e.g. using np.swapaxes().
     continuous_update : bool, optional
         Update the image while dragging the sliders, default: False
     slider_text: str, optional

@@ -233,6 +233,13 @@ stackview.switch(
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_switch_toggleable.gif)
 
+### nD-Viewer
+
+You can also use all functions above with n-dimensional data (since stackview 0.11.0). You will then see multiple sliders for navigating through dimensions such as space and time.
+In case you work with multiple channels, using `stackview.switch()` with `toggleable=True` is recommended ([Read more](https://github.com/haesleinhuepf/stackview/blob/main/docs/nd-data.ipynb)).
+
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/nd-data.gif)
+
 
 ### Crop
 
