@@ -40,9 +40,13 @@ def crop(image,
         Upper bound of properly shown intensities
 
     """
+    import warnings
 
     if 'cupy.ndarray' in str(type(image)):
         image = image.get()
+
+    if len(image.shape) > 3:
+        warnings.warn("Orthogonal views are only supported for 3D images. Consider using slice() instead.")
 
     return _Cropper(image,
                     slice_number=slice_number,
