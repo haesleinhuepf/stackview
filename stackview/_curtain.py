@@ -60,6 +60,7 @@ def curtain(
     """
     import ipywidgets
     from ._image_widget import ImageWidget
+    from ._slice_viewer import _SliceViewer
     import numpy as np
     from ._utilities import _no_resize
 
@@ -68,22 +69,6 @@ def curtain(
 
     if 'cupy.ndarray' in str(type(image_curtain)):
         image_curtain = image_curtain.get()
-
-    slice_slider = None
-
-    if slice_number is None:
-        slice_number = int(image.shape[axis] / 2)
-
-    # setup user interface for changing the slice
-    slice_slider = ipywidgets.IntSlider(
-        value=slice_number,
-        min=0,
-        max=image.shape[axis ] -1,
-        continuous_update=continuous_update,
-        description="Slice"
-    )
-    if len(image.shape) < 3 or (len(image.shape) == 3 and image.shape[-1] == 3):
-        slice_slider.layout.display = 'none'
 
     # setup user interface for changing the curtain position
     slice_shape = list(image.shape)
@@ -102,18 +87,29 @@ def curtain(
         description="Curtain"
     )
 
+    viewer = None
     from ._image_widget import _img_to_rgb
     def transform_image():
-        if len(image.shape) < 3 or (len(image.shape) == 3 and image.shape[-1] == 3):
-            image_slice = _img_to_rgb(image.copy(), colormap=colormap, display_min=display_min, display_max=display_max)
-            image_slice_curtain = _img_to_rgb(image_curtain, colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
-        else:
-            image_slice = _img_to_rgb(np.take(image, slice_slider.value, axis=axis), colormap=colormap, display_min=display_min, display_max=display_max)
-            image_slice_curtain = _img_to_rgb(np.take(image_curtain, slice_slider.value, axis=axis), colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
-        image_slice[:,curtain_slider.value:] = (1 - alpha) * image_slice[:,curtain_slider.value:] + \
-                                             alpha * image_slice_curtain[:,curtain_slider.value:]
+        image_slice =  _img_to_rgb(viewer.get_view_slice(), colormap=colormap, display_min=display_min, display_max=display_max)
+        image_slice_curtain = _img_to_rgb(viewer.get_view_slice(image_curtain), colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
+        image_slice[:, curtain_slider.value:] = (1 - alpha) * image_slice[:, curtain_slider.value:] + \
+                                                alpha * image_slice_curtain[:, curtain_slider.value:]
         return image_slice
-    view = ImageWidget(transform_image(), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+        #if len(image.shape) < 3 or (len(image.shape) == 3 and image.shape[-1] == 3):
+        #    image_slice = _img_to_rgb(image.copy(), colormap=colormap, display_min=display_min, display_max=display_max)
+        #    image_slice_curtain = _img_to_rgb(image_curtain, colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
+        #else:
+        #    image_slice = _img_to_rgb(np.take(image, slice_slider.value, axis=axis), colormap=colormap, display_min=display_min, display_max=display_max)
+        #    image_slice_curtain = _img_to_rgb(np.take(image_curtain, slice_slider.value, axis=axis), colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
+
+        #return image_slice
+
+    viewer = _SliceViewer(image, continuous_update=continuous_update, zoom_factor=zoom_factor,
+                          zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min,
+                          display_max=display_max)
+
+    view = viewer.view #ImageWidget(transform_image(), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+    sliders = viewer.slice_slider
 
     # event handler when the user changed something:
     def configuration_updated(event=None):
@@ -125,7 +121,8 @@ def curtain(
     curtain_slider.observe(configuration_updated)
 
     # connect user interface with event
-    slice_slider.observe(configuration_updated)
-    result = ipywidgets.VBox([_no_resize(view), slice_slider, curtain_slider])
+    viewer.observe(configuration_updated)
+    result = _no_resize(ipywidgets.VBox([_no_resize(view), sliders, curtain_slider]))
     result.update = configuration_updated
+    result.viewer = viewer
     return result
