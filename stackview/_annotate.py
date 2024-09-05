@@ -25,7 +25,7 @@ def annotate(
         alpha: float = 0.5,
         axis: int = 0,
         continuous_update: bool = True,
-        slider_text: str = "Slice",
+        slider_text: str = "[{}]",
         zoom_factor: float = 1.0,
         zoom_spline_order: int = 0,
         colormap:str = None,
@@ -70,6 +70,7 @@ def annotate(
     import numpy as np
     from ipyevents import Event
     from ._uint_field import UIntField
+    from ._slice_viewer import _SliceViewer
 
     if 'cupy.ndarray' in str(type(image)):
         image = image.get()
@@ -83,34 +84,28 @@ def annotate(
     if slice_number is None:
         slice_number = int(image.shape[axis] / 2)
 
-    if len(image.shape) <= 2:
-        slice_image = image
-    else:
-        slice_image = np.take(image, slice_number, axis=axis)
+    #if len(image.shape) <= 2:
+    #    slice_image = image
+    #else:
+    #    slice_image = np.take(image, slice_number, axis=axis)
 
     # Image view
-    view = ImageWidget(slice_image, zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
-
+    viewer = _SliceViewer(image,
+                          zoom_factor=zoom_factor,
+                          zoom_spline_order=zoom_spline_order,
+                          colormap=colormap,
+                          display_min=display_min,
+                          display_max=display_max,
+                          slider_text=slider_text)
+    view = viewer.view
     # setup user interface for changing the slice
-    slice_slider = None
-    if len(image.shape) > 2:
-        slice_slider = ipywidgets.IntSlider(
-            value=slice_number,
-            min=0,
-            max=image.shape[axis] - 1,
-            continuous_update=continuous_update,
-            description=slider_text,
-        )
+    slice_slider = viewer.slice_slider
+
 
     # event handler when the user changed the slider:
     def update_display(event=None):
-        if slice_slider is not None:
-            z = slice_slider.value
-            slice_image1 = np.take(image, z, axis=axis)
-            slice_image2 = np.take(labels, z, axis=axis)
-        else:
-            slice_image1 = image
-            slice_image2 = labels
+        slice_image1 = viewer.get_view_slice()
+        slice_image2 = viewer.get_view_slice(labels)
 
         if not _is_label_image(slice_image2):
             # necessary to display the labels in colour correctly
@@ -162,27 +157,26 @@ def annotate(
         absolute_position_x = int(relative_position_x)
         absolute_position_y = int(relative_position_y)
 
-        # differentiate 3D/2D drawing
-        if slice_slider is not None:
-            absolute_position_z = slice_slider.value
-            position = [absolute_position_x, absolute_position_y, absolute_position_z]
-        else:
-            absolute_position_z = None
-            position = [absolute_position_x, absolute_position_y]
+        labels_2d = labels
+        # differentiate nd/2D drawing
+        slice_indices = viewer.get_slice_index()
+        while len(slice_indices) > 0:
+            index = slice_indices.pop(0)
+            labels_2d = labels_2d[index]
+        position = [absolute_position_x, absolute_position_y, label_id_to_draw]
 
         # compare position and label with last known postion. If equal, don't update / redraw
-        position.append(label_id_to_draw)
         if np.array_equal(former_drawn_position, position):
             return
 
         # draw one circle
         draw_circle(absolute_position_x,
                     absolute_position_y,
-                    absolute_position_z,
+                    None,
                     axis,
                     radius,
                     label_id_to_draw,
-                    labels)
+                    labels_2d)
 
         # draw circles along a line we've beend drawing
         if former_drawn_position[0] is not None:
@@ -193,11 +187,11 @@ def annotate(
                                    (1.0 - relative_position) * np.asarray(position[0:2])
                 draw_circle(position_to_draw[0],
                             position_to_draw[1],
-                            absolute_position_z,
+                            None,
                             axis,
                             radius,
                             label_id_to_draw,
-                            labels)
+                            labels_2d)
 
         # store position
         for i in range(4):
@@ -211,13 +205,12 @@ def annotate(
     # connect events
     event_handler.on_dom_event(update_display_while_drawing)
 
+    viewer.observe(update_display)
     if slice_slider is not None:
         # connect user interface with event
-        slice_slider.observe(update_display)
-
-        result = _no_resize(ipywidgets.VBox([
-            ipywidgets.HBox([_no_resize(view), tool_box]),
-            slice_slider
+        result = _no_resize(ipywidgets.HBox([
+            ipywidgets.VBox([_no_resize(view), slice_slider]),
+            tool_box
         ]))
     else:
         result = _no_resize(ipywidgets.VBox([
