@@ -177,7 +177,7 @@ def interact(func,
         output_widgets.append(_no_resize(viewer.view))
         output_widgets.append(viewer.slice_slider)
 
-    result = ipywidgets.VBox(output_widgets)
+    result = _no_resize(ipywidgets.VBox(output_widgets))
     result.update = viewer.configuration_updated
     return result
 

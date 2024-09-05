@@ -215,13 +215,13 @@ def annotate(
         # connect user interface with event
         slice_slider.observe(update_display)
 
-        result = ipywidgets.VBox([
+        result = _no_resize(ipywidgets.VBox([
             ipywidgets.HBox([_no_resize(view), tool_box]),
             slice_slider
-        ])
+        ]))
     else:
-        result = ipywidgets.VBox([
+        result = _no_resize(ipywidgets.VBox([
             ipywidgets.HBox([_no_resize(view), tool_box]),
-        ])
+        ]))
     result.update = update_display
     return result

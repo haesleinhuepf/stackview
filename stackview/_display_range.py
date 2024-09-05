@@ -106,6 +106,6 @@ def display_range(
     min_slider.observe(configuration_updated)
     max_slider.observe(configuration_updated)
 
-    result = ipywidgets.VBox([_no_resize(view), slice_slider, min_slider, max_slider])
+    result = _no_resize(ipywidgets.VBox([_no_resize(view), slice_slider, min_slider, max_slider]))
     result.update = configuration_updated
     return result
