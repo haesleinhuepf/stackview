@@ -68,6 +68,6 @@ def slice(
     view = viewer.view
     slice_slider = viewer.slice_slider
 
-    result = ipywidgets.VBox([_no_resize(view), slice_slider])
+    result = _no_resize(ipywidgets.VBox([_no_resize(view), slice_slider]))
     result.update = viewer.update
     return result

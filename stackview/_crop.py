@@ -131,12 +131,17 @@ class _Cropper(VBox):
         if len(image.shape) > 2:
             widgets.append(slice_slider)
 
-        super(_Cropper, self).__init__(widgets)
+        super(_Cropper, self).__init__([_no_resize(VBox(widgets))])
 
     def update(self, event=None):
+        import numpy as np
         self._viewer.image = self._image[self.range]
         self._viewer.slice_slider.max = self._viewer.image.shape[0] - 1
-        self._viewer.update(None)
+        try:
+            self._viewer.update(None)
+        except:
+            self._viewer.view.data = np.zeros((2,2))
+
 
     @property
     def range(self):

@@ -5,7 +5,7 @@ def picker(
         display_width: int = None,
         display_height: int = None,
         continuous_update: bool = True,
-        slider_text: str = "Slice",
+        slider_text: str = "[{}]",
         zoom_factor:float = 1.0,
         zoom_spline_order:int = 0,
         colormap:str = None,
@@ -26,6 +26,8 @@ def picker(
         This parameter is obsolete. Use zoom_factor instead
     continuous_update : bool, optional
         Update the image while dragging the mouse, default: False
+    slider_text: str, optional
+        Text shown on the slider
     zoom_factor: float, optional
         Allows showing the image larger (> 1) or smaller (<1)
     zoom_spline_order: int, optional
@@ -66,23 +68,16 @@ def picker(
     from ipyevents import Event
     event_handler = Event(source=view, watched_events=['mousemove'])
 
-    def update_display(event):
+    def update_display(event=None):
         relative_position_x = event['relativeX'] / zoom_factor
         relative_position_y = event['relativeY'] / zoom_factor
         absolute_position_x = int(relative_position_x)
         absolute_position_y = int(relative_position_y)
-
-        if len(image.shape) > 2:
-            absolute_position_z = slice_slider.value
-            intensity = image[absolute_position_z, absolute_position_y, absolute_position_x]
-            label.value = "[z=" + str(absolute_position_z) + ", y=" + str(absolute_position_y) + ", x=" + str(
-                absolute_position_x) + "] = " + str(intensity)
-        else:
-            intensity = image[absolute_position_y, absolute_position_x]
-            label.value = "[y=" + str(absolute_position_y) + ", x=" + str(absolute_position_x) + "] = " + str(intensity)
+        intensity = viewer.get_view_slice()[absolute_position_y, absolute_position_x]
+        label.value = str(viewer.get_slice_index())[:-1] + ", " + str(absolute_position_y) + ", " + str(absolute_position_x) + "] = " + str(intensity)
 
     event_handler.on_dom_event(update_display)
 
-    result = ipywidgets.VBox([_no_resize(view), slice_slider, label], stretch=False)
+    result = _no_resize(ipywidgets.VBox([_no_resize(view), slice_slider, label], stretch=False))
     result.update = update_display
     return result
