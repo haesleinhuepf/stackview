@@ -63,6 +63,7 @@ def curtain(
     from ._slice_viewer import _SliceViewer
     import numpy as np
     from ._utilities import _no_resize
+    from ._uint_field import intSlider
 
     if 'cupy.ndarray' in str(type(image)):
         image = image.get()
@@ -79,7 +80,7 @@ def curtain(
         # RGB image
         max_curtain_position = slice_shape[-2]
 
-    curtain_slider = ipywidgets.IntSlider(
+    curtain_slider = intSlider(
         value=max_curtain_position / 2,
         min=0,
         max=max_curtain_position,

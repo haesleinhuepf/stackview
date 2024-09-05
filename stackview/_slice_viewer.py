@@ -19,6 +19,8 @@ class _SliceViewer():
                  ):
         import ipywidgets
         from ._image_widget import ImageWidget
+        from ._uint_field import intSlider
+        self.update_active = True
 
         self.image = image
 
@@ -30,23 +32,21 @@ class _SliceViewer():
             slider_text = [slider_text] * (len(image.shape) - 2)
 
         self.sliders = []
-        self.slider_guis = []
         offset = 2
         if 3 >= image.shape[-1] >= 4: # RGB or RGBA images
             offset = 3
         for d in range(len(image.shape) - offset):
-            slider = ipywidgets.IntSlider(
+            slider = intSlider(
                 value=slice_number[d],
                 min=0,
                 max=image.shape[d] - 1,
                 continuous_update=continuous_update,
+                description=slider_text[d].format(d)
             )
             slider.layout.width = '100%'  # Make the slider full-width
 
             slider.observe(self.update)
             self.sliders.append(slider)
-
-            self.slider_guis.append(ipywidgets.HBox([ipywidgets.Label(slider_text[d].format(d)), slider]))
 
         self.view = ImageWidget(self.get_view_slice(),
                                 zoom_factor=zoom_factor,
@@ -56,19 +56,19 @@ class _SliceViewer():
                                 display_max=display_max)
 
         # setup user interface for changing the slice
-        custom_css = "<style>.widget-readout { min-width: 1px !important; }</style>"
-        self.slice_slider = ipywidgets.VBox(self.slider_guis[::-1] + [ipywidgets.HTML(custom_css)])
+
+        self.slice_slider = ipywidgets.VBox(self.sliders[::-1])
         self.update()
 
     def observe(self, x):
+        self.update_active = False
         for s in self.sliders:
-            s.unobserve_all()
             s.observe(x)
 
     # event handler when the user changed something:
     def update(self, event=None):
-        self.view.data = self.get_view_slice()
-        return
+        if self.update_active:
+            self.view.data = self.get_view_slice()
 
     def configuration_updated(self, event=None):
         warnings.warn('SliceViewer.configuration_updated is deprecated, use SliceViewer.update instead.')
