@@ -13,7 +13,7 @@ def orthogonal(
         colormap:str = None,
         display_min:float = None,
         display_max:float = None,
-        crosshairs:bool = False,
+        crosshairs:bool = True,
 ):
     """Show three viewers slicing the image stack in Z,Y and X.
 
