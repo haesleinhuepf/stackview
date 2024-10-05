@@ -12,7 +12,8 @@ def orthogonal(
         zoom_spline_order:int = 0,
         colormap:str = None,
         display_min:float = None,
-        display_max:float = None
+        display_max:float = None,
+        crosshairs:bool = True,
 ):
     """Show three viewers slicing the image stack in Z,Y and X.
 
@@ -36,6 +37,8 @@ def orthogonal(
         Lower bound of properly shown intensities
     display_max: float, optional
         Upper bound of properly shown intensities
+    crosshairs: bool, optional
+        Show crosshairs in the image corresponding to the slice position
 
     Returns
     -------
@@ -64,46 +67,48 @@ def orthogonal(
         for widget in widgets:
             widget.update()
 
-    def redraw0(event=None):
-        image = np.copy(widgets[0].viewer.get_view_slice())
-        y = widgets[1].viewer.get_slice_index()[-1]
-        x = widgets[2].viewer.get_slice_index()[-1]
-        image[y,:] = image.max()
-        image[:,x] = image.max()
-        widgets[0].viewer.view.data = image
 
-    def redraw1(event=None):
-        image = np.copy(widgets[1].viewer.get_view_slice())
-        y = widgets[2].viewer.get_slice_index()[-1]
-        x = widgets[0].viewer.get_slice_index()[-1]
-        image[y, :] = image.max()
-        image[:, x] = image.max()
-        widgets[1].viewer.view.data = image
+    if crosshairs:
+        def redraw0(event=None):
+            image = np.copy(widgets[0].viewer.get_view_slice())
+            y = widgets[1].viewer.get_slice_index()[-1]
+            x = widgets[2].viewer.get_slice_index()[-1]
+            image[y,:] = image.max()
+            image[:,x] = image.max()
+            widgets[0].viewer.view.data = image
+
+        def redraw1(event=None):
+            image = np.copy(widgets[1].viewer.get_view_slice())
+            y = widgets[2].viewer.get_slice_index()[-1]
+            x = widgets[0].viewer.get_slice_index()[-1]
+            image[y, :] = image.max()
+            image[:, x] = image.max()
+            widgets[1].viewer.view.data = image
 
 
-    def redraw2(event=None):
-        image = np.copy(widgets[2].viewer.get_view_slice())
-        y = widgets[1].viewer.get_slice_index()[-1]
-        x = widgets[0].viewer.get_slice_index()[-1]
-        image[y, :] = image.max()
-        image[:, x] = image.max()
-        widgets[2].viewer.view.data = image
+        def redraw2(event=None):
+            image = np.copy(widgets[2].viewer.get_view_slice())
+            y = widgets[1].viewer.get_slice_index()[-1]
+            x = widgets[0].viewer.get_slice_index()[-1]
+            image[y, :] = image.max()
+            image[:, x] = image.max()
+            widgets[2].viewer.view.data = image
+    
+        widgets[0].viewer.observe(redraw0)
+        widgets[0].viewer.observe(redraw1)
+        widgets[0].viewer.observe(redraw2)
 
-    widgets[0].viewer.observe(redraw0)
-    widgets[0].viewer.observe(redraw1)
-    widgets[0].viewer.observe(redraw2)
+        widgets[1].viewer.observe(redraw0)
+        widgets[1].viewer.observe(redraw1)
+        widgets[1].viewer.observe(redraw2)
 
-    widgets[1].viewer.observe(redraw0)
-    widgets[1].viewer.observe(redraw1)
-    widgets[1].viewer.observe(redraw2)
+        widgets[2].viewer.observe(redraw0)
+        widgets[2].viewer.observe(redraw1)
+        widgets[2].viewer.observe(redraw2)
 
-    widgets[2].viewer.observe(redraw0)
-    widgets[2].viewer.observe(redraw1)
-    widgets[2].viewer.observe(redraw2)
-
-    redraw0()
-    redraw1()
-    redraw2()
+        redraw0()
+        redraw1()
+        redraw2()
 
     widgets[1].layout=ipywidgets.Layout(margin='0 5px 0 5px')
 
