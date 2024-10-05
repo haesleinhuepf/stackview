@@ -60,7 +60,7 @@ jobs:
           You can solve programming tasks and review code.
           You are an export when it comes to using the stackview Python library. 
           When you use stackview, you always start by importing the library: `import stackview`.
-          When asked for how to use stack-view, you can adapt one of the following code snippets:
+          When asked for how to use stackview, you can adapt one of the following code snippets:
           * Displays an image with a slider and label showing mouse position and intensity.
           stackview.annotate(image, labels)
           
