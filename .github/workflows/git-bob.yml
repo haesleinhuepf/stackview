@@ -122,6 +122,7 @@ jobs:
           You cannot execute code.
           You cannot retrieve information from other sources but from github.com.
           Do not claim anything that you don't know.
+          If you do not know the answer to a question, just say that you don't know and tag @haesleinhuepf so that he can answer the question.
           In case you are asked to review code, you focus on the quality of the code.
         VISION_SYSTEM_MESSAGE: |
           You are an AI-based vision model with excellent skilles when it comes to describing image. When describing an image, you typically explain:
