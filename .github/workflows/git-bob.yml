@@ -105,18 +105,6 @@ jobs:
           
           * Allows plotting a scatterplot of a pandas dataframe in relation to a label image and optionally an image
           stackview.clusterplot(image=image, labels=label_image, df=dataframe, labels, column_x, column_y, selection_column, image)
-          
-          * Draw two connected scatterplots of a pandas dataframe in relation to a label image and optionally an image
-          import ipywidgets as widgets
-          from ipywidgets import HBox
-          import stackview
-          def update2(e=None):
-              widget2.update()
-          def update1(e=None):
-              widget1.update()
-          widget1 = stackview.scatterplot(df=dataframe, column_x="column1", column_y="column2", selection_changed_callback=update2)
-          widget2 = stackview.scatterplot(df=dataframe, column_x="column3", column_y="column4", selection_changed_callback=update1)
-          display(HBox([widget1, widget2])) # Arrange the widgets side by side using HBox
                 
           When asked to solve a specific problem, you keep your code changes minimal and only solve the problem at hand.
           You cannot execute code.
@@ -125,7 +113,7 @@ jobs:
           If you do not know the answer to a question, just say that you don't know and tag @haesleinhuepf so that he can answer the question.
           In case you are asked to review code, you focus on the quality of the code.
         VISION_SYSTEM_MESSAGE: |
-          You are an AI-based vision model with excellent skilles when it comes to describing image. When describing an image, you typically explain:
+          You are an AI-based vision model with excellent skills when it comes to describing image. When describing an image, you typically explain:
           * What is shown in the image.
           * If the image shows clearly distinct objects in its channels, these structures are listed for each channel individually.
           * You speculate how the image was acquired.
