@@ -33,8 +33,9 @@ class _SliceViewer():
 
         self.sliders = []
         offset = 2
-        if 3 >= image.shape[-1] >= 4: # RGB or RGBA images
+        if image.shape[-1] == 3 or image.shape[-1] == 4: # RGB or RGBA images
             offset = 3
+
         for d in range(len(image.shape) - offset):
             slider = intSlider(
                 value=slice_number[d],
@@ -59,6 +60,11 @@ class _SliceViewer():
 
         self.slice_slider = ipywidgets.VBox(self.sliders[::-1])
         self.update()
+
+    def set_image(self, image):
+        for i, s in enumerate(self.sliders):
+            s._set_value_min_max(int(image.shape[i] / 2), 0, image.shape[i] - 1)
+        self.image = image
 
     def observe(self, x):
         self.update_active = False

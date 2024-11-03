@@ -143,3 +143,5 @@ cython_debug/
 .DS_STORE
 deploy.bat
 *Untitled*
+
+docs/png_umap*

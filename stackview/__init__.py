@@ -21,6 +21,6 @@ from ._display_range import display_range
 from ._scatterplot import scatterplot
 from ._grid import grid
 from ._clusterplot import clusterplot
-
+from ._sliceplot import sliceplot
 
 

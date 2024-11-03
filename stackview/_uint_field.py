@@ -59,6 +59,13 @@ def intSlider(min:int=0, max:int=100, step:int=1, value:int=1, continuous_update
 
     slider.observe(update)
 
+    def _set_value_min_max(value, min, max):
+        slider.value = value
+        slider.min = min
+        slider.max = max
+
+    box._set_value_min_max = _set_value_min_max
+
     update()
 
     return box
