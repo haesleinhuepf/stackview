@@ -1,4 +1,4 @@
-__version__ = "0.11.2"
+__version__ = "0.12.0"
 
 from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
