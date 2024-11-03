@@ -295,6 +295,16 @@ This functionality is inspired from the [napari-clusters-plotter](https://github
 
 ![clusterplot.gif](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/clusterplot.gif)
 
+### Sliceplot
+
+Another similar interactive plot is the `sliceplot`: In case you have a pandas DataFrame with a columns representing measurements of slices in an image stack, you can use this function to visualize the slices in a plot. 
+
+```python
+stackview.sliceplot(df, images, column_x="UMAP0", column_y="UMAP1")
+```
+
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/sliceplot.gif)
+
 ### Interact
 
 Exploration of the parameter space of image processing functions is available using `interact`:
