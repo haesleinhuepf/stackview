@@ -1,6 +1,6 @@
 def wordcloudplot(df, column_x: str = "x", column_y: str = "y", column_text: str = "text",
                   column_selection: str = "selection",
-                  figsize=(4, 4), markersize=4):
+                  figsize=(4, 4), markersize=4, width=400, height=400):
     """
     Visualizes a scatter plot of columns in a given dataframe next to a word cloud.
     Per default, the dataframe should contain a column "text".
@@ -21,6 +21,10 @@ def wordcloudplot(df, column_x: str = "x", column_y: str = "y", column_text: str
         The size of the scatter plot figure
     markersize: int
         The size of the markers
+    width: int
+        The width of the word cloud
+    height: int
+        The height of the word cloud
 
     Returns
     -------
@@ -41,7 +45,7 @@ def wordcloudplot(df, column_x: str = "x", column_y: str = "y", column_text: str
         selected_texts = df[column_text]
         text = "\n".join(selected_texts)
 
-    wordcloud = WordCloud().generate(text)
+    wordcloud = WordCloud(colormap="twilight", background_color="white", width=width, height=height).generate(text)
     image = wordcloud.to_image()
     selected_image = np.array(image)
 
@@ -54,7 +58,7 @@ def wordcloudplot(df, column_x: str = "x", column_y: str = "y", column_text: str
         if len(text) == 0:
             text = "empty wordcloud"
 
-        wordcloud = WordCloud().generate(text)
+        wordcloud = WordCloud(colormap="twilight", background_color="white", width=width, height=height).generate(text)
         image = wordcloud.to_image()
         temp = np.array(image)
 
