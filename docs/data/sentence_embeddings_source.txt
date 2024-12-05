@@ -1,0 +1,4 @@
+Extracted from: https://arxiv.org/abs/2204.07547 licensed CC-BY 4.0 by:
+Robert Haase, Elnaz Fazeli, David Legland, Michael Doube, Siân Culley, Ilya Belevich, Eija Jokitalo, Martin Schorb, Anna Klemm, Christian Tischer
+
+Used embedding: https://huggingface.co/mixedbread-ai/mxbai-embed-large-v1

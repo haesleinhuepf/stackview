@@ -1,0 +1,598 @@
+,sentence,UMAP0,UMAP1
+0,"A Hitchhiker’s Guide through the Bio-image Analysis Software Universe Robert Haase1,2, Elnaz Fazeli3, David Legland4,5, Michael Doube6, Siân Culley7,Ilya Belevich8, Eija Jokitalo8, Martin Schorb9,10, Anna Klemm11, Christian Tischer10 Affiliations: 1 DFG Cluster of Excellence “Physics of Life”, TU Dresden, Germany 2 Center for Systems Biology Dresden, Germany 3 Biomedicum Imaging Unit, Faculty of Medicine and HiLIFE, University of Helsinki, Finland 4 INRAE, UR BIA, F-44316 Nantes, France 5 INRAE, PROBE research infrastructure, BIBS facility, F-44316 Nantes, France 6 Department of Infectious Diseases and Public Health, City University of Hong Kong, Kowloon, Hong Kong 7 Randall Centre for Cell & Molecular Biophysics, Guy’s Campus, King’s College London, London SE1 1UL, UK 8 Institute of Biotechnology, Helsinki Institute of Life Science, University of Helsinki, Helsinki, Finland. 9 Electron Microscopy Core Facility, European Molecular Biology Laboratory, Heidelberg, Germany 10 Centre for Bioimage Analysis, European Molecular Biology Laboratory, Heidelberg, Germany 11 VI2 - Department of Information Technology and SciLifeLab BioImage Informatics Facility, Uppsala University, Uppsala, 752 37 Sweden Abstract:",-2.863276,8.680281
+1,"Modern research in the life sciences is unthinkable without computational methods for extracting, quantifying and visualizing information derived from biological microscopy imaging data.",-3.7312953,7.87506
+2,"In the past decade, we observed a dramatic increase in available software packages for these purposes.",-4.7486897,6.128065
+3,"As it is increasingly difficult to keep track of the number of available image analysis platforms, tool collections, components and emerging technologies, we provide a conservative overview of software we use in daily routine and give insights into emerging new tools.",-4.183692,6.84753
+4,"We give guidance on which aspects to consider when choosing the right platform, including aspects such as image data type, skills of the team, infrastructure and community at the institute and availability of time and budget.",-4.9128323,6.69118
+5,Introduction Scientific bio-image analysis software plays a key role in modern life sciences (Levet et al. 2021).,-3.744875,7.941083
+6,"New insights are virtually impossible without computational methods for image acquisition, processing, segmentation, feature extraction and visualization.",-3.7084248,7.6979804
+7,"In the past decade, biologists have increasingly applied statistical data analysis of imaging data and machine learning for image processing and particularly for image segmentation, as these allow overcoming the limitations of purely descriptive methods.",-3.6353626,7.983928
+8,We also perceive that tools and methods are converging:,-4.806174,6.5425954
+9,"If a single software platform provides image processing, feature extraction, statistical analysis and visualization, it is superior and preferred to software that is only good in one of those tasks, at least from a user's perspective.",-4.4257746,6.405975
+10,"The applications are highly diverse and spread across multiple sub-disciplines such as developmental biology, cancer research, immunology, cell and molecular biology, biophysics, agronomy, bioengineering and biomaterials.",-4.3364167,7.0873384
+11,Often software solutions are created to address a particular analysis challenge in one of those sub-disciplines.,-4.22022,6.018863
+12,"As it becomes increasingly hard to keep an overview of existing software, corresponding key applications and targeted scientific questions, we provide a detailed overview of current state-of-the-art software, upcoming next-generation tools and give hints for which aspects to consider when deciding between the many potential software solutions for current bio-image analysis questions.",-3.6344998,7.951101
+13,An early career scientist searching for the right software for their image analysis might have the hardest decision to make.,-4.6559763,6.7391853
+14,"Even if they know search engines specialized for bio-image analysis software such as https://biii.eu or https://bio.tools (BioImage Informatics Index (BIII) 2022; Elixir community 2022), it is hard to make any decision as beginners in the field often don't know the right terms to search for yet.",-4.6952753,7.093767
+15,"Hence, the glossary provided below may be a good starting point to get an overview of available software and related use-cases.",-4.5126796,5.6758046
+16,"Furthermore, we recommend attending institutional image-analysis courses, e.g. for PhD students in their first year.",-4.692051,7.0856295
+17,"In addition, getting in touch with senior scientists in their own group, with collaborators and local light or electron microscopy facilities is a good opportunity to find out which software is used in similar projects on campus.",-5.1320453,6.9485908
+18,Glossary Inspired by (Adams and Lloyd 1983) we give an overview of the bio-image analysis software universe by means of a glossary of software routinely used by bio-image analysts.,-3.792864,7.827038
+19,"To further classify those software related terms, we refer to groups of software as introduced by (Miura and Sladoje 2019):",-4.3324466,5.53204
+20,"Firstly, image/data analysis algorithms provided in a sustainably reusable fashion are referred to as ""components"".",-3.5582745,6.3224645
+21,"Secondly, software libraries and standalone applications that combine multiple components are ""collections"".",-4.4356737,5.536645
+22,"Thirdly, software that combines multiple components, potentially from multiple collections to solve a given variety of image analysis questions in a standardized form are referred to as ""workflow templates"".",-3.7519119,6.017384
+23,"If the software is specific for solving particular scientific questions using given components in one specific assembly, these are called ""workflows"".",-3.9074292,5.7981744
+24,"We extend this classification with ""frameworks"" of scientific software which are collections upon which many other software solutions are built.",-4.242948,5.7150073
+25,"We add ""programming languages"" that allow assembling components into workflows.",-3.7818115,5.3110957
+26,"We furthermore categorize the presented software in additional categories such as open-source, free of charge and major application categories such as acquisition, registration, segmentation and statistical analysis in Supplementary Table 1.",-3.9247863,5.8630095
+27,The table also contains properties of the given software such as preferred dimensionality of input image data and typical imaging modality.,-3.8392453,6.130735
+28,"The software listed in the following glossary were selected to reflect long-term available, reliable, sustainably maintained and supported software solutions.",-4.6052904,5.707244
+29,"We analysts often have to have a conservative perspective on existing software as we need to rely on established, reliable and maintained software to build workflows for our collaborators and trust the given software to be still available in 5-10 years allowing reproducible image data analysis.",-4.894173,6.464761
+30,"To this end, the number of citations served as a criterion to select software but we also considered software packages that have been available for about 5-10 years with continuous maintenance and reliable support by a vivid community.",-5.010469,6.1433153
+31,A less formal criterion we applied for selecting software was considering which tools a starting bio- image analyst would have benefitted from being aware of in order to follow a conversation at one of the Network of European Bio-Image Analysts (NEUBIAS) meetings.,-4.8723936,6.883468
+32,The given description of the glossary items highlights the main application of the software and its relationships with other glossary items.,-4.4450374,5.5464115
+33,"While the glossary focuses on general software and terms used in the field, this should not hide the large number of software or plugins developed for a specific task or context.",-4.504858,5.5271945
+34,"In the domain of plant science, the quantitative plant initiative (Lobet, Draye, and Périlleux 2013) proposes a curated list of software solutions that may also be useful to know.",-4.267473,6.483306
+35,"Also for lightsheet microscopy, there is a specific list of software for acquisition and analysis available (Gibbs et al. 2021).There are a large number of software tools and applications that have been specifically developed for the cryo-electron microscopy (cryoEM); a comprehensive list of software for the cryoEM community can be found from wikibooks (“Software Tools For Molecular Microscopy” 2006). 3D ImageJ Suite (Ollion et al. 2013) is a collection of ImageJ plugins for filtering, segmentation and analysis of geometry, shape, and spatial organization of objects in 3D images. 3D Slicer (Fedorov et al. 2012) is an image processing software based on the ITK library focused on medical imaging with 3D surface extraction, rendering and analysis capabilities.",-2.1189258,9.416569
+36,"It is increasingly used for visualizing and analyzing 3D structures such as cells, tissues and organs in microscopy data.",-3.526684,7.414205
+37,"ANTs (Avants et al. 2011), or Advanced Normalization Tools, is a collection of methods for image registration, segmentation, and analysis, mostly developed in the context of neuro-imaging and the comparison of cohorts.",-2.763942,6.967348
+38,"ANTs depends on ITK, an image processing library to which ANTs developers contribute.",-2.6622374,6.235521
+39,"Arivis Vision 4D (arivis AG, Rostock, Germany) is an image analysis software for processing multi-channel 2D, 3D and 4D data, focused but not limited to microscopy data.",-2.699061,7.365316
+40,"It is scalable, supports processing big image data, and has intuitive image stitching and alignment tools.",-3.143403,6.048951
+41,"Amira-Avizo (Thermo Fisher Scientific Inc, Waltham, MA, United States) is a 2D-5D image processing, visualization and analysis software.",-2.7477002,7.302963
+42,It can be customized using Python and MATLAB and offers additions for incorporating artificial intelligence.,-2.7935264,5.030883
+43,BigDataViewer (Pietzsch et al. 2015) is an n-dimensional image viewer component for slicing volumes in arbitrary directions.,-3.0364814,6.0939956
+44,The Fiji plugin can handle terabyte-sized image data composed of multiple channels and time points.,-3.2377014,5.931015
+45,BigStitcher (Hörl et al. 2019) is an automated and interactive image registration / fusion Fiji plugin capable of handling terabyte sized image data.,-2.9825082,6.184403
+46,It is based on the BigDataViewer.,-3.0613854,6.001352
+47,"BioFormats (Linkert et al. 2010) is an image file format interoperability library which serves multiple image analysis software applications such as Fiji, Omero and QuPath to load image data from many formats and vendors.",-3.1145787,5.5447927
+48,"Blender (Blender Foundation 2022) is a 3D surface rendering, modeling and visualization software with Python scripting,simulation, and video editing capabilities.",-3.5135589,7.066388
+49,"The home of Blender is in design and arts, and it is increasingly used for microscopy image data visualization.",-3.5118446,7.297332
+50,"BoneJ (Domander, Felder, and Doube 2021) is a collection of image processing operations and ImageJ plugins for skeletal / bone image analysis.",-1.7692941,7.0765266
+51,"It is used often in the soil, food and materials science communities.",-4.5296826,6.9471154
+52,Some of the tools were updated to work with ImageJ2.,-2.068364,6.557878
+53,C/C++ are programming languages traditionally used in computing.,-3.8136375,5.1022763
+54,Most operating systems are programmed in C and C++.,-4.0839972,5.1535645
+55,"Furthermore, many Python and also some Java libraries contain components and collections of [image] processing routines written in these languages because C and C++ offer higher performance.",-2.4646637,5.666538
+56,"CATMAID (Saalfeld et al. 2009) is a web application to navigate, share and collaboratively annotate massive volume image data sets.",-3.1947036,6.14745
+57,"CCP-EM (Burnley, Palmer, and Winn 2017) the Collaborative Computational Project for electron cryo-microscopy is a community guiding the users of cryo-EM software tools as well as developers of software packages and file formats.",-2.2231271,9.629325
+58,CCPi (“CCPi Tomographic Imaging” 2022) the Collaborative Computational Project in Tomographic Imaging provides a collection of software tools for tomographic imaging and reconstruction.,-2.1894271,9.588386
+59,CellPose (Stringer et al. 2021) is a deep-learning based segmentation algorithm for biological structures such as cell and cell nuclei in microscopy images.,-2.59593,8.111936
+60,It is accessible as a Python library.,-2.3583941,5.221003
+61,Third parties maintain CellPose plugins for QuPath and Fiji.,-3.3229213,5.3876505
+62,CellProfiler (McQuin et al. 2018) is an image analysis software application with graphical user interface (GUI) for user-friendly configuration of standardized image analysis workflows focusing on high-throughput microscopy imaging data of cells with capabilities for extracting tabular image feature data in high-performance-computing environments.,-2.3940368,8.5943165
+63,CellProfiler Analyst (Jones et al. 2008) is a data exploration software for further visualization and analysis of tabular data produced with CellProfiler.,-2.3342915,8.542092
+64,"It offers advanced plotting, dimensionality reduction and machine learning based object classification for dealing with big data as it is common in pharmaceutical research.",-3.609525,6.8023014
+65,DeconvolutionLab2 (Sage et al. 2017) is a collection of image deconvolution algorithms accessible as standalone command-line interface and as user-friendly ImageJ plugin.,-1.6509497,6.982352
+66,"Dragonfly (ORS, Montréal, Canada) is a powerful standalone software featuring an extensive set of tools for image processing, segmentation and 3D visualization.",-3.3816397,6.647175
+67,"Drishti (Limaye 2012; Hu, Limaye, and Lu 2020) is a visualization tool for 3D pixel data, which has been extended with segmentation and measurement tools.",-3.2032506,7.474347
+68,Elastix (Klein et al. 2010) is a standalone command-line tool for registration of 2D and 3D image data based on the ITK library.,-2.4456985,6.7143693
+69,"A Python compatible interface, SimpleElastix, is available as well.",-2.9668562,4.905839
+70,"EMAN2 (Tang et al. 2007) is a software application focusing on CryoEM, covering techniques such as single particle analysis, cryo-electron tomography or sub-tomogram averaging. fairSIM (Müller et al. 2016) is an ImageJ plugin for reconstructing structured illumination microscopy super-resolution images from raw data.",-2.0889018,9.558839
+71,Fiji (Schindelin et al. 2012) is an image analysis software based on ImageJ and a collection of ImageJ- and ImageJ2 compatible plugins focusing on general-purpose image analysis in the life sciences.,-2.7802918,5.8214393
+72,"It Is scriptable using multiple programming languages compatible with the Java ecosystem, extensible and capable of handling big image data through integration of components such as ImgLib2 and BigDataViewer.",-3.2189012,5.0248356
+73,Groovy (“The Apache Groovy Programming Language” 2022) is a scripting language that can be used for automating image analysis routines in QuPath and Fiji.,-3.0096545,4.895945
+74,"Gwyddion (Nečas and Klapetek, 2012) is a modular program for scanning probe microscopy (SPM) data visualization and analysis, primarily focused on the analysis of altitude maps such as obtained by atomic force microscopes.",-2.1694162,9.256917
+75,"Huygens (Scientific Volume Imaging B.V., Hilversum, Netherlands) is an image processing software dedicated to deconvolution of 3D stacks from fluorescence microscopy, potentially multi- channel and time-lapse data.",-2.6697206,7.672383
+76,Icy (de Chaumont et al. 2012) is an image analysis software focusing on general purpose image- analysis in the life sciences compatible with ImageJ.,-2.3154294,7.122628
+77,Icy is scriptable using JavaScript and a visual programming approach using so called protocols.,-3.2123456,4.9736505
+78,"Ilastik (Berg et al. 2019) is an image analysis software offering easy-to-use machine learning capabilities for image segmentation, object classification, object tracking and statistical analysis of microscopy image data.",-2.245838,6.829805
+79,Ilastik classifiers can be used from Fiji and CellProfiler.,-2.2851667,6.5919666
+80,"Furthermore, it supports execution on high-performance-computing clusters.",-3.4394782,6.2926984
+81,"ImageJ (Schneider, Rasband, and Eliceiri 2012) is an image analysis software and framework for image analysis algorithms integrated in Fiji, Icy, MicroManager, QuPath and others.",-1.8892252,6.9076724
+82,We conservatively estimate tens or hundreds of thousands of plugins and scripts have been developed in its 20+ year history making it one of the most important platforms for image analysis in the life sciences.,-4.322857,7.0441794
+83,ImageJ2 (Rueden et al. 2017) is a modern rewrite of the ImageJ codebase with focus in scientific image processing and analysis of big image data.,-1.9384493,6.746131
+84,It serves as an extensible platform underlying Fiji and other software platforms in the life sciences.,-3.2109523,5.193165
+85,ImageJ Macro (“Macro Language” 2022) is a limited programming language specific to the ImageJ platform useful for automating image processing routines.,-2.0749018,6.8758397
+86,Image.sc (Rueden et al. 2019) is an online discussion forum based on the Discourse platform (“Discourse - Civilized Discussion” 2022) that serves as questions & answers forum for many open source projects from the image science field.,-4.500067,8.033027
+87,It plays a key role in knowledge exchange and community support for many open source bio-image analysis software projects.,-4.941119,7.3028293
+88,See Figure 1 for a list of community partners.,-4.968687,7.4087205
+89,"Imaris (Oxford Instruments, Oxon, United Kingdom) is an image processing and visualization software supporting 3D volume rendering and quantitative analysis.",-2.619386,7.4621725
+90,"Through extra modules it is interoperable with Fiji, Python and MATLAB.",-3.1134593,5.0386953
+91,ImgLib2 (Pietzsch et al. 2012) is an image processing framework and collection of algorithms.,-2.20112,6.971457
+92,"It is the basis for software such as BigDataViewer, BigStitcher, ImageJ2, Fiji, Knime and others to handle terabyte-sized big image data.",-3.1732328,5.9894047
+93,"IMOD (Kremer, Mastronarde, and McIntosh 1996) is an image processing, modeling and visualization software collection for electron microscopy.",-2.2349727,9.321292
+94,"Aside from command line tools for image processing, it offers a GUI for reconstruction, registration and segmentation of data.",-2.9963908,6.5751996
+95,ITK (Yoo et al. 2002) is an image registration and segmentation algorithm collection and library with a long history in medical imaging.,-2.3734965,6.7224183
+96,"It is the underlying framework for tools such as 3D Slicer, Elastix, ANTs, and ITK Snap.",-2.6600373,6.156286
+97,ITK Snap (Yushkevich et al. 2006) is a software application specifically for segmentation and surface rendering of 3D medical imaging datasets based on ITK.,-2.4783552,6.574361
+98,"Java is the programming language Icy, ImageJ, Fiji, QuPath and compatible plugins are written in.",-3.1263945,4.846212
+99,It is also interoperable with Imaris and MATLAB.,-3.0263574,5.259053
+100,"JavaScript is a scripting language used for automation of image analysis routines in Icy, ImageJ and Fiji.",-2.9209926,5.1702514
+101,It is also the most popular web programming language world wide (“Stack Overflow Developer Survey 2021” 2021).,-2.537018,5.044326
+102,"Jupyter Notebooks (Kluyver et al. 2016) is an interactive, cloud compatible programming environment suitable for image data analysis, statistics and scientific plotting.",-2.109085,6.071168
+103,It is a key component for reproducible data science in the scientific Python ecosystem and is extensively used for documentation and training.,-2.377169,5.325815
+104,Jython is a Java-compatible scripting language based on the syntax of Python 2.,-3.066668,4.7944255
+105,"It can be used for automation of image analysis routines in Fjij but is technically not compatible with numpy, scipy, scikit-image and other Python-based libraries.",-2.2851055,6.095843
+106,It is compatible with Java-based components.,-3.2627044,4.729816
+107,KNIME (Berthold et al. 2008) is a visual and interactive programming environment focusing on data science with image analysis and machine learning capabilities.,-2.3730993,6.143863
+108,"Its image processing capabilities are based on ImageJ, ImageJ2, SciJava and Imglib2.",-2.2008123,6.358177
+109,"Knossos (Helmstaedter, Briggman, and Denk 2011) is an image visualization and annotation software for large connectomics (electron microscopy) data extensible using Python modules.",-2.3332407,9.064677
+110,"Leica Application Suite X (Leica microsystems GmbH, Wetzlar, Germany) is a software for microscope control, image acquisition, visualization and analysis.",-2.0249379,9.203364
+111,"It offers modules for computational clearing and deconvolution (lightning), Fluorescence lifetime, FRET, and FCS analysis, CARS calculations, 2D and 3D measurements.",-3.7000093,6.5621514
+112,"MATLAB (Mathworks, Natick, MA, United States) is a software environment for numeric computing that provides a multi-paradigm programming language and a number of dedicated applications and toolboxes, e.g. for image processing, computer vision, statistics and machine learning.",-2.535417,5.3323684
+113,It can be extended using Java libraries.,-3.1257195,4.738961
+114,Matplotlib (Hunter 2007) is a scientific plotting and image visualization collection commonly used for image data science by the Python community.,-2.081943,5.7279205
+115,MicroManager (Edelstein et al. 2010) is a microscope control software with built-in image processing capabilities based on ImageJ.,-1.8053341,9.3011675
+116,It can be scripted using the BeanShell language and recently using Python (Pinkard et al. 2021).,-3.0463538,4.7800083
+117,"Microscopy Image Browser (Belevich et al. 2016) is a MATLAB-based software for advanced image processing, segmentation, quantification, and visualization of multi-dimensional light and electron microscopy datasets.",-2.1745226,9.029348
+118,"It works with BioFormats, allows batch processing operations and can be directly linked to Fiji.",-3.2163613,5.393888
+119,MorphographX (Barbier de Reuille et al. 2015) is a software for visualization and analysis of 4D datasets.,-2.676778,7.4861135
+120,It focuses on the analysis of organ growth from 4D live-imaging confocal data of plants.,-3.5369248,7.4613886
+121,"Various algorithms implemented in MorphographX extract surfaces from 3D data and post- process the intensities along those surfaces, which can be seen as an efficient 2.5 dimensional approximation of 3D quantification.",-2.6188908,7.3997097
+122,"MorphoLibJ (Legland, Arganda-Carreras, and Andrey 2016) is a collection of methods and plugins for ImageJ implementing mathematical morphology operations such as dilation, opening, watershed and reconstruction as well as methods for quantitative analysis of label images.",-1.8345208,7.2978673
+123,"NanoJ (Laine et al. 2019) is a toolbox of ImageJ plugins for super-resolution microscopy processing and analysis tasks, including drift correction and channel registration.",-1.0975871,8.835651
+124,It also incorporates the widely-used SRRF method for live-cell super-resolution image reconstruction (Gustafsson et al. 2016).,-1.180326,9.039868
+125,NeuronJ (Meijering et al. 2004) is an ImageJ plugin for neurite tracing and analysis.,-1.9158825,7.8216915
+126,"NIS-Elements (Nikon, Tokyo, Japan) is a software for microscope control, computer-assisted image acquisition and analysis.",-1.975844,9.242413
+127,"It integrates artificial intelligence solutions for de-blurring, segmentation and image restoration.",-3.0404928,6.7867746
+128,Image analysis components can be combined to a workflow within a visual programming environment.,-3.0362754,6.5267324
+129,Numpy (Harris et al. 2020) is a Python library and a collection of efficient array processing algorithms.,-1.600703,5.7246356
+130,It is among the most used Python libraries in the world (“Python Package Index Download Statistics” 2021) and the basis for many image processing components and collections in the Python ecosystem.,-2.3091314,5.281396
+131,"ParaView (Ahrens, Geveci, and Law 2005) is a software for vector and surface data analysis and visualization based on the ITK library.",-2.6176252,6.8358846
+132,"Python is a programming language, potentially the most popular language in science and surely among the top used programming languages in general (“Stack Overflow Developer Survey 2020” 2020).",-2.3475053,5.167485
+133,"It is commonly used to assemble various image processing, data analysis and visualization libraries in scientific workflow.",-3.4039805,6.238706
+134,OrientationJ (Püspöki et al. 2016) is an ImageJ plugin to characterize the orientation and isotropy properties of regions of interest in images.,-1.9621974,6.8675113
+135,Omero (Allan et al. 2012) is a research data management solution for microscopy image data.,-3.3461292,5.5973682
+136,It was initially developed to facilitate analysis of large amounts of high-throughput imaging data.,-3.4822493,6.6236987
+137,"Omero can be used as a remote-server storing image data that is highly interoperable with other software such as CellProfiler, Fiji and QuPath.",-3.3163593,5.4987626
+138,OpenCV (Bradski 2000) is a collection of image analysis components that includes several hundred computer vision algorithms.,-2.7491434,6.718035
+139,OpenCV focuses on 2D+time imaging data acquired with video cameras and has also many applications in microscopy.,-3.022376,6.907572
+140,QuPath (Bankhead et al. 2017) is an image analysis software for quantitative pathology.,-2.2203496,8.718734
+141,It allows visualization and analysis of large 2D slide scanner imaging data of histological slices.,-3.4299242,7.3953676
+142,"Its user- friendly GUI offers tools for manual annotation, machine-learning based tissue classification and deep-learning based cell segmentation.",-3.2749999,7.0799026
+143,It is extensible using Java-based plugins and scriptable using the Groovy programming language.,-3.2709453,4.6990905
+144,It is interoperable with Omero and BioFormats.,-3.2763062,5.3424387
+145,R (“The R Project for Statistical Computing” 2022) is a programming language for statistical computing and plotting.,-2.095446,5.581386
+146,It is commonly used for the downstream statistical analysis of the output of image analysis packages.,-3.4654245,6.309571
+147,R-packages also exist for image processing (Pau et al. 2010).,-3.2201183,6.4025
+148,"RELION (Scheres 2012), or REgularised LIkelihood OptimisatioN, is a software package for cryo- EM structure determination processing data from single particle or tomography experiments.",-2.250651,9.633249
+149,RStudio (“The R Project for Statistical Computing” n.d.) is a standalone application allowing interactive programming using the R language.,-2.1440737,5.660716
+150,"Users can view existing variables, manipulate tables and plots.",-2.8441083,6.5540104
+151,SciJava (“SciJava” 2022) is a collection of image analysis data structures and algorithms such as ImgLib2 and serves as the basis for ImageJ2.,-1.9569311,6.5612397
+152,Scikit-image (van der Walt et al. 2014) is a general purpose collection of scientific image analysis algorithms based on numpy and scipy.,-1.7844388,6.0692563
+153,Image analysis workflows using scikit-image can be written in Python and it is commonly used with jupyter notebooks.,-2.0887885,5.9842596
+154,"Scikit-learn (Pedregosa et al. 2011) is a collection of Python-based algorithms for machine learning commonly used in the context of image for pixel, object and image classification.",-1.6350288,5.9111905
+155,"SCILS (Bruker, Billerica, MA, United states) is a software for analysis of mass-spectrometry imaging (MSI) data, including machine learning algorithms and tools for visualizing ion images and mass spectra.",-3.5604882,7.867675
+156,"Scipy (van der Walt et al. 2014; Virtanen et al. 2020) is a collection of algorithms for scientific data processing, simulation, optimization and analysis.",-1.4039804,5.873804
+157,It serves as the basis for other software such as scikit-image.,-2.332162,6.074081
+158,SerialEM (Mastronarde 2005) is an acquisition software for a variety of transmission electron microscopes.,-2.374599,9.775572
+159,"It provides different means of automation through navigation, a built-in scripting language and Python integration.",-3.3014276,5.0084896
+160,"Typical applications are electron tomography, large areas for 3-D volume imaging from serial sections or single-particle cryo-EM.",-2.3874035,9.7748165
+161,"Single Neurite Tracer (Arshadi et al. 2021) is a Fiji plugin for processing three-dimensional, multi- channel, timelapse data to trace neurites including analysis and plotting.",-1.7140112,8.114764
+162,"SMAP (Ries 2020) is a MATLAB-based framework for 2D and 3D single-molecule localization microscopy analysis encompassing tasks such as molecule localization, image rendering, and quantitative analysis.",-1.4624653,9.398589
+163,SR-Tessler (Levet et al. 2015) is a standalone software for quantitative analysis of localization- based super-resolution microscopy data.,-1.3853867,9.287468
+164,"StackReg (Thévenaz, Ruttimann, and Unser 1998) is an ImageJ plugin for 2D+time image registration.",-2.001829,6.811157
+165,"It is also commonly used for other types of image registration, e.g. for alignment of slices in 3D image stacks.",-2.6809988,6.7355103
+166,StarDist (Schmidt et al. 2018; Weigert et al. 2020) is a deep-learning based Python library for segmenting star-shaped objects such as cell nuclei which is also available as plugins for Fiji and QuPath.,-1.7187779,7.733943
+167,"ThunderSTORM (Ovesný et al. 2014) is an ImageJ plugin for automated processing, analysis and visualization of data acquired by single-molecule localization microscopy.",-1.5561466,8.975535
+168,ThunderSTORM is at the moment of writing not actively maintained and may in the future be replaced by other solutions.,-4.383648,5.337027
+169,TomoPy (Gürsoy et al. 2014) is an open-source Python package for processing tomography data and image reconstruction.,-2.0620852,9.629871
+170,It is mainly used for X-Ray tomography.,-2.5638497,9.883274
+171,"Tomviz (Levin et al. 2018) is a software package tailored for processing, visualization, and analysis of 3D tomographic data acquired with transmission electron microscopy.",-2.171269,9.550805
+172,It is compatible with Python scripting to accommodate custom algorithms.,-2.8591795,4.924727
+173,TrackMate (Tinevez et al. 2017) is a Fiji plugin for object tracking in 2D+t and 3D+t image data.,-1.4199623,7.4625187
+174,"It comes with advanced plotting, track visualization and cell lineage tree visualization tools.",-3.6272254,7.35434
+175,"It is extensible using Java-based plugins and scriptable using advanced scripting languages in Fiji such as Groovy, JavaScript and Jython.",-3.140692,4.7359834
+176,Trainable WEKA Segmentation (Arganda-Carreras et al. 2017) is a user-friendly ImageJ plugin for pixel classification using various machine learning techniques based on the Waikato Environment for Knowledge Analysis (Witten et al. 2016).,-1.8369378,6.559347
+177,"TrakEM2 (Arganda-Carreras et al. 2017; Cardona et al. 2012) is a Fiji plugin for registration, stitching and management of large-scale electron microscopy data which offers tools for segmentation and reconstruction of objects such as neurons in 3D.",-1.7777548,8.588974
+178,"Zen (Zeiss AG, Oberkochen, Germany) is a software for microscope control, image acquisition, visualization and analysis.",-1.9623103,9.288891
+179,"It offers components for image stitching, registration and segmentation.",-2.9883904,6.486065
+180,"Emerging software Apart from our conservative view on the field, we also perceive recent software developments which presumably will become part of the above glossary within the next 5-10 years.",-4.6301885,5.948581
+181,"Most prominently, deep learning approaches are flooding our field with promising image processing components especially for image restoration (Weigert et al. 2018; Krull, Buchholz, and Jug 2018; Batson and Royer 2019) and cell / nuclei segmentation (Schmidt et al. 2018; Weigert et al. 2020; Aigouy et al. 2020; Stringer et al. 2021), classification and tracking (Mathis et al. 2018) within complex scenes.",-3.1793175,7.2397075
+182,Readers interested in an extended list of new application and ready-to-use deep-learning models are referred to (Belthangady and Royer 2019) and BioImage.,-3.4806445,7.255803
+183,IO 2022.,0.23819211,7.1669703
+184,Those deep-learning based components rely on technical frameworks such as TensorFlow (Tensorflow-Developers 2021) and PyTorch (Paszke et al. 2019) which are not directly accessible to end-users.,-3.8306777,6.569465
+185,Multiple user-friendly GUIs were recently developed offering modern deep-learning tools to a wide target audience (Gómez-de-Mariscal et al. 2021; von Chamier et al. 2021; Ouyang et al. 2019; Belevich and Jokitalo 2021).,-3.5256665,6.94994
+186,"User-friendly deep-learning based image processing is also already integrated within some of the applications listed in the glossary, namely ilastik, Microscopy Image Browser and almost all of the commercial software packages.",-3.235484,7.07372
+187,"In the same context, the napari project (Sofroniew et al. 2021) is bridging the Python community towards the life scientists community by offering automatically generated, user- friendly GUIs to the most recent deep-learning and data science components and strives to become a major framework of the bio-image analysis community.",-3.5484278,6.806652
+188,"From a Python community perspective, napari is already a game changer as it brings widely usable n-dimensional viewing to the otherwise scripting centered Python community (Perkel 2021).",-2.5042353,5.3851995
+189,"From a wider perspective, more image visualization tools have been published recently and show high potential to become major players within the next decade since, compared to current default solutions, they provide opportunities to processing big image data and applying deep learning to microscopy image data (Vergara et al. 2021; Chiaruttini et al. 2022).",-3.5339837,7.254805
+190,"Processing big image data, in the form of large 3D image stacks, long 3D+time data or large collections of 2D or 3D image data sets, is also a hot topic where new tools developed using remote-data, remote-computing and network-based approaches are emerging (Afgan et al. 2018; Marée et al. 2016; Rubens et al. 2020; Tischer et al. 2021; Rubens et al. 2019; Boergens et al. 2017; Rocklin 2015) and also semi-commercial solutions are appearing such as Apeer (Zeiss AG, Oberkochen Germany).",-3.2035694,6.5849767
+191,"Graphics-Processing-Unit (GPU)-accelerated classical image processing (Ryosuke Okuta, Yuya Unno, Daisuke Nishino, Shohei Hido, Crissman Loomis 2017; Haase, Royer, et al. 2020; Dzmitry Malyshau, Kai Ninomiya, Brandon Jones (Editors) 2022; Haase, Jain, et al. 2020) will play a major role for overcoming current limitations concerning processing times for large image data.",-1.3656366,7.122275
+192,"From our perspective, such big-data capable solutions will also facilitate analyzing spatial relationships in biological specimen and tissues using modern data-science approaches in the context of spatial-omics and transcriptomics (Stoltzfus et al. 2020; Palla et al. 2021; Axelrod et al. 2021; Haase 2021; Solorzano, Partel, and Wählby 2020; Pielawski et al. 2022).",-3.8372204,7.5582724
+193,"For single molecule localization microscopy analysis, improved methods for molecule detection and localization are in active development (Sage et al. 2019).",-1.4741776,9.328919
+194,"In the field of super-resolution microscopy more broadly, there is also a focus on developing user-friendly methods for ensuring the fidelity of reconstructed images (Culley et al. 2018; Ball et al. 2015; Marsh et al. 2021).",-1.181582,9.024798
+195,"Last but not least, new file formats and solutions for research image data management (Miles et al. 2020; Moore et al. 2021; Stephan Saalfeld, Igor Pisarev, Philipp Hanslovsky, John Bogovic, Andrew Champion, Curtis Rueden, John Kirkham 2017) are under development and we expect those to have a huge impact on how analysts handle image data within the next decade.",-3.7594893,7.156713
+196,Aspects to consider when choosing bio-image analysis software for your research The choice of the right bio-image analysis software is closely related to the purpose of a given research project and more broadly to the field a research group is working in.,-4.4286413,7.404909
+197,We suggest becoming confident in a single software that broadly fits the planned research needs instead of switching the used software from project to project just because a single feature may be more accessible or more accurate in another software.,-4.960731,6.3168077
+198,Getting to know software and maintaining expertise comes at a high cost when numerous potentially incompatible platforms are used.,-4.925793,5.828427
+199,Interoperability between software is another key feature to consider.,-4.958375,5.678733
+200,"For example, we discourage using software that comes with proprietary custom file formats and suggest using broadly available file formats instead.",-4.439671,5.7493014
+201,"Most prominently, there are some software packages with custom formats for project files.",-4.403194,5.5198855
+202,"We recommend making sure these project files can be accessed with common text editors and contain human-readable text that is based on standard formats such as XML, JSON, YAML or CSV.",-4.411952,5.6417413
+203,"It also appears beneficial if software has capabilities for workflow automation or, in the case of plugins, can be automated using the platform they can be integrated with.",-4.03779,5.4456587
+204,"For example, software with a great built-in segmentation algorithm can become a major bottleneck if the algorithm cannot be integrated with other software, e.g. for pre- processing, post-processing, feature-extraction and statistical analysis.",-4.168924,6.4167776
+205,Striving for reproducible bio-image analysis workflows with minimal manual interaction steps is key for analyzing large amounts of image data leading to insights cemented by appropriate measurements exhibiting statistical power.,-3.9067929,8.169358
+206,"If the software supports forming and properly documenting such automated workflows, reproducibility and interpretability of results can be ensured (Miura and Nørrelykke 2021).",-4.0557303,5.6911764
+207,"Other technical aspects such as big data capabilities play a key role, especially when new microscopy techniques potentially producing more and more data are published every year.",-3.860601,7.2688856
+208,"Many software packages claim the ability to work with big data, but often refer to visualization only or refer to big data as many images with a size of megabytes to gigabytes each.",-3.7019196,6.485277
+209,"On the other hand, software packages capable of processing big volumetric image data in the range of terabytes and petabytes to produce quantitative analysis results are still rare and often limited in other aspects, for example image data dimensionality or imaging modality.",-3.837296,6.517684
+210,"We see more and more web-based solutions being published diminishing the need to buy expensive computational hardware, to train and execute neural network architectures.",-3.8618212,6.800356
+211,"When using web-based solutions in the cloud, institutional, national and international laws have to be respected.",-4.959261,5.83126
+212,Additional technical burdens hinder the wide adoption of cloud computing at the moment.,-4.9017634,5.849124
+213,"For example, uploading multiple terabytes of imaging data from a European institute to an American computing server is not just challenging from a legal but also from the file transfer bandwidth perspective.",-3.7946918,6.345136
+214,We assume these burdens will fall in the next decade and the technology will become available to more and more researchers as the benefits of using it outweigh the risks.,-4.6058264,6.352434
+215,"Hence, choosing a software that is interoperable with cloud-computing and cloud-storage technologies appears a future-proof approach.",-4.8337173,5.6669917
+216,"Many image analysis tasks have a substantial number of solutions that have been developed, and it can often be unclear which solution is most appropriate for a user’s specific problem.",-4.059984,6.4752684
+217,"Several image analysis fields have established benchmarking challenges, whereby software is applied to exemplar datasets and performance is automatically and independently assessed.",-4.0233126,6.4510736
+218,"Such challenges exist for cell tracking (Ulman et al. 2017; “Cell Tracking Benchmark” 2022), cell segmentation (Arganda-Carreras et al. 2015), electron microscopy image segmentation (Wei et al. 2020) and single molecule localization (Sage et al. 2019).",-1.869742,8.668991
+219,"These provide users with a quantitative comparison of the state-of-the-art, along with test datasets and guidance for quality reporting.",-4.0938354,6.23763
+220,Community aspects should also be taken into account when choosing the right image analysis software.,-4.83161,6.813345
+221,"A key role in bio-image analysis for microscopy is played by the Image Science community https://image.sc, an online forum where developers and users of most software listed in the glossary are actively supporting each other by providing support and feedback (Figure 1).",-4.6451354,7.7527537
+222,"Before using a software mid-/long-term, users may want to explore this forum and other online platforms to figure out how actively supported the software is by a broader community.",-5.3082743,6.3761096
+223,"Furthermore, some software communities hold regular virtual community meetings, where users and plugin-developers can get in touch with core-developers to exchange ideas, use-cases and receive support.",-5.342025,6.7928777
+224,The weekly community meeting of the napari community and the open office hours of the CellProfiler community shall be highlighted here as well-appreciated examples.,-4.887377,7.1545534
+225,"For staying up-to-date with new developments in bio-image analysis software, following new media channels such as the NEUBIAS Academy YouTube channel (NEUBIAS 2020) and the @Talk_BioImg Twitter bot which retweets posts containing the #BioImageAnalysis hashtag should be considered as well for an audience with general interest in the field, e.g. postdocs and core-facility staff working on applied bio-image analysis and image data science.",-4.6133814,7.6438646
+226,"In addition, the Global Bioimaging infrastructure is organizing image analysis courses and providing a training resource for core facility staff and image analysis community.",-4.783529,7.4802046
+227,"From a group leader's and an institutional decision maker’s perspective, guiding scientists towards using a common software platform makes sense.",-5.2107916,6.553129
+228,"The more local collaborators work with the same software, and maybe just use different plugins, the more they can support each other and exchange knowledge.",-5.320576,6.6466665
+229,"If it is apparent that a majority of the group or institute members are using the same software, an institute can strengthen this community by inviting the developers of that software annually for courses and seminars.",-5.377979,6.6920333
+230,Building this bridge between users and developers is of mutual benefit:,-5.3073997,6.646342
+231,"While the users receive support and training from experts, the experts can establish collaborations with power users leading to scientific publications.",-5.343283,6.6819997
+232,These applied-science publications are key to grant applications and sustainable maintenance of research software.,-4.891366,6.217239
+233,Conclusions and Perspectives Comparing the bio-image analysis software universe one decade ago to its state now clearly shows that it is expanding.,-4.051196,7.6261663
+234,Multiple huge ecosystems grew from a small number of general- purpose software developed more than a decade ago.,-4.6709146,5.920014
+235,"Recently, many of those platforms are increasing their efforts to build bridges, which is appreciated from our bio-image analysis workflow designers` perspective.",-4.654364,7.4063582
+236,"Users are well-advised to use interoperable, established, sustainably maintained software packages for their research.",-5.105662,6.0846086
+237,"Also keeping an eye on recent developments, especially in the deep learning context, makes a lot of sense, while staying a brave scientist and questioning those new methods.",-3.9371371,7.27224
+238,Such critical thinking is necessary to solidify knowledge about new methods before eventually adopting them as community standards.,-4.8695426,6.5581703
+239,Last but not least we want to emphasize that the decision on which software to use for specific research projects should be made in groups.,-5.055846,6.449278
+240,"Getting in touch with local, regional and global experts and discussing advantages and disadvantages is the right path in a growing universe of bio-image analysis software.",-4.895856,7.2700076
+241,"Acknowledgements We would like to thank Mafalda Sousa (I3S, Porto), Ignacio Arganda-Carreras (Universidad del Pais Vasco, Donostia-San Sebastian), Martin Jones (The Francis Crick Institute, London) for reviewing the manuscript and providing constructive feedback prior to submission.",-3.1155477,8.872906
+242,RH acknowledges support by the Deutsche Forschungsgemeinschaft under Germany’s Excellence Strategy - EXC2068 - Cluster of Excellence Physics of Life of TU Dresden.,-5.039327,7.783674
+243,"EF, IB and EJ acknowledge support by Biomedicum Imaging Unit and Electron Microscopy Unit, Helsinki University, as a part of Biocenter Finland infrastructure.",-4.9702544,7.862295
+244,"CT acknowledges support by grant number 2020- 225265 from the Chan Zuckerberg Initiative DAF, an advised fund of Silicon Valley Community Foundation.",-5.030764,7.6304026
+245,SC acknowledges support from a Royal Society University Research Fellowship.,-5.0474753,7.7301307
+246,"AK was funded via the BioImage Informatics Facility, a unit of the National Bioinformatics Infrastructure Sweden NBIS, with funding from SciLifeLab, National Microscopy Infrastructure NMI (VR-RFI 2019-00217), and the Chan-Zuckerberg Initiative.",-4.894796,7.739504
+247,Figures Figure 1:,0.76285005,7.8779755
+248,Screenshot of the image.sc forum in April 2022 showing the logos of the community partners and related communities.,-4.605827,7.931787
+249,"Listed open-source projects provide online support for their software on this platform, which might be a key-criterion when deciding for which software to use.",-5.189703,6.171105
+250,Tables download for filtering available interactive Supplementary Table 1:,-0.06362508,7.702251
+251,List of the software terms from the glossary with categorical information and capabilities https://cloudstore.zih.tu-dresden.de/index.php/s/AaLoe38QJN5aN48 .,-4.4322076,5.485816
+252,"The software is classified according to a user interface in Standalone Application with GUI, Command Line interface and Online platforms.",-4.2612453,5.330116
+253,"Furthermore, plugins that are parts of other software are differentiated from frameworks which serve as basis for others and software that is extensible using plugins.",-4.44595,5.4823885
+254,Scriptable software and programming languages are specified as well.,-3.6612089,5.0023065
+255,"A classification in Components, Collections and Workflow as suggested by (Miura and Sladoje 2019) is also provided.",-4.1957283,5.6950636
+256,We differentiate between Open Source software and software that is available free of charge.,-4.7544084,5.6443295
+257,"Image processing features are categorized according to the categories Acquisition, Reconstruction, Deconvolution, Denoising, Background removal, Registration, Stitching, Manual annotation, Segmentation, Surface extraction, Object Tracking tracing, Quantification / feature extraction, Statistical analysis, Visualization and Plotting.",-3.0306535,6.582161
+258,The given preferred data dimensionality and preferred modality specify which use-cases a software was made for.,-4.082088,5.9824257
+259,"The software may be applicable to data of other dimensionality and from other modalities. lineage / cell References Adams, Douglas, and John Lloyd. 1983.",-4.050705,7.4495406
+260,The Meaning of Liff.,1.2323925,8.066635
+261,Pan.,1.3404121,7.975841
+262,"Afgan, Enis, Dannon Baker, Bérénice Batut, Marius van den Beek, Dave Bouvier, Martin Cech, John Chilton, et al. 2018. “The Galaxy Platform for Accessible, Reproducible and Collaborative Biomedical Analyses: 2018 Update.” Nucleic Acids Research 46 (W1):",-1.3885328,8.181553
+263,W537– 44.,1.4558399,8.037761
+264,"Ahrens, James, Berk Geveci, and Charles Law. 2005. “ParaView:",1.5151316,7.1731544
+265,"An End-User Tool for Large- Data Visualization.” In Visualization Handbook, 717–31.",-2.9282854,7.170828
+266,Elsevier.,0.47214904,8.127453
+267,"Aigouy, Benoit, Claudio Cortes, Shanda Liu, and Benjamin Prud’Homme. 2020. “EPySeg:",1.9360194,5.837522
+268,A Coding-Free Solution for Automated Segmentation of Epithelia Using Deep Learning.” Development 147 (24). https://doi.org/10.1242/dev.194589.,-2.7944882,7.8965545
+269,"Allan, Chris, Jean-Marie Burel, Josh Moore, Colin Blackburn, Melissa Linkert, Scott Loynton, Donald Macdonald, et al. 2012. “OMERO:",1.7306732,5.8721294
+270,"Flexible, Model-Driven Data Management for Experimental Biology.” Nature Methods 9 (3): 245–53.",-3.6817563,8.541319
+271,"Arganda-Carreras, Ignacio, Verena Kaynig, Curtis Rueden, Kevin W.",2.8616948,6.817908
+272,"Eliceiri, Johannes Schindelin, Albert Cardona, and H.",2.7109506,6.192412
+273,Sebastian Seung. 2017. “Trainable Weka Segmentation:,-1.7577956,6.5914383
+274,A Machine Learning Tool for Microscopy Pixel Classification.” Bioinformatics 33 (15): 2424– 26.,-3.072249,8.3638525
+275,"Arganda-Carreras, Ignacio, Srinivas C.",2.778741,6.818681
+276,"Turaga, Daniel R.",1.9071418,7.7001085
+277,"Berger, Dan Cireşan, Alessandro Giusti, Luca M.",2.6248806,6.428099
+278,"Gambardella, Jürgen Schmidhuber, et al. 2015. “Crowdsourcing the Creation of Image Segmentation Algorithms for Connectomics.” Frontiers in Neuroanatomy 9 (November): 142.",-1.7288805,8.177362
+279,"Arshadi, Cameron, Ulrik Günther, Mark Eddison, Kyle I.",2.4709706,6.4603615
+280,S.,1.4115431,7.8357706
+281,"Harrington, and Tiago A.",2.1272202,8.122186
+282,Ferreira. 2021. “SNT:,1.1517648,7.256484
+283,A Unifying Toolbox for Quantification of Neuronal Anatomy.” Nature Methods 18 (4): 374–77.,-1.9682328,8.334912
+284,"Avants, Brian B., Nicholas J.",2.5851576,7.2700076
+285,"Tustison, Gang Song, Philip A.",2.0796413,7.6438384
+286,"Cook, Arno Klein, and James C.",2.2307348,6.728361
+287,Gee. 2011. “A Reproducible Evaluation of ANTs Similarity Metric Performance in Brain Image Registration.” NeuroImage 54 (3): 2033–44.,-1.9652857,7.8561707
+288,"Axelrod, Shannon, Matthew Cai, Ambrose Carr, Jeremy Freeman, Deep Ganguli, Justin Kiggins, Brian Long, Tony Tung, and Kevin Yamauchi. 2021. “Starfish:",2.0126324,6.0663757
+289,Scalable Pipelines for Image- Based Transcriptomics.” Journal of Open Source Software 6 (61): 2440.,-3.3441043,8.622765
+290,"Ball, Graeme, Justin Demmerle, Rainer Kaufmann, Ilan Davis, Ian M.",2.525363,6.298324
+291,"Dobbie, and Lothar Schermelleh. 2015. “SIMcheck:",1.1149988,6.901795
+292,A Toolbox for Successful Super-Resolution Structured Illumination Microscopy.” Scientific Reports 5 (November): 15915.,-1.1369263,9.122115
+293,"Bankhead, Peter, Maurice B.",2.1454601,7.5649657
+294,"Loughrey, José A.",1.7966244,8.3189535
+295,"Fernández, Yvonne Dombrowski, Darragh G.",2.719761,6.835134
+296,"McArt, Philip D.",2.201419,7.5990086
+297,"Dunne, Stephen McQuaid, et al. 2017. “QuPath:",-1.6855967,8.63156
+298,Open Source Software for Digital Pathology Image Analysis.” Scientific Reports 7 (1): 16878.,-3.4656668,8.729001
+299,"Barbier de Reuille, Pierre, Anne-Lise Routier-Kierzkowska, Daniel Kierzkowski, George W.",2.110799,7.0302706
+300,"Bassel, Thierry Schüpbach, Gerardo Tauriello, Namrata Bajpai, et al. 2015. “MorphoGraphX:",0.03351413,7.2017026
+301,A Platform for Quantifying Morphogenesis in 4D.” eLife 4 (May): 05864.,-2.9201849,7.7182937
+302,"Batson, Joshua, and Loic Royer. 2019. “Noise2Self:",1.872433,5.819372
+303,Blind Denoising by Self-Supervision.” http://arxiv.org/abs/1901.11365.,-1.0504715,8.021572
+304,"Belevich, Ilya, Merja Joensuu, Darshan Kumar, Helena Vihinen, and Eija Jokitalo. 2016. “Microscopy Image Browser:",-1.1509899,8.680035
+305,A Platform for Segmentation and Analysis of Multidimensional Datasets.” PLoS Biology 14 (1): e1002340.,-3.4597118,8.508895
+306,"Belevich, Ilya, and Eija Jokitalo. 2021. “DeepMIB:",1.1954885,6.3198643
+307,User-Friendly and Open-Source Software for Training of Deep Learning Network for Biological Image Segmentation.” PLoS Computational Biology 17 (3): e1008374.,-2.8412662,7.9888277
+308,"Berg, Stuart, Dominik Kutra, Thorben Kroeger, Christoph N.",2.379947,6.4505324
+309,"Straehle, Bernhard X.",1.7471201,6.9727173
+310,"Kausler, Carsten Haubold, Martin Schiegg, et al. 2019. “Ilastik:",1.6328957,6.7191653
+311,Interactive Machine Learning for (bio)image Analysis.” Nature Methods 16 (12): 1226–32.,-3.2938807,8.190956
+312,"Berthold, Michael R., Nicolas Cebron, Fabian Dill, Thomas R.",2.4662979,6.929079
+313,"Gabriel, Tobias Kötter, Thorsten Meinl, Peter Ohl, Christoph Sieb, Kilian Thiel, and Bernd Wiswedel. 2008. “KNIME:",1.8094847,6.607514
+314,"The Konstanz Information Miner.” In Data Analysis, Machine Learning and Applications, 319–26.",-1.5788182,5.481226
+315,"Studies in Classification, Data Analysis, and Knowledge Organization.",-1.6435763,5.487075
+316,"Berlin, Heidelberg:",1.7269137,7.22984
+317,Springer Berlin Heidelberg. “BioImage Informatics Index.” 2022. 2022. https://biii.eu.,-2.6587439,8.428786
+318,Blender Foundation. 2022. “Blender.org - Home of the Blender Project - Free and Open 3D Creation Software.” 2022. https://www.blender.org/.,-4.0799994,7.566332
+319,"Boergens, Kevin M., Manuel Berning, Tom Bocklisch, Dominic Bräunlein, Florian Drawitsch, Johannes Frohnhofen, Tom Herold, et al. 2017. “webKnossos:",1.7443178,6.6345105
+320,Efficient Online 3D Data Annotation for Connectomics.” Nature Methods 14 (7): 691–94.,-1.9751537,8.253658
+321,"Bradski, G. 2000. “The OpenCV Library.” In Dr Dobb’s Journal of Software Tools.",-2.4751754,6.812454
+322,"Burnley, Tom, Colin M.",2.3447323,7.6014876
+323,"Palmer, and Martyn Winn. 2017. “Recent Developments in the CCP-EM Software Suite.” Acta Crystallographica.",-2.3324802,9.603421
+324,"Section D, Structural Biology 73 (Pt 6): 469–77.",-2.6458864,9.488616
+325,"Cardona, Albert, Stephan Saalfeld, Johannes Schindelin, Ignacio Arganda-Carreras, Stephan Preibisch, Mark Longair, Pavel Tomancak, Volker Hartenstein, and Rodney J.",2.4925885,6.3937383
+326,Douglas. 2012. “TrakEM2 Software for Neural Circuit Reconstruction.” PloS One 7 (6): e38011. “CCPi Tomographic Imaging.” 2022. 2022. http://www.ccpi.ac.uk/. “Cell Tracking Benchmark.” 2022. 2022. http://celltrackingchallenge.net/latest-ctb-results/.,-1.4607341,8.431822
+327,"Chamier, Lucas von, Romain F.",2.4174712,6.1783648
+328,"Laine, Johanna Jukkala, Christoph Spahn, Daniel Krentzel, Elias Nehme, Martina Lerche, et al. 2021. “Democratising Deep Learning for Microscopy with ZeroCostDL4Mic.” Nature Communications 12 (1): 2276.",-1.1750162,8.3009615
+329,"Chaumont, Fabrice de, Stéphane Dallongeville, Nicolas Chenouard, Nicolas Hervé, Sorin Pop, Thomas Provoost, Vannary Meas-Yedid, et al. 2012. “Icy:",2.1369464,5.753164
+330,An Open Bioimage Informatics Platform for Extended Reproducible Research.” Nature Methods 9 (7): 690–96.,-3.5082898,8.63971
+331,"Chiaruttini, Nicolas, Olivier Burri, Peter Haub, Romain Guiet, Jessica Sordet-Dessimoz, and Arne Seitz. 2022. “An Open-Source Whole Slide Image Registration Workflow at Cellular Precision Using Fiji, QuPath and Elastix.” Frontiers (January). https://doi.org/10.3389/fcomp.2021.780026. in Computer Science 3 Culley, Siân, David Albrecht, Caron Jacobs, Pedro Matos Pereira, Christophe Leterrier, Jason Mercer, and Ricardo Henriques. 2018. “Quantitative Mapping and Minimization of Super- Resolution Optical Imaging Artifacts.” Nature Methods 15 (4): 263–66. “Discourse - Civilized Discussion.” 2022.",-1.1992149,8.253316
+332,Discourse - Civilized Discussion. 2022. https://www.discourse.org/.,-4.568086,7.968428
+333,"Domander, Richard, Alessandro A.",2.5764332,6.733334
+334,"Felder, and Michael Doube. 2021. “BoneJ2 - Refactoring Established Research Software.” Wellcome Open Research 6 (February): 37.",-1.1715316,7.407573
+335,"Dzmitry Malyshau, Kai Ninomiya, Brandon Jones (Editors). 2022. “WebGPU.” 2022. https://www.w3.org/TR/webgpu/.",-1.0627826,6.7909684
+336,"Edelstein, Arthur, Nenad Amodaj, Karl Hoover, Ron Vale, and Nico Stuurman. 2010. “Computer Control of Microscopes Using µManager.” Current Protocols in Molecular Biology / Edited by Frederick M.",-1.7858509,9.381589
+337,Ausubel ... [et Al.] Chapter 14 (October):,0.8221973,7.9715853
+338,Unit14.20.,0.88078636,7.9247904
+339,Elixir community. 2022. “Bio.tools.” Bio.tools. 2022. https://bio.tools/.,-4.450352,8.021995
+340,"Fedorov, Andriy, Reinhard Beichel, Jayashree Kalpathy-Cramer, Julien Finet, Jean-Christophe Fillion-Robin, Sonia Pujol, Christian Bauer, et al. 2012. “3D Slicer as an Image Computing Platform for the Quantitative Imaging Network.” Magnetic Resonance Imaging 30 (9): 1323– 41.",-1.3172709,8.203576
+341,"Gibbs, Holly C., Sakina M.",2.7808151,7.163148
+342,"Mota, Nathan A.",1.7743566,7.906094
+343,"Hart, Sun Won Min, Alex O.",2.3808074,6.228599
+344,"Vernino, Anna L.",2.2975028,7.521319
+345,"Pritchard, Anindito Sen, et al. 2021. “Navigating the Light-Sheet Image Analysis Software Landscape:",-2.1499238,8.528104
+346,Concepts for Driving Cohesion From Data Acquisition to Analysis.” Frontiers in Cell and Developmental Biology 9 (November): 739079.,-3.9304125,8.222429
+347,"Gómez-de-Mariscal, Estibaliz, Carlos García-López-de-Haro, Wei Ouyang, Laurène Donati, Emma Lundberg, Michael Unser, Arrate Muñoz-Barrutia, and Daniel Sage. 2021. “DeepImageJ:",1.8018289,5.928068
+348,A User-Friendly Environment to Run Deep Learning Models in ImageJ.” Nature Methods 18 (10): 1192–95.,-2.889185,7.822638
+349,"Gürsoy, Dogˇa, Francesco De Carlo, Xianghui Xiao, and Chris Jacobsen. 2014. “TomoPy:",-0.6548685,8.473029
+350,A Framework for the Analysis of Synchrotron Tomographic Data.” Journal of Synchrotron Radiation 21 (Pt 5): 1188–93.,-2.5848916,9.808632
+351,"Gustafsson, Nils, Siân Culley, George Ashdown, Dylan M.",2.0696225,6.4821005
+352,"Owen, Pedro Matos Pereira, and Ricardo Henriques. 2016. “Fast Live-Cell Conventional Fluorophore Nanoscopy with ImageJ through Super-Resolution Radial Fluctuations.” Nature Communications 7 (August): 12471.",-1.0514911,8.890363
+353,"Haase, Robert. 2021. “Image Processing Filters for Grids of Cells Analogous to Filters Processing (November).",-1.3302786,7.8099837
+354,Computer Science Pixels.” of 3 in Grids https://doi.org/10.3389/fcomp.2021.774396.,-1.2656697,6.9661193
+355,"Frontiers Haase, Robert, Akanksha Jain, Stéphane Rigaud, Daniela Vorkel, Pradeep Rajasekhar, Theresa Suckert, Talley J.",1.7118515,6.689378
+356,"Lambert, et al. 2020. “Interactive Design of GPU-Accelerated Image Data Flow Graphs and Cross-Platform Deployment Using Multi-Lingual Code Generation.” bioRxiv. https://doi.org/10.1101/2020.11.19.386565.",-1.4200746,7.2348576
+357,"Haase, Robert, Loic A.",1.9208695,7.006008
+358,"Royer, Peter Steinbach, Deborah Schmidt, Alexandr Dibrov, Uwe Schmidt, Martin Weigert, et al. 2020. “CLIJ:",1.7140948,6.477123
+359,GPU-Accelerated Image Processing for Everyone.” Nature Methods 17 (1): 5–6.,-1.5601276,7.115119
+360,"Harris, Charles R., K.",2.1727386,7.715015
+361,"Jarrod Millman, Stéfan J. van der Walt, Ralf Gommers, Pauli Virtanen, David Cournapeau, Eric Wieser, et al. 2020. “Array Programming with NumPy.” Nature 585 (7825): 357–62.",-1.1728432,6.166201
+362,"Helmstaedter, Moritz, Kevin L.",2.7775116,7.8290253
+363,"Briggman, and Winfried Denk. 2011. “High-Accuracy Neurite Reconstruction for High-Throughput Neuroanatomy.” Nature Neuroscience 14 (8): 1081–88.",-1.7350824,8.27791
+364,"Hörl, David, Fabio Rojas Rusak, Friedrich Preusser, Paul Tillberg, Nadine Randel, Raghav K.",2.1838796,6.548548
+365,"Chhetri, Albert Cardona, et al. 2019. “BigStitcher:",1.0008378,6.960756
+366,Reconstructing High-Resolution Image Datasets of Cleared and Expanded Samples.” Nature Methods 16 (9): 870–74.,-3.0485482,8.287669
+367,"Hunter, John D. 2007. “Matplotlib:",-1.9016352,5.914744
+368,A 2D Graphics Environment.” Computing in Science & Engineering 9 (3): 90–95.,-2.664678,6.964434
+369,"Hu, Yuzhi, Ajay Limaye, and Jing Lu. 2020. “Three-Dimensional Segmentation of Computed Tomography Data Using :",-1.5289414,8.070794
+370,New Tools and Developments.” Royal Society Open Science 7 (12): 201033.,-3.8501413,7.3456745
+371,"Jones, Thouis R., In Han Kang, Douglas B.",2.1626313,7.477955
+372,"Wheeler, Robert A.",1.8406054,7.330598
+373,"Lindquist, Adam Papallo, David M.",2.3883922,6.939521
+374,"Sabatini, Polina Golland, and Anne E.",2.7268329,6.3003697
+375,Carpenter. 2008. “CellProfiler Analyst:,-2.2466075,8.559687
+376,Data Exploration and Analysis Software for Complex Image-Based Screens.” BMC Bioinformatics 9 (November): 482.,-3.4724905,8.220439
+377,"Klein, Stefan, Marius Staring, Keelin Murphy, Max A.",2.3540213,6.321175
+378,"Viergever, and Josien P.",2.0532212,8.13981
+379,W.,1.8456106,7.842844
+380,Pluim. 2010. “Elastix:,0.034904946,7.582482
+381,A Toolbox for Intensity-Based Medical Image Registration.” IEEE Transactions on Medical Imaging 29 (1): 196–205.,-2.0269797,7.5023685
+382,"Kluyver, Thomas, Benjamin Ragan-Kelley, Fernando Pérez, Brian Granger, Matthias Bussonnier, Jonathan Frederic, Kyle Kelley, et al. 2016. “Jupyter Notebooks – a Publishing Format for Reproducible Computational Workflows.” In Positioning and Power in Academic Publishing:",-0.885923,7.112422
+383,"Players, Agents and Agendas, 87–90.",1.6353686,7.4796124
+384,IOS Press.,0.01947691,8.079405
+385,"Kremer, J.",1.4213017,8.348508
+386,"R., D.",1.8039277,7.8286743
+387,N.,1.4143745,7.9110265
+388,"Mastronarde, and J.",2.0669057,8.223016
+389,R.,1.7905493,7.9279213
+390,McIntosh. 1996. “Computer Visualization of Three- Dimensional Image Data Using IMOD.” Journal of Structural Biology 116 (1): 71–76.,-2.5011344,9.0426655
+391,"Krull, Alexander, Tim-Oliver Buchholz, and Florian Jug. 2018. “Noise2Void - Learning Denoising from Single Noisy Images.” http://arxiv.org/abs/1811.10980.",-1.030745,8.107568
+392,"Laine, Romain F., Kalina L.",2.3817613,5.850513
+393,"Tosheva, Nils Gustafsson, Robert D.",1.9751908,6.9256573
+394,M.,1.8828005,8.201759
+395,"Gray, Pedro Almada, David Albrecht, Gabriel T.",2.3478677,6.648229
+396,"Risa, et al. 2019. “NanoJ:",0.24073943,7.533676
+397,A High-Performance Open-Source Super- Resolution Microscopy Toolbox.” Journal of Physics D:,-1.281365,9.199174
+398,Applied Physics 52 (16): 163001.,0.21483298,8.292389
+399,"Legland, David, Ignacio Arganda-Carreras, and Philippe Andrey. 2016. “MorphoLibJ:",-0.85475683,7.554417
+400,Integrated Library and Plugins for Mathematical Morphology with ImageJ.” Bioinformatics 32 (22): 3532–34.,-2.8055036,8.30723
+401,"Levet, Florian, Anne E.",2.5335906,5.9664574
+402,"Carpenter, Kevin W.",2.7956445,7.969361
+403,"Eliceiri, Anna Kreshuk, Peter Bankhead, and Robert Haase. 2021. “Developing Open-Source Software for Bioimage Analysis:",-3.0669851,8.238894
+404,Opportunities and Challenges.” F1000Research 10 (April): 302.,-4.1065173,7.2721696
+405,"Levet, Florian, Eric Hosy, Adel Kechkar, Corey Butler, Anne Beghin, Daniel Choquet, and Jean- Baptiste Sibarita. 2015. “SR-Tesseler:",1.799566,5.905379
+406,A Method to Segment and Quantify Localization- Based Super-Resolution Microscopy Data.” Nature Methods 12 (11): 1065–71.,-1.189732,9.137414
+407,"Levin, Barnaby D.",2.1750033,7.5846705
+408,"A., Yi Jiang, Elliot Padgett, Shawn Waldon, Cory Quammen, Chris Harris, Utkarsh Ayachit, et al. 2018. “Tutorial on the Visualization of Volumetric Data Using Tomviz.” Microscopy Today 26 (1): 12–17.",-1.4224442,8.710319
+409,"Limaye, Ajay. 2012. “Drishti:",0.9608979,8.005336
+410,"A Volume Exploration and Presentation Tool.” In Developments in X-Ray Tomography VIII, edited by Stuart R.",-2.6081495,9.874973
+411,Stock.,1.209369,8.0587435
+412,SPIE. https://doi.org/10.1117/12.935640.,-0.72065496,8.249679
+413,"Linkert, Melissa, Curtis T.",2.7950146,7.334198
+414,"Rueden, Chris Allan, Jean-Marie Burel, Will Moore, Andrew Patterson, Brian Loranger, et al. 2010. “Metadata Matters:",1.4338968,6.2161508
+415,Access to Image Data in the Real World.” The Journal of Cell Biology 189 (5): 777–82.,-3.3447213,8.227456
+416,"Lobet, Guillaume, Xavier Draye, and Claire Périlleux. 2013. “An Online Database for Plant Image Analysis Software Tools.” Plant Methods 9 (1): 38. “Macro Language.” 2022. 2022. https://imagej.nih.gov/ij/developer/macro/macros.html.",-2.1412463,7.7483177
+417,"Marée, Raphaël, Loïc Rollus, Benjamin Stévens, Renaud Hoyoux, Gilles Louppe, Rémy Vandaele, Jean-Michel Begon, Philipp Kainz, Pierre Geurts, and Louis Wehenkel. 2016. “Collaborative Analysis of Multi-Gigapixel Imaging Data Using Cytomine.” Bioinformatics 32 (9): 1395–1401.",-1.3799055,8.323353
+418,"Marsh, Richard J., Ishan Costello, Mark-Alexander Gorey, Donghan Ma, Fang Huang, Mathias Gautel, Maddy Parsons, and Susan Cox. 2021. “Sub-Diffraction Error Mapping for Localisation Microscopy Images.” Nature Communications 12 (1): 5611.",-1.0889014,8.6945095
+419,"Mastronarde, David N. 2005. “Automated Electron Microscope Tomography Using Robust Prediction of Specimen Movements.” Journal of Structural Biology 152 (1): 36–51.",-2.495923,9.728047
+420,"Mathis, Alexander, Pranav Mamidanna, Kevin M.",2.750446,7.2482967
+421,"Cury, Taiga Abe, Venkatesh N.",1.4430736,6.5561166
+422,"Murthy, Mackenzie Weygandt Mathis, and Matthias Bethge. 2018. “DeepLabCut:",0.987289,6.767696
+423,Markerless Pose Estimation of User-Defined Body Parts with Deep Learning.” Nature Neuroscience 21 (9): 1281–89.,-2.7849278,7.886335
+424,"McQuin, Claire, Allen Goodman, Vasiliy Chernyshev, Lee Kamentsky, Beth A.",2.5474095,6.1323447
+425,"Cimini, Kyle W.",2.805587,6.5094094
+426,"Karhohs, Minh Doan, et al. 2018. “CellProfiler 3.0:",-2.0402207,8.497253
+427,Next-Generation Image Processing for Biology.” PLoS Biology 16 (7): e2005970.,-3.2246764,8.398953
+428,"Meijering, E., M.",1.8868575,8.1859665
+429,"Jacob, J-C F.",2.0715718,8.346218
+430,"Sarria, P.",1.6698159,8.230711
+431,"Steiner, H.",1.9182963,7.941047
+432,"Hirling, and M.",2.0672762,8.161072
+433,Unser. 2004. “Design and Validation of a Tool for Neurite Tracing and Analysis in Fluorescence Microscopy Images.” Cytometry.,-1.7132919,8.184488
+434,Part A:,1.2404337,7.8576236
+435,The Journal of the International Society for Analytical Cytology 58 (2): 167–76.,-0.193876,8.147952
+436,"Miles, Alistair, John Kirkham, Martin Durant, James Bourbeau, Tarik Onalan, Joe Hamman, Zain January. “Zarr-Developers/zarr-Python: v2.4.0,” 2020. al. et Patel, https://doi.org/10.5281/zenodo.3773450.",-0.7338458,6.2350626
+437,"Miura, Kota, and Simon F.",1.6133378,6.4961305
+438,Nørrelykke. 2021. “Reproducible Image Handling and Analysis.” The EMBO Journal 40 (3): e105889.,-0.85497826,8.143294
+439,"Miura, Kota, and Natasa Sladoje, eds. 2019.",0.31170136,7.552967
+440,Bioimage Data Analysis Workflows. 1st ed.,-3.5973773,8.601853
+441,Learning Materials in Biosciences.,-4.4206085,7.074177
+442,"Cham, Switzerland:",1.470146,7.696363
+443,Springer Nature.,0.095871635,8.16749
+444,"Moore, Josh, Chris Allan, Sébastien Besson, Jean-Marie Burel, Erin Diel, David Gault, Kevin Kozlowski, et al. 2021. “OME-NGFF:",1.987356,5.7273626
+445,A next-Generation File Format for Expanding Bioimaging Data-Access Strategies.” Nature Methods 18 (12): 1496–98.,-3.5555382,8.683143
+446,"Müller, Marcel, Viola Mönkemöller, Simon Hennig, Wolfgang Hübner, and Thomas Huser. 2016. “Open-Source Image Reconstruction of Super-Resolution Structured Illumination Microscopy Data in ImageJ.” Nature Communications 7 (March): 10980. “NEUBIAS https://www.youtube.com/neubias.",-1.0086308,8.722958
+447,NEUBIAS.,1.3150927,7.9975863
+448,Channel.” Academy Youtube 2020. 2020.,0.61540365,6.922645
+449,"Ollion, Jean, Julien Cochennec, François Loll, Christophe Escudé, and Thomas Boudier. 2013. “TANGO:",2.1045918,5.704367
+450,A Generic Tool for High-Throughput 3D Image Analysis for Studying Nuclear Organization.” Bioinformatics 29 (14): 1840–41.,-3.1049473,8.875739
+451,"Ouyang, Wei, Florian Mueller, Martin Hjelmare, Emma Lundberg, and Christophe Zimmer. 2019. “ImJoy:",2.0788076,6.088428
+452,An Open-Source Computational Platform for the Deep Learning Era.” Nature Methods 16 (12): 1199–1200.,-2.9769812,7.6366625
+453,"Ovesný, Martin, Pavel Křížek, Josef Borkovec, Zdeněk Svindrych, and Guy M.",2.51293,6.3297677
+454,Hagen. 2014. “ThunderSTORM:,0.8730573,8.1785
+455,A Comprehensive ImageJ Plug-in for PALM and STORM Data Analysis and Super-Resolution Imaging.” Bioinformatics 30 (16): 2389–90.,-2.7973137,8.581719
+456,"Palla, Giovanni, Hannah Spitzer, Michal Klein, David Sebastian Fischer, Anna Christina Schaar, Louis Benedikt Kuemmerle, Sergei Rybakov, et al. 2021. “Squidpy:",1.8936893,6.213158
+457,A Scalable Framework bioRxiv.,-3.6310287,8.608531
+458,Cell for https://doi.org/10.1101/2021.02.19.431994.,-0.6542182,8.16748
+459,Analysis.” bioRxiv.,-3.7595372,8.197483
+460,"Spatial Single Paszke, Adam, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, et al. 2019. “PyTorch:",0.90887177,6.613136
+461,"An Imperative Style, High-Performance Deep Learning Library.” http://arxiv.org/abs/1912.01703.",-2.8139267,7.4644737
+462,"Pau, Grégoire, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber. 2010. “EBImage--an R Package for Image Processing with Applications to Cellular Phenotypes.” Bioinformatics 26 (7): 979–81.",-2.607657,8.390097
+463,"Pedregosa, Fabian, Gaël Varoquaux, Alexandre Gramfort, Vincent Michel, Bertrand Thirion, Olivier Grisel, Mathieu Blondel, et al. 2011. “Scikit-Learn:",-1.5004872,5.9120016
+464,Machine Learning in Python.” Journal of Machine Learning Research:,-1.5102676,5.7037773
+465,JMLR 12 (85): 2825–30.,0.6447011,8.2969475
+466,"Perkel, Jeffrey M. 2021. “Python Power-up:",-0.6227131,6.208029
+467,New Image Tool Visualizes Complex Data.” Nature 600 (7888): 347–48.,-3.3129058,7.7691455
+468,"Pielawski, Nicolas, Axel Andersson, Christophe Avenel, Andrea Behanova, Eduard Chelebian, Anna Klemm, Fredrik Nysjö, Leslie Solorzano, and Carolina Wählby. 2022. “TissUUmaps 3:",2.200292,5.8341365
+469,Interactive Visualization and Quality Assessment of Large-Scale Spatial Omics Data.” https://doi.org/10.1101/2022.01.28.478131.,-3.2809021,7.806598
+470,"Pietzsch, Tobias, Stephan Preibisch, Pavel Tomancák, and Stephan Saalfeld. 2012. “ImgLib2-- Generic Image Processing in Java.” Bioinformatics 28 (22): 3009–11.",-2.320435,7.9925504
+471,"Pietzsch, Tobias, Stephan Saalfeld, Stephan Preibisch, and Pavel Tomancak. 2015. “BigDataViewer:",1.2818953,6.796269
+472,Visualization and Processing for Large Image Data Sets.” Nature Methods 12 (6): 481–83.,-3.2518215,8.027835
+473,"Pinkard, Henry, Nico Stuurman, Ivan E.",2.4079282,6.0959992
+474,"Ivanov, Nicholas M.",2.6248517,7.2420363
+475,"Anthony, Wei Ouyang, Bin Li, Bin Yang, et al. 2021. “Pycro-Manager:",1.0139246,6.245125
+476,Open-Source Software for Customized and Reproducible Microscope Control.” Nature Methods 18 (3): 226–28.,-1.6002537,9.342809
+477,"Püspöki, Zsuzsanna, Martin Storath, Daniel Sage, and Michael Unser. 2016. “Transforms and Operators for Directional Bioimage Analysis:",-2.59294,8.152055
+478,"A Survey.” Advances in Anatomy, Embryology, and Cell Biology 219: 69–93. “Python Package Index Download Statistics.” 2021. 2021. https://pypistats.org/top.",-1.4618165,7.899896
+479,"Ries, Jonas. 2020. “SMAP:",0.8080139,7.245745
+480,A Modular Super-Resolution Microscopy Analysis Platform for SMLM Data.” Nature Methods 17 (9): 870–72.,-1.2666585,9.25248
+481,"Rocklin, Matthew. 2015. “Dask:",1.5440851,7.6275935
+482,Parallel Computation with Blocked Algorithms and Task in Science Conference.,-1.3193702,5.9477897
+483,SciPy. the 14th Python In Proceedings of Scheduling.” https://doi.org/10.25080/majora-7b98e3ed-013.,-1.3284858,5.8617167
+484,"Rubens, Ulysse, Renaud Hoyoux, Laurent Vanosmael, Mehdy Ouras, Maxime Tasset, Christopher Hamilton, Rémi Longuespée, and Raphaël Marée. 2019. “Cytomine:",2.231515,5.692224
+485,Toward an Open and Collaborative Software Platform for Digital Pathology Bridged to Molecular Investigations.” Proteomics.,-3.5310717,8.746673
+486,Clinical Applications 13 (1): e1800057.,-0.35343662,8.307495
+487,"Rubens, Ulysse, Romain Mormont, Lassi Paavolainen, Volker Bäcker, Benjamin Pavie, Leandro A.",2.3022308,5.7642813
+488,"Scholz, Gino Michiels, et al. 2020. “BIAFLOWS:",1.3555303,6.704017
+489,"A Collaborative Framework to Reproducibly Deploy and Benchmark Bioimage Analysis Workflows.” Patterns (New York, N.Y.) 1 (3): 100040.",-3.6022024,8.655633
+490,"Rueden, Curtis T., Jeanelle Ackerman, Ellen T.",2.9424434,7.112865
+491,"Arena, Jan Eglinger, Beth A.",2.3549452,7.9884596
+492,"Cimini, Allen Goodman, Anne E.",2.8479826,6.2641344
+493,"Carpenter, and Kevin W.",2.7677152,8.043878
+494,Eliceiri. 2019. “Scientific Community Image Forum:,-4.394279,8.141299
+495,A Discussion Forum for Scientific Image Software.” PLoS Biology 17 (6): e3000340.,-4.079413,8.338876
+496,"Rueden, Curtis T., Johannes Schindelin, Mark C.",2.8384314,6.9600525
+497,"Hiner, Barry E.",1.8442802,7.371352
+498,"DeZonia, Alison E.",1.7751106,7.782847
+499,"Walter, Ellen T.",2.800846,7.3627834
+500,"Arena, and Kevin W.",2.7778504,8.08175
+501,Eliceiri. 2017. “ImageJ2:,-1.815609,6.780723
+502,ImageJ for the next Generation of Scientific Image Data.” BMC Bioinformatics 18 (1): 529.,-3.1155167,8.53221
+503,"Ryosuke Okuta, Yuya Unno, Daisuke Nishino, Shohei Hido, Crissman Loomis. 2017. “CuPy:",1.9148059,6.1423573
+504,A NumPy-Compatible Library for NVIDIA GPU Calculations.” Proceedings of Workshop on Machine Learning Systems (LearningSys) in The Thirty-First Annual Conference on Neural 2017.,-1.3084142,6.4678826
+505,Processing Information http://learningsys.org/nips17/assets/papers/paper_16.pdf.,-0.118666545,7.528362
+506,Systems (NIPS).,0.30150867,7.7506094
+507,"Saalfeld, Stephan, Albert Cardona, Volker Hartenstein, and Pavel Tomancak. 2009. “CATMAID:",1.8477613,6.625251
+508,Collaborative Annotation Toolkit for Massive Amounts of Image Data.” Bioinformatics 25 (15): 1984–86.,-3.4145901,8.567694
+509,"Sage, Daniel, Lauréne Donati, Ferréol Soulez, Denis Fortun, Guillaume Schmit, Arne Seitz, Romain Guiet, Cédric Vonesch, and Michael Unser. 2017. “DeconvolutionLab2:",1.3944435,5.9268885
+510,An Open- Source Software for Deconvolution Microscopy.” Methods 115 (February): 28–41.,-1.5210096,9.279588
+511,"Sage, Daniel, Thanh-An Pham, Hazen Babcock, Tomas Lukes, Thomas Pengo, Jerry Chao, Ramraj Velmurugan, et al. 2019. “Super-Resolution Fight Club:",1.7560784,5.939478
+512,Assessment of 2D and 3D Single-Molecule Localization Microscopy Software.” Nature Methods 16 (5): 387–95.,-1.4382582,9.404581
+513,"Scheres, Sjors H.",1.66876,7.0739236
+514,W. 2012. “RELION:,1.7010671,7.8627353
+515,Implementation of a Bayesian Approach to Cryo-EM Structure Determination.” Journal of Structural Biology 180 (3): 519–30.,-2.4533439,9.651909
+516,"Schindelin, Johannes, Ignacio Arganda-Carreras, Erwin Frise, Verena Kaynig, Mark Longair, Tobias Pietzsch, Stephan Preibisch, et al. 2012. “Fiji:",2.185408,6.2338696
+517,An Open-Source Platform for Biological-Image Analysis.” Nature Methods 9 (7): 676–82.,-3.3214126,8.545319
+518,"Schmidt, Uwe, Martin Weigert, Coleman Broaddus, and Gene Myers. 2018. “Cell Detection with Star-Convex Polygons.” In Medical Image Computing and Computer Assisted Intervention – MICCAI 2018, 265–73.",-1.5959647,7.9240384
+519,Lecture Notes in Computer Science.,-1.1594002,6.2501345
+520,Cham:,1.399096,7.90209
+521,Springer International Publishing.,0.061999977,8.137715
+522,"Schneider, Caroline A., Wayne S.",2.8619294,7.419844
+523,"Rasband, and Kevin W.",2.8142822,8.060969
+524,Eliceiri. 2012. “NIH Image to ImageJ: 25 Years of Image Analysis.” Nature Methods 9 (7): 671–75. “SciJava.” 2022. 2022. https://scijava.org/.,-0.7372488,7.9212923
+525,"Sofroniew, Nicholas, Talley Lambert, Kira Evans, Juan Nunez-Iglesias, Grzegorz Bokota, Gonzalo Peña-Castellanos, Philip Winston, et al. 2021.",1.8727951,6.053147
+526,Napari/napari: 0.4.12rc2.,-2.4952843,5.5860586
+527,Zenodo. https://doi.org/10.5281/ZENODO.3555620. “Software Tools For Molecular Microscopy.” 2006. 2006. https://en.wikibooks.org/wiki/Software_Tools_For_Molecular_Microscopy.,-1.975587,9.427865
+528,"Solorzano, Leslie, Gabriele Partel, and Carolina Wählby. 2020. “TissUUmaps:",2.0188928,5.9957547
+529,Interactive Visualization of Large-Scale Spatial Gene Expression and Tissue Morphology Data.” Bioinformatics 36 (15): 4363–65. “Stack Overflow Developer Survey 2020.” 2020. 2020. https://insights.stackoverflow.com/survey/2020/?utm_source=social- share&utm_medium=social&utm_campaign=dev-survey-2020. “Stack Overflow Developer Survey 2021.” 2021.,-2.1565282,7.913242
+530,Stack Overflow. 2021. https://insights.stackoverflow.com/survey/2021/?utm_source=social- share&utm_medium=social&utm_campaign=dev-survey-2021.,-1.0103312,6.76276
+531,"Stephan Saalfeld, Igor Pisarev, Philipp Hanslovsky, John Bogovic, Andrew Champion, Curtis Rueden, John Kirkham. 2017. “N5:",2.0062487,6.2232533
+532,Not HDF5.” 2017. https://github.com/saalfeldlab/n5.,-1.215571,6.5338745
+533,"Stoltzfus, Caleb R., Jakub Filipek, Benjamin H.",2.4912016,7.181939
+534,"Gern, Brandy E.",2.4190614,7.767585
+535,"Olin, Joseph M.",1.8847358,8.247975
+536,"Leal, Yajun Wu, Miranda R.",2.6956398,6.7333994
+537,"Lyons-Cohen, et al. 2020. “CytoMAP:",-0.99418867,8.343617
+538,A Spatial Analysis Toolbox Reveals Features of Myeloid Cell Organization in Lymphoid Tissues.” Cell Reports 31 (3): 107523.,-3.0666893,8.820059
+539,"Stringer, Carsen, Tim Wang, Michalis Michaelos, and Marius Pachitariu. 2021. “Cellpose:",2.1550798,6.0480156
+540,A Generalist Algorithm for Cellular Segmentation.” Nature Methods 18 (1): 100–106.,-2.486522,8.292998
+541,"Tang, Guang, Liwei Peng, Philip R.",2.4642859,7.2263308
+542,"Baldwin, Deepinder S.",1.2156023,7.3288445
+543,"Mann, Wen Jiang, Ian Rees, and Steven J.",2.7150855,6.443595
+544,Ludtke. 2007. “EMAN2:,1.5939083,7.871085
+545,An Extensible Image Processing Suite for Electron Microscopy.” Journal of Structural Biology 157 (1): 38–46.,-2.530873,9.329902
+546,Tensorflow-Developers. 2021.,-1.1242166,6.5919433
+547,TensorFlow.,-1.2481565,6.460282
+548,Zenodo. https://doi.org/10.5281/ZENODO.4724125. “The Apache Groovy Programming Language.” 2022. 2022. https://groovy-lang.org/. “The R Project for Statistical Computing.” 2022. 2022. https://www.R-project.org/. ———. n.d.,-0.85412896,6.3342056
+549,"Accessed January 23, 2022. https://www.R-project.org/.",-0.49137574,6.4817967
+550,"Thévenaz, P., U.",1.4457865,8.08443
+551,E.,1.6030767,7.980587
+552,"Ruttimann, and M.",2.1664798,8.110269
+553,Unser. 1998. “A Pyramid Approach to Subpixel Registration Based on Intensity.” IEEE Transactions on Image Processing:,-1.6635997,7.7120056
+554,A Publication of the IEEE Signal Processing Society 7 (1): 27–41.,-0.8980068,6.9587684
+555,"Tinevez, Jean-Yves, Nick Perry, Johannes Schindelin, Genevieve M.",2.5730863,5.9329963
+556,"Hoopes, Gregory D.",2.227786,7.4969735
+557,"Reynolds, Emmanuel Laplantine, Sebastian Y.",2.377429,5.655908
+558,"Bednarek, Spencer L.",2.4059997,7.6593814
+559,"Shorte, and Kevin W.",2.8088346,8.012737
+560,Eliceiri. 2017. “TrackMate:,-1.2736874,7.493147
+561,An Open and Extensible Platform for Single-Particle Tracking.” Methods 115 (February): 80–90.,-1.4147527,9.404289
+562,"Tischer, Christian, Ashis Ravindran, Sabine Reither, Nicolas Chiaruttini, Rainer Pepperkok, and Nils Norlin. 2021. “BigDataProcessor2:",1.3936992,6.523375
+563,"A Free and Open-Source Fiji Plugin for Inspection and Processing , February. https://doi.org/10.1093/bioinformatics/btab106.",-2.8652184,5.6439915
+564,"Image Data.” Bioinformatics of TB Sized Ulman, Vladimír, Martin Maška, Klas E.",-3.023079,8.508727
+565,G.,1.6100156,7.961493
+566,"Magnusson, Olaf Ronneberger, Carsten Haubold, Nathalie Harder, Pavel Matula, et al. 2017. “An Objective Comparison of Cell-Tracking Algorithms.” Nature Methods 14 (12): 1141–52.",-1.6877252,8.403854
+567,"Vergara, Hernando M., Constantin Pape, Kimberly I.",2.6916373,7.0594735
+568,"Meechan, Valentyna Zinchenko, Christel Genoud, Adrian A.",2.6030006,6.013998
+569,"Wanner, Kevin Nzumbi Mutemi, et al. 2021. “Whole-Body Integration of Gene Expression and Single-Cell Morphology.” Cell 184 (18): 4819–37.e22.",-2.1680279,8.156469
+570,"Virtanen, Pauli, Ralf Gommers, Travis E.",2.1136897,6.4258466
+571,"Oliphant, Matt Haberland, Tyler Reddy, David Cournapeau, Evgeni Burovski, et al. 2020. “SciPy 1.0:",-0.96038187,6.051264
+572,Fundamental Algorithms for Scientific Computing in Python.” Nature Methods 17 (3): 261–72.,-1.3875194,5.841238
+573,"Walt, Stéfan van der, Johannes L.",2.6127436,6.8320236
+574,"Schönberger, Juan Nunez-Iglesias, François Boulogne, Joshua D.",2.0123446,6.1426735
+575,"Warner, Neil Yager, Emmanuelle Gouillart, Tony Yu, and scikit-image contributors. 2014. “Scikit-Image:",-1.7202675,6.14164
+576,Image Processing in Python.” PeerJ 2 (June): e453.,-1.8572693,6.207049
+577,"Wei, Donglai, Zudi Lin, Daniel Franco-Barranco, Nils Wendt, Xingyu Liu, Wenjie Yin, Xin Huang, et al. 2020. “MitoEM Dataset:",-1.3006954,8.469597
+578,Large-Scale 3D Mitochondria Instance Segmentation from EM Images.” Medical Image Computing and Computer-Assisted Intervention:,-2.4095469,8.257187
+579,MICCAI ...,1.4445015,7.999037
+580,International Conference on Medical Image Computing and Computer-Assisted Intervention 12265 (October): 66–76.,-1.5665861,7.719631
+581,"Weigert, Martin, Uwe Schmidt, Tobias Boothe, Andreas Müller, Alexandr Dibrov, Akanksha Jain, Benjamin Wilhelm, et al. 2018. “Content-Aware Image Restoration:",-0.93029904,8.282238
+582,Pushing the Limits of Fluorescence Microscopy.” Nature Methods 15 (12): 1090–97.,-1.2426153,9.205046
+583,"Weigert, Martin, Uwe Schmidt, Robert Haase, Ko Sugawara, and Gene Myers. 2020. “Star- Convex Polyhedra for 3D Object Detection and Segmentation in Microscopy.” In 2020 IEEE Winter Conference IEEE. https://doi.org/10.1109/wacv45572.2020.9093435. of Computer Vision on Applications (WACV).",-1.3498937,8.038615
+584,"Witten, Ian H., Eibe Frank, Mark A.",2.588454,7.0179877
+585,"Hall, and Christopher J.",2.5981762,8.066282
+586,Pal. 2016.,1.0184311,8.110515
+587,Data Mining:,-1.5371692,5.5122414
+588,Practical Machine Learning Tools and Techniques.,-1.5428067,5.5506935
+589,Morgan Kaufmann.,2.1372898,6.582097
+590,"Yoo, Terry S., Michael J.",2.435626,7.3163714
+591,"Ackerman, William E.",2.3924406,7.4594584
+592,"Lorensen, Will Schroeder, Vikram Chalana, Stephen Aylward, Dimitris Metaxas, and Ross Whitaker. 2002. “Engineering and Algorithm Design for an Image Processing Api:",-1.4303187,7.1543036
+593,A Technical Report on ITK--the Insight Toolkit.” Studies in Health Technology and Informatics 85: 586–92.,-2.382421,6.5797215
+594,"Yushkevich, Paul A., Joseph Piven, Heather Cody Hazlett, Rachel Gimpel Smith, Sean Ho, James C.",2.2397392,5.9342513
+595,"Gee, and Guido Gerig. 2006. “User-Guided 3D Active Contour Segmentation of Anatomical Structures:",-1.7259225,8.101804
+596,Significantly Improved Efficiency and Reliability.” NeuroImage 31 (3): 1116–28.,-1.8782041,8.065697
