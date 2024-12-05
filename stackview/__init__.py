@@ -1,4 +1,4 @@
-__version__ = "0.12.0"
+__version__ = "0.12.1"
 
 from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
@@ -22,5 +22,6 @@ from ._scatterplot import scatterplot
 from ._grid import grid
 from ._clusterplot import clusterplot
 from ._sliceplot import sliceplot
+from ._wordcloudplot import wordcloudplot
 
 
