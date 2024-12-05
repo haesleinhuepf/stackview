@@ -305,6 +305,13 @@ stackview.sliceplot(df, images, column_x="UMAP0", column_y="UMAP1")
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/sliceplot.gif)
 
+
+### Wordcloudplot
+
+If you have a pandas DataFrame with a column containing text and additionally numeric columns related to the text, you can use the `wordcloudplot` function to visualize selected texts in a wordcloud.
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/wordcloudplot.png)
+
 ### Interact
 
 Exploration of the parameter space of image processing functions is available using `interact`:
