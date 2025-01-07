@@ -18,7 +18,7 @@ from ._colormaps import create_colormap
 from ._imshow import imshow
 from ._animate import animate, animate_curtain
 from ._display_range import display_range
-from ._scatterplot import plot
+from ._plot import plot
 from ._grid import grid
 from ._clusterplot import clusterplot
 

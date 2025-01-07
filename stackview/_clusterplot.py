@@ -39,7 +39,7 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
     from ._grid import grid
     from ._curtain import curtain
     from ._slice import slice
-    from ._scatterplot import plot
+    from ._plot import plot
     import functools
 
     labels = np.asarray(labels)
