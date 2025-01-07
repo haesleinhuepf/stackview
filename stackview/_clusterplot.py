@@ -1,7 +1,7 @@
 def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection:str="selection", image=None,
                      zoom_factor:float=1, zoom_spline_order:int=0, figsize=(4, 4), alpha:float=0.5, markersize=4):
     """
-    Visualizes a scatter plot of columns in a given dataframe next to a segmented image.
+    Visualizes a plot of columns in a given dataframe next to a segmented image.
 
     Inspired by the napari clusters plotter:
     https://github.com/BiAPoL/napari-clusters-plotter
@@ -25,7 +25,7 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
     zoom_spline_order: int, optional
         Spline order used for interpolation (default=0, nearest-neighbor)
     figsize: tuple, optional
-        The size of the scatter plot figure
+        The size of the plot figure
     alpha: float, optional
         sets the transparency of the curtain
     markersize: int

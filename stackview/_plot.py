@@ -55,7 +55,7 @@ def plot(df, column_x="x", column_y="y", column_selection="selection", figsize=(
         with plot_output:
             # Clear previous output and figure
             plot_output.clear_output(wait=True)
-            plt.close("all")  # Ensure no lingering figures
+            plt.close("all")
 
             # Create a new plot based on the selected columns
             if x_pulldown.value == y_pulldown.value:
