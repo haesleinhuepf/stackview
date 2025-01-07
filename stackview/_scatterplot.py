@@ -1,8 +1,8 @@
 import numpy as np
 
-def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: str = "selection", figsize=(4, 4), selection_changed_callback=None, markersize:int=4):
+def plot(df, column_x="x", column_y="y", column_selection="selection", figsize=(4, 4), selection_changed_callback=None, markersize=4):
     """
-    Create a scatterplot of a pandas dataframe while interactively choosing the columns and using a lasso tool for selecting data points
+    Create an interactive plot (scatter plot or histogram) based on selected columns.
 
     Parameters
     ----------
@@ -15,21 +15,24 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
     column_selection: str
         The column to use for the selection
     figsize: tuple
-        The size of the scatter plot figure
+        The size of the figure
     selection_changed_callback: function
         The function to call when the selection changes
     markersize: int
-        The size of the markers
+        The size of the markers (for scatter plots)
 
     Returns
     -------
     An ipywidgets widget
     """
-
     from ipywidgets import VBox, HBox, Layout
     from ._utilities import _no_resize
 
-    plotter = ScatterPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback=selection_changed_callback, markersize=markersize)
+    if column_x == column_y:
+        plotter = HistogramPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback, markersize)
+    else:
+        plotter = ScatterPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback, markersize)
+
     small_layout = Layout(width='auto', padding='0px', margin='0px', align_items='center', justify_content='center')
 
     import ipywidgets
@@ -55,7 +58,7 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
 
     result = _no_resize(VBox([
         HBox([ipywidgets.Label("Axes "), x_pulldown, y_pulldown], layout=small_layout),
-        plotter.widget
+        plotter.fig.canvas
     ]))
 
     result.update = plotter.update
@@ -63,100 +66,98 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
     return result
 
 
-class ScatterPlotter():
+class Plotter:
+    """
+    Base class for creating interactive plots.
+    """
     def __init__(self, df, column_x, column_y, column_selection, figsize, selection_changed_callback, markersize):
-        """
-        An interactive scatter plotter for pandas dataframes.
-        Use `.widget` on this object to get access to the graphical user interface.
+        self.df = df
+        self.column_x = column_x
+        self.column_y = column_y
+        self.column_selection = column_selection
+        self.figsize = figsize
+        self.selection_changed_callback = selection_changed_callback
+        self.markersize = markersize
 
-        Parameters
-        ----------
-        df: pandas.DataFrame
-            The dataframe to plot
-        column_x: str
-            The column to use for the x-axis
-        column_y: str
-            The column to use for the y-axis
-        column_selection: str
-            The column to use for the selection
-        figsize: tuple
-            The size of the figure
-        selection_changed_callback: function
-            The function to call when the selection changes
-        markersize: int
-            The size of the markers
-        """
+    def set_data(self, df, column_x, column_y):
+        self.df = df
+        self.column_x = column_x
+        self.column_y = column_y
+
+    def update(self):
+        raise NotImplementedError("Subclasses must implement this method.")
+
+
+class ScatterPlotter(Plotter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         import matplotlib.pyplot as plt
         from matplotlib._pylab_helpers import Gcf
-        from IPython import get_ipython
 
-        # switch to interactive mode if we are in a Jupyter notebook
+        # Set up interactive mode for Jupyter notebooks
+        from IPython import get_ipython
         ipython = get_ipython()
         if ipython is not None:
             ipython.run_line_magic("matplotlib", "ipympl")
         plt.ion()
 
-        # store variables
-        self.set_data(df, column_x, column_y)
-        self.selection_column = column_selection
-        self.selection_changed_callback = selection_changed_callback
-        self.markersize = markersize
-
-        # create figure
-        self.fig = plt.figure(figsize=figsize)
-        #self.fig.tight_layout(pad=0, h_pad=0, w_pad=0)
+        # Create figure
+        self.fig = plt.figure(figsize=self.figsize)
         plt.subplots_adjust(left=0.15, right=1, top=1, bottom=0.1)
-
         self.ax = None
         self.plotted_points = None
-        self.update()
 
-        self.fig.canvas.toolbar_visible = False
-        self.fig.canvas.header_visible = False
-        self.fig.canvas.footer_visible = False
-        self.fig.canvas.resizable = False
-
-        # prevent immediate display of the canvas
-        manager = Gcf.get_active()
-        Gcf.figs.pop(manager.num, None)
-
+        # Selector initialization (to be updated during plotting)
         self.selector = None
-        #self.selector = Selector(self.fig, self.ax, self.plotted_points, callback=self.set_selection)
         self.update()
-
-        # show selection if defined
-        if column_selection in df.columns:
-            self.selector.set_selection(df[column_selection])
-            self.update()
-
-        self.widget = self.fig.canvas
-
-
-
-    def set_data(self, df, column_x, column_y):
-        self.dataframe = df
-        self.column_x = column_x
-        self.column_y = column_y
-        self.data = np.asarray((df[column_x], df[column_y]))
-
-    def set_selection(self, selection):
-        self.dataframe[self.selection_column] = selection
-        self.selector.set_selection(selection)
-        if self.selection_changed_callback is not None:
-            self.selection_changed_callback(selection)
 
     def update(self):
         self.fig.clf()
         self.ax = self.fig.gca()
-        self.plotted_points = self.ax.scatter(self.data[0], self.data[1], s=self.markersize)
+        self.plotted_points = self.ax.scatter(
+            self.df[self.column_x], self.df[self.column_y], s=self.markersize
+        )
         self.ax.set_xlabel(self.column_x)
         self.ax.set_ylabel(self.column_y)
+        self.setup_selector()
+
+    def setup_selector(self):
         self.selector = Selector(self.fig, self.ax, self.plotted_points, callback=self.set_selection)
-        if self.selection_column in self.dataframe.columns:
-            self.selector.set_selection(self.dataframe[self.selection_column])
+        if self.column_selection in self.df.columns:
+            self.selector.set_selection(self.df[self.column_selection])
 
-        self.selector.update()
+    def set_selection(self, selection):
+        self.df[self.column_selection] = selection
+        self.selector.set_selection(selection)
+        if self.selection_changed_callback:
+            self.selection_changed_callback(selection)
 
+
+class HistogramPlotter(Plotter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        import matplotlib.pyplot as plt
+        from matplotlib._pylab_helpers import Gcf
+
+        # Set up interactive mode for Jupyter notebooks
+        from IPython import get_ipython
+        ipython = get_ipython()
+        if ipython is not None:
+            ipython.run_line_magic("matplotlib", "ipympl")
+        plt.ion()
+
+        # Create figure
+        self.fig = plt.figure(figsize=self.figsize)
+        plt.subplots_adjust(left=0.15, right=1, top=1, bottom=0.1)
+        self.ax = None
+        self.update()
+
+    def update(self):
+        self.fig.clf()
+        self.ax = self.fig.gca()
+        self.ax.hist(self.df[self.column_x], bins=30, alpha=0.7)
+        self.ax.set_xlabel(self.column_x)
+        self.ax.set_ylabel("Frequency")
 
 # modified from https://matplotlib.org/3.1.1/gallery/widgets/lasso_selector_demo_sgskip.html
 class Selector:

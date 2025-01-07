@@ -39,7 +39,7 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
     from ._grid import grid
     from ._curtain import curtain
     from ._slice import slice
-    from ._scatterplot import scatterplot
+    from ._scatterplot import plot
     import functools
 
     labels = np.asarray(labels)
@@ -69,12 +69,11 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
     update_selection = functools.partial(update, label_image=labels, selected_image=selected_image,
                                          widget=image_display)
 
-    scatterplot = scatterplot(df, column_x, column_y, column_selection, figsize=figsize,
+    plot = plot(df, column_x, column_y, column_selection, figsize=figsize,
                                         selection_changed_callback=update_selection, markersize=markersize)
 
     return grid([[
         image_display,
-        scatterplot,
-
+        plot,
     ]])
 
