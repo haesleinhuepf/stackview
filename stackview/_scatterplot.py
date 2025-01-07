@@ -27,41 +27,65 @@ def plot(df, column_x="x", column_y="y", column_selection="selection", figsize=(
     """
     from ipywidgets import VBox, HBox, Layout
     from ._utilities import _no_resize
+    import matplotlib.pyplot as plt
+    import ipywidgets as widgets
 
-    if column_x == column_y:
-        plotter = HistogramPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback, markersize)
-    else:
-        plotter = ScatterPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback, markersize)
+    # Layout for dropdown menus
+    small_layout = Layout(width="auto", padding="0px", margin="0px", align_items="center", justify_content="center")
 
-    small_layout = Layout(width='auto', padding='0px', margin='0px', align_items='center', justify_content='center')
-
-    import ipywidgets
-    x_pulldown = ipywidgets.Dropdown(
+    # Dropdowns for axis selection
+    x_pulldown = widgets.Dropdown(
         options=list(df.columns),
         value=column_x,
-        layout=small_layout
+        layout=small_layout,
+        description="X-axis",
     )
-    y_pulldown = ipywidgets.Dropdown(
+    y_pulldown = widgets.Dropdown(
         options=list(df.columns),
         value=column_y,
-        layout=small_layout
+        layout=small_layout,
+        description="Y-axis",
     )
 
-    def on_change(event):
-        """Executed when the user changes the pulldown selection."""
-        if event['type'] == 'change' and event['name'] == 'value':
-            plotter.set_data(df, x_pulldown.value, y_pulldown.value)
-            plotter.update()
+    # Container for the plot canvas
+    plot_output = widgets.Output()
 
-    x_pulldown.observe(on_change)
-    y_pulldown.observe(on_change)
+    # Helper function to create the appropriate plot
+    def create_plot():
+        with plot_output:
+            # Clear previous output and figure
+            plot_output.clear_output(wait=True)
+            plt.close("all")  # Ensure no lingering figures
 
+            # Create a new plot based on the selected columns
+            if x_pulldown.value == y_pulldown.value:
+                plotter = HistogramPlotter(df, x_pulldown.value, y_pulldown.value, column_selection, figsize, selection_changed_callback, markersize)
+            else:
+                plotter = ScatterPlotter(df, x_pulldown.value, y_pulldown.value, column_selection, figsize, selection_changed_callback, markersize)
+
+            # Render the figure
+            plt.show(plotter.fig)
+            return plotter
+
+    # Initialize the plotter
+    plotter = create_plot()
+
+    # Callback for dropdown changes
+    def on_change(change):
+        nonlocal plotter
+        if change["name"] == "value":
+            # Update or recreate the plotter based on the new column values
+            plotter = create_plot()
+
+    # Attach observers to dropdowns
+    x_pulldown.observe(on_change, names="value")
+    y_pulldown.observe(on_change, names="value")
+
+    # Combine dropdowns and plot into a single widget
     result = _no_resize(VBox([
-        HBox([ipywidgets.Label("Axes "), x_pulldown, y_pulldown], layout=small_layout),
-        plotter.fig.canvas
+        HBox([x_pulldown, y_pulldown], layout=small_layout),
+        plot_output,
     ]))
-
-    result.update = plotter.update
 
     return result
 
