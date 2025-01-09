@@ -6,6 +6,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/haesleinhuepf/stackview?style=social)](https://github.com/haesleinhuepf/stackview/)
 [![GitHub forks](https://img.shields.io/github/forks/haesleinhuepf/stackview?style=social)](https://github.com/haesleinhuepf/stackview/)
 [![License](https://img.shields.io/pypi/l/stackview.svg?color=green)](https://github.com/haesleinhuepf/stackview/raw/main/LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14281364.svg)](https://doi.org/10.5281/zenodo.14281364)
+
 
 Interactive image stack viewing in jupyter notebooks based on 
 [ipycanvas](https://ipycanvas.readthedocs.io/) and 
