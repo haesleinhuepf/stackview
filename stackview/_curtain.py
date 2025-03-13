@@ -1,4 +1,3 @@
-
 def curtain(
         image,
         image_curtain,
@@ -8,14 +7,14 @@ def curtain(
         display_height: int = None,
         continuous_update: bool = True,
         alpha: float = 1,
-        zoom_factor :float = 1.0,
-        zoom_spline_order :int = 0,
-        colormap:str = None,
-        display_min:float = None,
-        display_max:float = None,
-        curtain_colormap:str = None,
-        curtain_display_min:float = None,
-        curtain_display_max:float = None
+        zoom_factor: float = 1.0,
+        zoom_spline_order: int = 0,
+        colormap: str = None,
+        display_min: float = None,
+        display_max: float = None,
+        curtain_colormap: str = None,
+        curtain_display_min: float = None,
+        curtain_display_max: float = None
 ):
     """Show two images and allow with a slider to show either the one or the other image.
 
@@ -90,26 +89,20 @@ def curtain(
 
     viewer = None
     from ._image_widget import _img_to_rgb
-    def transform_image():
-        image_slice =  _img_to_rgb(viewer.get_view_slice(), colormap=colormap, display_min=display_min, display_max=display_max)
-        image_slice_curtain = _img_to_rgb(viewer.get_view_slice(image_curtain), colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
-        image_slice[:, curtain_slider.value:] = (1 - alpha) * image_slice[:, curtain_slider.value:] + \
-                                                alpha * image_slice_curtain[:, curtain_slider.value:]
-        return image_slice
-        #if len(image.shape) < 3 or (len(image.shape) == 3 and image.shape[-1] == 3):
-        #    image_slice = _img_to_rgb(image.copy(), colormap=colormap, display_min=display_min, display_max=display_max)
-        #    image_slice_curtain = _img_to_rgb(image_curtain, colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
-        #else:
-        #    image_slice = _img_to_rgb(np.take(image, slice_slider.value, axis=axis), colormap=colormap, display_min=display_min, display_max=display_max)
-        #    image_slice_curtain = _img_to_rgb(np.take(image_curtain, slice_slider.value, axis=axis), colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
 
-        #return image_slice
+    def transform_image():
+        image_slice = _img_to_rgb(viewer.get_view_slice(), colormap=colormap, display_min=display_min, display_max=display_max).copy()
+        image_slice_curtain = _img_to_rgb(viewer.get_view_slice(image_curtain), colormap=curtain_colormap, display_min=curtain_display_min, display_max=curtain_display_max)
+        composited_image = image_slice.copy()
+        composited_image[:, curtain_slider.value:] = (1 - alpha) * composited_image[:, curtain_slider.value:] + \
+                                                     alpha * image_slice_curtain[:, curtain_slider.value:]
+        return composited_image
 
     viewer = _SliceViewer(image, continuous_update=continuous_update, zoom_factor=zoom_factor,
                           zoom_spline_order=zoom_spline_order, colormap=colormap, display_min=display_min,
                           display_max=display_max)
 
-    view = viewer.view #ImageWidget(transform_image(), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
+    view = viewer.view  # ImageWidget(transform_image(), zoom_factor=zoom_factor, zoom_spline_order=zoom_spline_order)
     sliders = viewer.slice_slider
 
     # event handler when the user changed something:
