@@ -13,7 +13,7 @@ def color_name_to_rgb(color_name):
 
 
 @jupyter_displayable_output
-def add_bounding_boxes(image, bounding_boxes, line_width=5):
+def add_bounding_boxes(image, bounding_boxes, line_width=2):
     """
     Adds bounding boxes to an image by drawing them on top.
 
