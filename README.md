@@ -272,6 +272,21 @@ Output:
 (40, 40, 40)
 ```
 
+### Bounding boxes
+
+You can draw bounding boxes into images using the `add_bounding_boxes` function. 
+The bounding boxes are defined as a list of dictionaries, each with 'x', 'y', 'width', 'height' keys, optional also 'color' and 'description'.
+If you work with nD data, you can also pass a list of bounding boxes for each slice. [Read more](https://github.com/haesleinhuepf/stackview/blob/main/docs/add_bounding_boxes.ipynb)).
+
+```
+cat = imread("data/real_cat.png")
+bb = {'x': 110, 'y': 30, 'width': 290, 'height': 350, 'color': 'lightgreen', 'description':'cat', 'font_size':50}
+
+stackview.add_bounding_boxes(cat, [bb])
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/bounding_boxes.png)
+
 ### scatterplot and clusterplot
 
 Using `stackview.scatterplot()` you can create interactive plots for pandas DataFrames ([full example](https://github.com/haesleinhuepf/stackview/blob/main/docs/scatterplot.ipynb)).
