@@ -23,5 +23,5 @@ from ._grid import grid
 from ._clusterplot import clusterplot
 from ._sliceplot import sliceplot
 from ._wordcloudplot import wordcloudplot
-
+from ._add_bounding_boxes import add_bounding_boxes
 
