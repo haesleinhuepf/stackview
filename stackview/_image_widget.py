@@ -91,7 +91,8 @@ def _img_to_rgb(image,
     if diplay_range_width == 0:
         diplay_range_width = 1
 
-    image = (image.astype(float) - display_min) / diplay_range_width * 255
+    image = ((image.astype(float) - display_min) / diplay_range_width * 255).astype(np.uint8)
+
     image = np.minimum(image, 255)
     image = np.maximum(image, 0)
 
