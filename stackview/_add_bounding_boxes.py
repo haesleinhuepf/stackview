@@ -52,9 +52,18 @@ def add_bounding_boxes(image, bounding_boxes, line_width=2):
     for bbox in bounding_boxes:
         x = bbox['x']
         y = bbox['y']
-        width = bbox['width']
-        height = bbox['height']
+        width = bbox['width'] if 'width' in bbox else 1
+        height = bbox['height'] if 'height' in bbox else 1
         color_name = bbox['color'] if 'color' in bbox else "red"
+
+        if isinstance(x, float):
+            x = int(x * img_with_boxes.shape[1])
+        if isinstance(y, float):
+            y = int(y * img_with_boxes.shape[0])
+        if isinstance(width, float):
+            width = int(width * img_with_boxes.shape[1])
+        if isinstance(height, float):
+            height = int(height * img_with_boxes.shape[0])
 
         # Convert color name to RGB
         color = color_name_to_rgb(color_name)
