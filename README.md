@@ -74,7 +74,13 @@ stackview.display_range(image)
 
 ![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_display_range.gif)
 
+### Interactive histogram
 
+```
+stackview.histogram(image)
+```
+
+![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/histogram.gif)
 
 ### Static insight views
 
