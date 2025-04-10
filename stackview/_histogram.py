@@ -83,7 +83,7 @@ def histogram(
         cropped_image = image[..., y:y+height, x:x+width]
 
         min_val = np.min(cropped_image)
-        max_val = np.min(cropped_image)
+        max_val = np.max(cropped_image)
 
         #histogram = np.histogram(cropped_image, bins=256, range=(0, 255))
         # plot histogram and store histogram as numpy RGB array
