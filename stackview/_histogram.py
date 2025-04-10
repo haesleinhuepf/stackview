@@ -209,8 +209,6 @@ def histogram(
         y = min(former_drawn_position['start_y'], former_drawn_position['end_y'])
         w = abs(former_drawn_position['start_x'] - former_drawn_position['end_x'])
         h = abs(former_drawn_position['start_y'] - former_drawn_position['end_y'])
-        table.value = f"huhu {x},{y},{w},{h}"
-        result.d = f"huhu {x},{y},{w},{h}"
 
         update_display()
 
