@@ -82,6 +82,9 @@ def histogram(
         #return np.random.normal(50, y, (100, 100))
         cropped_image = image[..., y:y+height, x:x+width]
 
+        min_val = np.min(cropped_image)
+        max_val = np.min(cropped_image)
+
         #histogram = np.histogram(cropped_image, bins=256, range=(0, 255))
         # plot histogram and store histogram as numpy RGB array
         plt.figure(figsize=(1.8, 1.4))
@@ -105,9 +108,9 @@ def histogram(
             histogram_image = Image.open(file_obj)
 
             # Convert the PIL image to a numpy array
-            return np.array(histogram_image)[...,:3]
+            return np.array(histogram_image)[...,:3], min_val, max_val
 
-    histogram_image = create_histogram_plot(image, 0, 0, image.shape[-2], image.shape[-1])
+    histogram_image, min_val, max_val = create_histogram_plot(image, 0, 0, image.shape[-2], image.shape[-1])
     histogram_viewer = _SliceViewer(histogram_image)
 
     width = image.shape[-1]
@@ -115,8 +118,8 @@ def histogram(
     layout = layout=ipywidgets.Layout(display="flex", max_height="25px")
     slice_lbl = ipywidgets.Label(f"(..., 0:{height}, 0:{width}", layout=layout)
     dtype_lbl = ipywidgets.Label(str(image.dtype), layout=layout)
-    min_intensity_lbl = ipywidgets.Label("", layout=layout)
-    max_intensity_lbl = ipywidgets.Label("", layout=layout)
+    min_intensity_lbl = ipywidgets.Label(str(min_val), layout=layout)
+    max_intensity_lbl = ipywidgets.Label(str(max_val), layout=layout)
 
     layout = ipywidgets.Layout(display="flex", justify_content="flex-end", min_width="50px", max_height="25px")
 
@@ -147,11 +150,11 @@ def histogram(
             annotated_image = rgb_image1
 
         if former_drawn_position['state'] == "mouse-up" and bb is not None:
-            h_image = create_histogram_plot(slice_image1, bb['x'], bb['y'], bb['width'], bb['height'])
+            h_image, min_val, max_val = create_histogram_plot(slice_image1, bb['x'], bb['y'], bb['width'], bb['height'])
             histogram_viewer.view.data = h_image
             former_drawn_position['state'] = None
-            min_intensity_lbl.value = str(np.min(slice_image1))
-            max_intensity_lbl.value = str(np.max(slice_image1))
+            min_intensity_lbl.value = str(min_val)
+            max_intensity_lbl.value = str(max_val)
 
         view.data = annotated_image
 
