@@ -46,9 +46,9 @@ def histogram(
     import ipywidgets
     from ipyevents import Event
     from ._slice_viewer import _SliceViewer
-    from ._static_view import _plt_to_png
     import numpy as np
     import matplotlib.pyplot as plt
+    from ._grid import grid
 
     if 'cupy.ndarray' in str(type(image)):
         image = image.get()
@@ -56,8 +56,8 @@ def histogram(
     if slice_number is None:
         slice_number = int(image.shape[0] / 2)
 
-    total_min = image.min()
-    total_max = image.max()
+    total_min = float(image.min())
+    total_max = float(image.max())
 
     # Image view
     viewer = _SliceViewer(image,
@@ -84,20 +84,14 @@ def histogram(
 
         #histogram = np.histogram(cropped_image, bins=256, range=(0, 255))
         # plot histogram and store histogram as numpy RGB array
-        plt.figure(figsize=(4, 4))
+        plt.figure(figsize=(1.8, 1.4))
         # measure how long this takes
 
-        plt.hist(cropped_image.flatten(), bins=25)
+        plt.hist(cropped_image.flatten(), bins=32)
         plt.xlim(total_min, total_max)
-
-        state = former_drawn_position['state']
-
-        plt.xlabel(f'Intensity')
-        plt.ylabel(f'Frequency {state}')
-        plt.title(f'Histogram (x={x}, y={y}, w={width}, h={height})')
+        plt.yticks([])
+        plt.xticks([total_min, int((total_min + total_max) / 2), total_max])
         plt.tight_layout()
-        #return np.array(_plt_to_png())
-        #byte_data = _plt_to_png()
 
         from io import BytesIO
         from PIL import Image
@@ -114,10 +108,24 @@ def histogram(
             return np.array(histogram_image)[...,:3]
 
     histogram_image = create_histogram_plot(image, 0, 0, image.shape[-2], image.shape[-1])
-    print("h", histogram_image.shape)
     histogram_viewer = _SliceViewer(histogram_image)
 
-    dbg = ipywidgets.Label("Hello world")
+    width = image.shape[-1]
+    height = image.shape[-2]
+    layout = layout=ipywidgets.Layout(display="flex", max_height="25px")
+    slice_lbl = ipywidgets.Label(f"(..., 0:{height}, 0:{width}", layout=layout)
+    dtype_lbl = ipywidgets.Label(str(image.dtype), layout=layout)
+    min_intensity_lbl = ipywidgets.Label("", layout=layout)
+    max_intensity_lbl = ipywidgets.Label("", layout=layout)
+
+    layout = ipywidgets.Layout(display="flex", justify_content="flex-end", min_width="50px", max_height="25px")
+
+    table = grid([
+        [ipywidgets.Label("slice", layout=layout), slice_lbl],
+        [ipywidgets.Label("dtype", layout=layout), dtype_lbl],
+        [ipywidgets.Label("min", layout=layout), min_intensity_lbl],
+        [ipywidgets.Label("max", layout=layout), max_intensity_lbl],
+    ])
 
     # event handler when the user changed the slider:
     def update_display(event=None):
@@ -134,32 +142,23 @@ def histogram(
                 'height': abs(former_drawn_position['start_y'] - former_drawn_position['end_y'])
             }
             annotated_image = add_bounding_boxes(rgb_image1, [bb])
+            slice_lbl.value = f"(..., {bb['y']}:{bb['y']+bb['height']}, {bb['x']}:{bb['x']+bb['width']})"
         else:
             annotated_image = rgb_image1
 
         if former_drawn_position['state'] == "mouse-up" and bb is not None:
-            import time
-            start_time = time.time()
-
             h_image = create_histogram_plot(slice_image1, bb['x'], bb['y'], bb['width'], bb['height'])
-
-            delta_time = time.time() - start_time
-            dbg.value = f"A {delta_time:.2f}"
-
             histogram_viewer.view.data = h_image
-
-            delta_time = time.time() - start_time
-            dbg.value = f"B {delta_time:.2f}"
-
             former_drawn_position['state'] = None
-
+            min_intensity_lbl.value = str(np.min(slice_image1))
+            max_intensity_lbl.value = str(np.max(slice_image1))
 
         view.data = annotated_image
 
 
     # user interface for histogram
     tool_box = ipywidgets.VBox([
-        dbg,
+        table,
         histogram_viewer.view
     ])
 
@@ -210,7 +209,7 @@ def histogram(
         y = min(former_drawn_position['start_y'], former_drawn_position['end_y'])
         w = abs(former_drawn_position['start_x'] - former_drawn_position['end_x'])
         h = abs(former_drawn_position['start_y'] - former_drawn_position['end_y'])
-        dbg.value = f"huhu {x},{y},{w},{h}"
+        table.value = f"huhu {x},{y},{w},{h}"
         result.d = f"huhu {x},{y},{w},{h}"
 
         update_display()
