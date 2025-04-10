@@ -220,7 +220,10 @@ def histogram(
     # connect events
     event_handler.on_dom_event(update_display_while_drawing)
 
-    viewer.observe(update_display)
+    def viewer_update(e=None):
+        former_drawn_position['state'] = 'mouse-up'
+        update_display()
+    viewer.observe(viewer_update)
 
     result.update = update_display
     return result
