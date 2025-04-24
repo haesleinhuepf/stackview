@@ -160,7 +160,7 @@ def interact(func,
                 viewer.image = func(*args, **kwargs)
 
         viewer.slice_slider.max = viewer.image.shape[0] - 1
-        viewer.configuration_updated(None)
+        viewer.update(None)
 
     worker_function.__signature__ = inspect.Signature(exposable_parameters)
     inter = ipywidgets.interactive(worker_function, dict(manual=False, auto_display=False))
@@ -178,7 +178,7 @@ def interact(func,
         output_widgets.append(viewer.slice_slider)
 
     result = _no_resize(ipywidgets.VBox(output_widgets))
-    result.update = viewer.configuration_updated
+    result.update = viewer.update
     return result
 
 
