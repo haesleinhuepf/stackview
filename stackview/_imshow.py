@@ -96,6 +96,9 @@ def imshow(image,
         if max_display_intensity is None:
             max_display_intensity = 65536
 
+        if image.min() < 0:
+            image = np.abs(image)
+
     if plot is None:
         import matplotlib.pyplot as plt
         plt.imshow(image, cmap=colormap, vmin=min_display_intensity, vmax=max_display_intensity, interpolation='nearest',
