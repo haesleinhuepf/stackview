@@ -113,8 +113,9 @@ class StackViewNDArray(np.ndarray):
 
                 histogram = _png_to_html(_plt_to_png())
 
+            min_intensity = self.obj.min()
             max_intensity = self.obj.max()
-            min_max = "<tr><td>min</td><td>" + str(self.obj.min()) + "</td></tr>" + \
+            min_max = "<tr><td>min</td><td>" + str(min_intensity) + "</td></tr>" + \
                       "<tr><td>max</td><td>" + str(max_intensity) + "</td></tr>"
 
             if labels:
@@ -126,9 +127,9 @@ class StackViewNDArray(np.ndarray):
                 min_max += "<tr><td>n labels</td><td>" + str(num_labels) + "</td></tr>"
                 if max_intensity != num_labels:
                     min_max += "<tr><td colspan=\"2\"><a href=\"https://haesleinhuepf.github.io/BioImageAnalysisNotebooks/20h_segmentation_post_processing/sequential_labeling.html\" style=\"color:darkred; font-weight:bold\">Not sequentially labeled!</a></td></tr>"
-
+                if min_intensity < 0:
+                    min_max += "<tr><td colspan=\"2\" style=\"color:darkred; font-weight:bold\">Negative label values detected!</td></tr>"
         else:
-
             min_max = ""
 
         help_text = ""
