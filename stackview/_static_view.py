@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Callable
-from functools import wraps
+from functools import lru_cache, wraps
 from toolz import curry
 
 def insight(image, library_name=None, help_url=None):
@@ -49,9 +49,21 @@ class StackViewNDArray(np.ndarray):
         self.obj = obj
 
     def __getattr__(self, name):
+        if name == "__repr__":
+            return self.__repr__
         if name == "_repr_html_":
             return self._repr_html_
         return getattr(self.obj, name)
+
+
+    def __repr__(self):
+        if _is_running_in_colab:
+            from IPython.display import display, HTML
+            display(HTML(self._repr_html_()))
+            return ""
+        else:
+            return self.obj.__repr__()
+
 
     def _repr_html_(self):
         """HTML representation of the image object for IPython.
@@ -159,6 +171,14 @@ class StackViewNDArray(np.ndarray):
         ]
 
         return "\n".join(all)
+
+@lru_cache(maxsize=None)
+def _is_running_in_colab():
+    try:
+        import google.colab
+        return True
+    except ImportError:
+        return False
 
 
 def _png_to_html(png):
