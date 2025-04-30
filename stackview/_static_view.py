@@ -57,7 +57,7 @@ class StackViewNDArray(np.ndarray):
 
 
     def __repr__(self):
-        if _is_running_in_colab:
+        if _is_running_in_colab():
             from IPython.display import display, HTML
             display(HTML(self._repr_html_()))
             return ""
