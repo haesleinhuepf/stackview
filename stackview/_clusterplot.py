@@ -1,7 +1,7 @@
 def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection:str="selection", image=None,
                      zoom_factor:float=1, zoom_spline_order:int=0, figsize=(4, 4), alpha:float=0.5, markersize=4):
     """
-    Visualizes a plot of columns in a given dataframe next to a segmented image.
+    Visualizes a scatter plot of columns in a given dataframe next to a segmented image.
 
     Inspired by the napari clusters plotter:
     https://github.com/BiAPoL/napari-clusters-plotter
@@ -39,7 +39,7 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
     from ._grid import grid
     from ._curtain import curtain
     from ._slice import slice
-    from ._plot import plot
+    from ._scatterplot import scatterplot
     import functools
 
     labels = np.asarray(labels)
@@ -69,11 +69,11 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
     update_selection = functools.partial(update, label_image=labels, selected_image=selected_image,
                                          widget=image_display)
 
-    plot = plot(df, column_x, column_y, column_selection, figsize=figsize,
+    scatterplot = scatterplot(df, column_x, column_y, column_selection, figsize=figsize,
                                         selection_changed_callback=update_selection, markersize=markersize)
 
     return grid([[
         image_display,
-        plot,
+        scatterplot,
     ]])
 

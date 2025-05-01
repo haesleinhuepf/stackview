@@ -1,6 +1,6 @@
 import numpy as np
 
-def plot(df, column_x="x", column_y="y", column_selection="selection", figsize=(4, 4), selection_changed_callback=None, markersize=4):
+def scatterplot(df, column_x="x", column_y="y", column_selection="selection", figsize=(4, 4), selection_changed_callback=None, markersize=4):
     """
     Create an interactive plot (scatter plot or histogram) based on selected columns.
 
