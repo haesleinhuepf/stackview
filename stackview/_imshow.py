@@ -79,7 +79,7 @@ def imshow(image,
     if colormap is None:
         colormap = "Greys_r"
 
-    if colormap.startswith("pure_"):
+    if isinstance(colormap, str) and colormap.startswith("pure_"):
         colormap = create_colormap(colormap)
 
     if labels:
