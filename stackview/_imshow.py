@@ -92,12 +92,12 @@ def imshow(image,
         colormap = imshow.labels_cmap
 
         if min_display_intensity is None:
-            min_display_intensity = 0
+            min_display_intensity = image.min()
         if max_display_intensity is None:
-            max_display_intensity = 65536
+            max_display_intensity = min_display_intensity + 65536
 
-        if image.min() < 0:
-            image = np.abs(image)
+        #if image.min() < 0:
+        #    image = np.abs(image) + 0
 
     if plot is None:
         import matplotlib.pyplot as plt
