@@ -1,6 +1,5 @@
 import warnings
 
-
 def imshow(image,
            title:str = None,
            labels: bool = None,
