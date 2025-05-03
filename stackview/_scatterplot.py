@@ -169,7 +169,7 @@ class ScatterPlotter():
         
 class HistogramPlotter:
 
-    def __init__(self, df, column, column_selection, figsize, selection_changed_callback, bins=30):
+    def __init__(self, df, column, column_selection, figsize, selection_changed_callback, bins=15):
         """
         An interactive histogram plotter for a single column of a pandas DataFrame.
         Designed to be used in combination with ipywidgets for dynamic display.
@@ -217,6 +217,9 @@ class HistogramPlotter:
 
         self.update()
 
+        self.selector = Selector(self.fig, self.ax, self.ax.patches, callback=self.set_selection, mode="hist")
+        self.widget = self.fig.canvas
+
         self.fig.canvas.toolbar_visible = False
         self.fig.canvas.header_visible = False
         self.fig.canvas.footer_visible = False
@@ -232,19 +235,44 @@ class HistogramPlotter:
         self.column = column
         self.column_x = column
         self.column_y = column
+    
+    def set_selection(self, selection):
+        import numpy as np
+
+        # Get the bin edges used by the current histogram
+        bin_counts, bin_edges = np.histogram(self.dataframe[self.column], bins=self.bins)
+
+        # Create a boolean selection mask over the dataframe
+        selected = np.zeros(len(self.dataframe), dtype=bool)
+
+        for i, selected_bin in enumerate(selection):
+            if selected_bin:
+                if i == len(bin_edges) - 2:
+                    # Include right edge for last bin
+                    in_bin = (self.dataframe[self.column] >= bin_edges[i]) & (self.dataframe[self.column] <= bin_edges[i + 1])
+                else:
+                    in_bin = (self.dataframe[self.column] >= bin_edges[i]) & (self.dataframe[self.column] < bin_edges[i + 1])
+                selected |= in_bin
+
+        self.dataframe[self.selection_column] = selected
+        if self.selection_changed_callback is not None:
+            self.selection_changed_callback(selected)
+
 
     def update(self):
         self.fig.clf()
         self.ax = self.fig.gca()
-        self.ax.hist(self.dataframe[self.column], bins=self.bins, color='steelblue')
+        counts, bins, patches = self.ax.hist(self.dataframe[self.column], bins=self.bins, color='steelblue')
         self.ax.set_xlabel(self.column)
         self.ax.set_ylabel("Frequency")
         self.fig.canvas.draw_idle()
 
+        if hasattr(self, "selector"):
+            self.selector = Selector(self.fig, self.ax, self.ax.patches, callback=self.set_selection, mode="hist")
 
 # modified from https://matplotlib.org/3.1.1/gallery/widgets/lasso_selector_demo_sgskip.html
 class Selector:
-    def __init__(self, parent, ax, collection, callback):
+    def __init__(self, parent, ax, collection, callback, mode= "scatter"):
         """
         Interactive Lasso-based point selector for matplotlib scatter plots.
         Highlights selected points and invokes a callback with the selection mask.
@@ -269,39 +297,67 @@ class Selector:
         """
         from matplotlib.widgets import LassoSelector
         from matplotlib.path import Path
+
         self.parent = parent
         self.ax = ax
         self.canvas = ax.figure.canvas
-        self.offsets = collection.get_offsets()
-        self.num_points = len(self.offsets)
         self.collection = collection
-
-        self.lasso = LassoSelector(ax, onselect=self.on_select, props=dict(color='magenta'))
-        self.selected_indices = []
+        self.mode = mode
         self.callback = callback
+        self.lasso = LassoSelector(ax, onselect=self.on_select, props=dict(color='magenta'))
 
-        self.face_colors = collection.get_facecolors()
-        if len(self.face_colors) == 0:
-            raise ValueError('Collection must have a face color')
-        elif len(self.face_colors) == 1:
-            self.face_colors = np.tile(self.face_colors, (self.num_points, 1))
+        if mode == "scatter":
+            self.offsets = collection.get_offsets()
+            self.num_points = len(self.offsets)
+
+            self.face_colors = collection.get_facecolors()
+            if len(self.face_colors) == 0:
+                raise ValueError('Collection must have a face color')
+            elif len(self.face_colors) == 1:
+                self.face_colors = np.tile(self.face_colors, (self.num_points, 1))
+        elif mode == "hist":
+            self.offsets = None
+            self.num_points = len(collection)
 
     def on_select(self, verts):
         from matplotlib.path import Path
         path = Path(verts)
-        selection = path.contains_points(self.offsets)
-        self.callback(selection)
+
+        if self.mode == "scatter":
+            selection = path.contains_points(self.offsets)
+            self.callback(selection)
+        elif self.mode == "hist":
+            selection = np.zeros(len(self.collection), dtype=bool)
+            for i, patch in enumerate(self.collection):
+                x = patch.get_x()
+                y = patch.get_y()
+                width = patch.get_width()
+                height = patch.get_height()
+
+                # Define key points inside the bar (corners + center)
+                test_points = [
+                    (x + width * 0.5, y + height * 0.5),  # center
+                    (x, y),                               # bottom-left
+                    (x + width, y),                       # bottom-right
+                    (x, y + height),                      # top-left
+                    (x + width, y + height)               # top-right
+                ]
+
+                if any(path.contains_point(pt) for pt in test_points):
+                    selection[i] = True
+
+            self.callback(selection)
+            self.set_selection(selection)
 
     def set_selection(self, selection):
-        self.selected_indices = np.nonzero(selection)
-
-        # Set all points to blue [0.2, 0.4, 1.0]
-        self.face_colors[:, :3] = [0.2, 0.4, 1.0]  # blue
-
-        # Set selected points to orange [1.0, 0.5, 0.0]
-        self.face_colors[self.selected_indices, :3] = [1.0, 0.5, 0.0]  # orange
-
-        self.collection.set_facecolors(self.face_colors)
+        if self.mode == "scatter":
+            self.selected_indices = np.nonzero(selection)
+            self.face_colors[:, :3] = [0.2, 0.4, 1.0]  # blue
+            self.face_colors[self.selected_indices, :3] = [1.0, 0.5, 0.0]  # orange
+            self.collection.set_facecolors(self.face_colors)
+        elif self.mode == "hist":
+            for i, bar in enumerate(self.collection):
+                bar.set_facecolor("orange" if selection[i] else "steelblue")
         self.update()
 
     def update(self):
