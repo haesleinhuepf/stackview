@@ -37,24 +37,18 @@ class StackViewNDArray(np.ndarray):
     def __new__(cls, input_array, library_name=None, help_url=None):
         if 'cupy.ndarray' in str(type(input_array)):
             input_array = input_array.get()
-        obj = np.asarray(input_array).view(cls)
+        input_array = np.asarray(input_array)
+        obj = super(StackViewNDArray, cls).__new__(cls, shape=input_array.shape, dtype=input_array.dtype)
         obj.library_name = library_name
         obj.help_url = help_url
+        obj[:] = input_array
         return obj
 
     def __array_finalize__(self, obj):
         if obj is None: return
         self.library_name = getattr(obj, 'library_name', None)
         self.help_url = getattr(obj, 'help_url', None)
-        self.obj = obj
-
-    def __getattr__(self, name):
-        if name == "__repr__":
-            return self.__repr__
-        if name == "_repr_html_":
-            return self._repr_html_
-        return getattr(self.obj, name)
-
+        #self.obj = obj
 
     def __repr__(self):
         if _is_running_in_colab():
@@ -62,7 +56,7 @@ class StackViewNDArray(np.ndarray):
             display(HTML(self._repr_html_()))
             return ""
         else:
-            return self.obj.__repr__()
+            return str(self)
 
 
     def _repr_html_(self):
@@ -71,19 +65,19 @@ class StackViewNDArray(np.ndarray):
                 -------
                 HTML text with the image and some properties.
                 """
-        if len(self.obj.shape) < 2:
-            return str(self.obj)
+        if len(self.shape) < 2:
+            return str(self)
 
         import numpy as np
-        size_in_pixels = np.prod(self.obj.shape)
-        size_in_bytes = size_in_pixels * self.obj.dtype.itemsize
+        size_in_pixels = np.prod(self.shape)
+        size_in_bytes = size_in_pixels * self.dtype.itemsize
 
         from ._image_widget import _is_label_image
-        labels = _is_label_image(self.obj)
+        labels = _is_label_image(self)
 
         import matplotlib.pyplot as plt
         from ._imshow import imshow
-        imshow(self.obj,
+        imshow(self,
                 labels=labels,
                 continue_drawing=True,
                 colorbar=not labels)
@@ -110,7 +104,7 @@ class StackViewNDArray(np.ndarray):
                 import numpy as np
 
                 num_bins = 32
-                h, _ = np.histogram(self.obj, bins=num_bins)
+                h, _ = np.histogram(self, bins=num_bins)
 
                 plt.figure(figsize=(1.8, 1.2))
                 plt.bar(range(0, len(h)), h)
@@ -125,22 +119,24 @@ class StackViewNDArray(np.ndarray):
 
                 histogram = _png_to_html(_plt_to_png())
 
-            min_intensity = self.obj.min()
-            max_intensity = self.obj.max()
+            min_intensity = self.min()
+            max_intensity = self.max()
             min_max = "<tr><td>min</td><td>" + str(min_intensity) + "</td></tr>" + \
                       "<tr><td>max</td><td>" + str(max_intensity) + "</td></tr>"
 
             if labels:
-                unique_labels = list(np.unique(self.obj))
+                unique_labels = list(np.unique(self))
                 if 0 in unique_labels:
                     unique_labels.remove(0)
 
                 num_labels = len(unique_labels)
                 min_max += "<tr><td>n labels</td><td>" + str(num_labels) + "</td></tr>"
-                if max_intensity != num_labels:
-                    min_max += "<tr><td colspan=\"2\"><a href=\"https://haesleinhuepf.github.io/BioImageAnalysisNotebooks/20h_segmentation_post_processing/sequential_labeling.html\" style=\"color:darkred; font-weight:bold\">Not sequentially labeled!</a></td></tr>"
                 if min_intensity < 0:
                     min_max += "<tr><td colspan=\"2\" style=\"color:darkred; font-weight:bold\">Negative label values detected!</td></tr>"
+                else:
+                    if max_intensity != num_labels:
+                        min_max += "<tr><td colspan=\"2\"><a href=\"https://haesleinhuepf.github.io/BioImageAnalysisNotebooks/20h_segmentation_post_processing/sequential_labeling.html\" style=\"color:darkred; font-weight:bold\">Not sequentially labeled!</a></td></tr>"
+
         else:
             min_max = ""
 
@@ -236,8 +232,8 @@ def _imshow(image, title: str = None, labels: bool = False, min_display_intensit
     continue_drawing: float
         True: the next shown image can be visualized on top of the current one, e.g. with alpha = 0.5
     """
+    return
     import numpy as np
-
     if len(image.shape) == 3 and image.shape[2] == 3: # RGB image
         import matplotlib.pyplot as plt
         plt.imshow(image, vmin=min_display_intensity, vmax=max_display_intensity,
@@ -261,10 +257,10 @@ def _imshow(image, title: str = None, labels: bool = False, min_display_intensit
         import matplotlib
         import numpy as np
 
-        if not hasattr(_imshow, "labels_cmap"):
+        if not hasattr(imshow, "labels_cmap"):
             from ._image_widget import _labels_lut
-            _imshow.labels_cmap = matplotlib.colors.ListedColormap(_labels_lut())
-        cmap = _imshow.labels_cmap
+            imshow.labels_cmap = matplotlib.colors.ListedColormap(_labels_lut())
+        cmap = imshow.labels_cmap
 
         if min_display_intensity is None:
             min_display_intensity = 0
