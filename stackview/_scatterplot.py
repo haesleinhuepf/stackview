@@ -26,54 +26,59 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
     An ipywidgets widget
     """
 
-    from ipywidgets import VBox, HBox, Layout
-    from ._utilities import _no_resize
+    from ipywidgets import VBox, HBox, Layout, Output, Dropdown, Label
+    from IPython.display import display
 
     if column_x == column_y:
-        plotter = HistogramPlotter(df, column_x, column_selection, figsize, selection_changed_callback=selection_changed_callback)
+        plotter = HistogramPlotter(df, column_x, column_selection, figsize, selection_changed_callback, bins=50)
     else:
-        plotter = ScatterPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback=selection_changed_callback, markersize=markersize)
-    
+        plotter = ScatterPlotter(df, column_x, column_y, column_selection, figsize, selection_changed_callback, markersize)
+
     small_layout = Layout(width='auto', padding='0px', margin='0px', align_items='center', justify_content='center')
 
-    import ipywidgets
-    x_pulldown = ipywidgets.Dropdown(
-        options=list(df.columns),
-        value=column_x,
-        layout=small_layout
-    )
-    y_pulldown = ipywidgets.Dropdown(
-        options=list(df.columns),
-        value=column_y,
-        layout=small_layout
-    )
+    x_pulldown = Dropdown(options=list(df.columns), value=column_x, layout=small_layout)
+    y_pulldown = Dropdown(options=list(df.columns), value=column_y, layout=small_layout)
+
+    plot_output = Output()
+    with plot_output:
+        display(plotter.widget)
 
     def on_change(event):
         if event['type'] == 'change' and event['name'] == 'value':
             x_col = x_pulldown.value
             y_col = y_pulldown.value
 
-            nonlocal plotter, result
-            container = result.children[-1]
+            nonlocal plotter
 
-            if x_col == y_col:
-                new_plotter = HistogramPlotter(df, x_col, column_selection, figsize, selection_changed_callback)
+            is_histogram_now = (x_col == y_col)
+            is_histogram_current = (plotter.column_x == plotter.column_y)
+
+            if is_histogram_now != is_histogram_current:
+                if is_histogram_now:
+                    new_plotter = HistogramPlotter(df, x_col, column_selection, figsize, selection_changed_callback, bins=50)
+                else:
+                    new_plotter = ScatterPlotter(df, x_col, y_col, column_selection, figsize, selection_changed_callback, markersize)
+                plotter = new_plotter
+
+                with plot_output:
+                    plot_output.clear_output(wait=True)
+                    display(new_plotter.widget)
             else:
-                new_plotter = ScatterPlotter(df, x_col, y_col, column_selection, figsize, selection_changed_callback, markersize)
-
-            result.children = (result.children[0], new_plotter.widget)
-            plotter = new_plotter
+                if is_histogram_now:
+                    plotter.set_data(df, x_col)
+                else:
+                    plotter.set_data(df, x_col, y_col)
+                plotter.update()
 
     x_pulldown.observe(on_change)
     y_pulldown.observe(on_change)
 
-    result = _no_resize(VBox([
-        HBox([ipywidgets.Label("Axes "), x_pulldown, y_pulldown], layout=small_layout),
-        plotter.widget
-    ]))
+    result = VBox([
+        HBox([Label("Axes "), x_pulldown, y_pulldown], layout=small_layout),
+        plot_output
+    ])
 
     result.update = plotter.update
-
     return result
 
 
@@ -104,21 +109,17 @@ class ScatterPlotter():
         from matplotlib._pylab_helpers import Gcf
         from IPython import get_ipython
 
-        # switch to interactive mode if we are in a Jupyter notebook
         ipython = get_ipython()
         if ipython is not None:
             ipython.run_line_magic("matplotlib", "ipympl")
         plt.ion()
 
-        # store variables
         self.set_data(df, column_x, column_y)
         self.selection_column = column_selection
         self.selection_changed_callback = selection_changed_callback
         self.markersize = markersize
 
-        # create figure
         self.fig = plt.figure(figsize=figsize)
-        #self.fig.tight_layout(pad=0, h_pad=0, w_pad=0)
         plt.subplots_adjust(left=0.15, right=1, top=1, bottom=0.1)
 
         self.ax = None
@@ -130,15 +131,12 @@ class ScatterPlotter():
         self.fig.canvas.footer_visible = False
         self.fig.canvas.resizable = False
 
-        # prevent immediate display of the canvas
         manager = Gcf.get_active()
         Gcf.figs.pop(manager.num, None)
 
         self.selector = None
-        #self.selector = Selector(self.fig, self.ax, self.plotted_points, callback=self.set_selection)
         self.update()
 
-        # show selection if defined
         if column_selection in df.columns:
             self.selector.set_selection(df[column_selection])
             self.update()
@@ -166,11 +164,36 @@ class ScatterPlotter():
         self.selector = Selector(self.fig, self.ax, self.plotted_points, callback=self.set_selection)
         if self.selection_column in self.dataframe.columns:
             self.selector.set_selection(self.dataframe[self.selection_column])
-
         self.selector.update()
 
+        
 class HistogramPlotter:
-    def __init__(self, df, column, column_selection, figsize, selection_changed_callback):
+
+    def __init__(self, df, column, column_selection, figsize, selection_changed_callback, bins=30):
+        """
+        An interactive histogram plotter for a single column of a pandas DataFrame.
+        Designed to be used in combination with ipywidgets for dynamic display.
+
+        Parameters
+        ----------
+        df : pandas.DataFrame
+            The dataframe containing the data to plot
+        column : str
+            The column of the dataframe to plot as a histogram
+        column_selection : str
+            The name of the column storing selection status (currently unused for histograms)
+        figsize : tuple
+            The size of the figure (width, height)
+        selection_changed_callback : function or None
+            Callback function triggered when selection changes (not used in histogram)
+        bins : int
+            Number of bins to use for the histogram
+
+        Attributes
+        ----------
+        widget : matplotlib.backend_bases.FigureCanvasBase
+            The canvas widget to be displayed in a Jupyter notebook
+        """
         import matplotlib.pyplot as plt
         from matplotlib._pylab_helpers import Gcf
         from IPython import get_ipython
@@ -182,8 +205,11 @@ class HistogramPlotter:
 
         self.dataframe = df
         self.column = column
+        self.column_x = column
+        self.column_y = column
         self.selection_column = column_selection
         self.selection_changed_callback = selection_changed_callback
+        self.bins = bins
 
         self.fig = plt.figure(figsize=figsize)
         plt.subplots_adjust(left=0.15, right=1, top=1, bottom=0.1)
@@ -201,10 +227,16 @@ class HistogramPlotter:
 
         self.widget = self.fig.canvas
 
+    def set_data(self, df, column):
+        self.dataframe = df
+        self.column = column
+        self.column_x = column
+        self.column_y = column
+
     def update(self):
         self.fig.clf()
         self.ax = self.fig.gca()
-        self.ax.hist(self.dataframe[self.column], bins='auto', color='steelblue')
+        self.ax.hist(self.dataframe[self.column], bins=self.bins, color='steelblue')
         self.ax.set_xlabel(self.column)
         self.ax.set_ylabel("Frequency")
         self.fig.canvas.draw_idle()
@@ -213,7 +245,30 @@ class HistogramPlotter:
 # modified from https://matplotlib.org/3.1.1/gallery/widgets/lasso_selector_demo_sgskip.html
 class Selector:
     def __init__(self, parent, ax, collection, callback):
+        """
+        Interactive Lasso-based point selector for matplotlib scatter plots.
+        Highlights selected points and invokes a callback with the selection mask.
+
+        Parameters
+        ----------
+        parent : matplotlib.figure.Figure
+            The matplotlib figure containing the plot
+        ax : matplotlib.axes.Axes
+            The axes to attach the lasso selector to
+        collection : matplotlib.collections.PathCollection
+            The scatter plot collection from which points are selected
+        callback : function
+            A function that receives a boolean mask of selected points
+
+        Attributes
+        ----------
+        selected_indices : list
+            Indices of the currently selected points
+        face_colors : ndarray
+            Array of RGBA colors used to visualize selected/unselected points
+        """
         from matplotlib.widgets import LassoSelector
+        from matplotlib.path import Path
         self.parent = parent
         self.ax = ax
         self.canvas = ax.figure.canvas
@@ -238,13 +293,13 @@ class Selector:
         self.callback(selection)
 
     def set_selection(self, selection):
-        from ._colormaps import _labels_lut
         self.selected_indices = np.nonzero(selection)
-        labels_lut = _labels_lut()
 
-        for i in range(3):
-            self.face_colors[:, i] = labels_lut[1,i]
-            self.face_colors[self.selected_indices, i] = labels_lut[2,i]
+        # Set all points to blue [0.2, 0.4, 1.0]
+        self.face_colors[:, :3] = [0.2, 0.4, 1.0]  # blue
+
+        # Set selected points to orange [1.0, 0.5, 0.0]
+        self.face_colors[self.selected_indices, :3] = [1.0, 0.5, 0.0]  # orange
 
         self.collection.set_facecolors(self.face_colors)
         self.update()
