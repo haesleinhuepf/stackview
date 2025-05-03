@@ -350,14 +350,19 @@ class Selector:
             self.set_selection(selection)
 
     def set_selection(self, selection):
+        blue = [31 / 255, 119 / 255, 180 / 255]   # #1f77b4
+        orange = [255 / 255, 127 / 255, 14 / 255] # #ff7f0e
+
         if self.mode == "scatter":
             self.selected_indices = np.nonzero(selection)
-            self.face_colors[:, :3] = [0.2, 0.4, 1.0]  # blue
-            self.face_colors[self.selected_indices, :3] = [1.0, 0.5, 0.0]  # orange
+            self.face_colors[:, :3] = blue  # reset all to blue
+            self.face_colors[self.selected_indices, :3] = orange  # selected to orange
             self.collection.set_facecolors(self.face_colors)
+
         elif self.mode == "hist":
             for i, bar in enumerate(self.collection):
-                bar.set_facecolor("orange" if selection[i] else "steelblue")
+                bar.set_facecolor(orange if selection[i] else blue)
+
         self.update()
 
     def update(self):
