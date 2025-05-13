@@ -131,7 +131,7 @@ stackview.imshow(labels, plot=axs[2], alpha=0.4, title='image + labels')
 
 ### Static animations
 
-The `animate` and `animate_curtain` functions can be used to store animations of image stacks / images blended over each other as gif to disk.
+The `animate`, `animate_curtain` and `animate_blend` functions can be used to store animations of image stacks / images blended over each other as gif to disk.
 
 ```python
 stackview.animate(blobs_images, frame_delay_ms=50)
@@ -197,6 +197,17 @@ stackview.curtain(slice_image, labels)
 ```
 
 ![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/demo_curtain3.gif)
+
+### Blend
+
+You can blend images interactively like this:
+
+```
+stackview.blend(image, label_image)
+```
+
+![](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/blend.gif)
+
 
 ### Side-by-side view
 

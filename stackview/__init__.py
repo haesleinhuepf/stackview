@@ -1,4 +1,4 @@
-__version__ = "0.17.0"
+__version__ = "0.18.0"
 
 from ._static_view import jupyter_displayable_output, insight
 from ._utilities import merge_rgb
@@ -16,7 +16,7 @@ from ._picker import picker
 from ._switch import switch
 from ._colormaps import create_colormap
 from ._imshow import imshow
-from ._animate import animate, animate_curtain
+from ._animate import animate, animate_curtain, animate_blend
 from ._display_range import display_range
 from ._scatterplot import scatterplot
 from ._grid import grid
@@ -25,3 +25,4 @@ from ._sliceplot import sliceplot
 from ._wordcloudplot import wordcloudplot
 from ._add_bounding_boxes import add_bounding_boxes
 from ._histogram import histogram
+from ._blend import blend
