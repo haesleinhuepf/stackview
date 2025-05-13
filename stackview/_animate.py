@@ -1,4 +1,3 @@
-
 def animate(timelapse, filename:str=None, overwrite_file:bool=True, frame_delay_ms:int=150, num_loops:int=1000, colormap=None, display_min=None, display_max=None, zoom_factor:float=1.0):
     """
     Create an animated GIF from a list of 2D images and return it as Markdown object, that can be shown in Jupyter notebooks.
@@ -148,3 +147,82 @@ def animate_curtain(timelapse, timelapse_curtain,
         images.append(image_slice)
 
     return animate(np.asarray(images), filename=filename, overwrite_file=overwrite_file, frame_delay_ms=frame_delay_ms, num_loops=num_loops, zoom_factor=zoom_factor)
+
+def animate_blend(
+        image1,
+        image2,
+        num_steps: int = 20,
+        zoom_factor: float = 1.0,
+        colormap1: str = None,
+        display_min1: float = None,
+        display_max1: float = None,
+        colormap2: str = None,
+        display_min2: float = None,
+        display_max2: float = None,
+        filename: str = None,
+        overwrite_file: bool = True,
+        frame_delay_ms: int = 150,
+        num_loops: int = 1000
+):
+    """Create an animated GIF showing a smooth blend transition between two images.
+
+    Parameters
+    ----------
+    image1 : image
+        First image to blend
+    image2 : image
+        Second image to blend
+    num_steps : int, optional
+        Number of steps in the animation
+    zoom_factor : float, optional
+        Allows showing the image larger (> 1) or smaller (<1)
+    colormap1 : str, optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ... for first image
+    display_min1 : float, optional
+        Lower bound of properly shown intensities for first image
+    display_max1 : float, optional
+        Upper bound of properly shown intensities for first image
+    colormap2 : str, optional
+        Matplotlib colormap name or "pure_green", "pure_magenta", ... for second image
+    display_min2 : float, optional
+        Lower bound of properly shown intensities for second image
+    display_max2 : float, optional
+        Upper bound of properly shown intensities for second image
+    filename : str, optional
+        Name of the file where the animation will be saved
+    overwrite_file : bool, optional
+        Overwrite the file if it already exists. Default: True
+    frame_delay_ms : int, optional
+        Delay between frames in milliseconds
+    num_loops : int, optional
+        Number of loops in the animation
+
+    Returns
+    -------
+    An HTML object that can be displayed in a Jupyter notebook.
+    """
+    import numpy as np
+    from ._image_widget import _img_to_rgb
+
+    if 'cupy.ndarray' in str(type(image1)):
+        image1 = image1.get()
+
+    if 'cupy.ndarray' in str(type(image2)):
+        image2 = image2.get()
+
+    # Convert images to RGB
+    image1_rgb = _img_to_rgb(image1, colormap=colormap1, display_min=display_min1, display_max=display_max1)
+    image2_rgb = _img_to_rgb(image2, colormap=colormap2, display_min=display_min2, display_max=display_max2)
+
+    # Create frames with different blend factors
+    frames = []
+    for i in range(num_steps):
+        blend_factor = i / (num_steps - 1)
+        blended = (1 - blend_factor) * image1_rgb + blend_factor * image2_rgb
+        frames.append(blended.astype(np.uint8))
+
+    # Add reverse frames to create a smooth loop
+    frames.extend(frames[::-1])
+
+    return animate(np.asarray(frames), filename=filename, overwrite_file=overwrite_file,
+                  frame_delay_ms=frame_delay_ms, num_loops=num_loops, zoom_factor=zoom_factor)
