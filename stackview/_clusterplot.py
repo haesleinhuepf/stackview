@@ -25,7 +25,7 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
     zoom_spline_order: int, optional
         Spline order used for interpolation (default=0, nearest-neighbor)
     figsize: tuple, optional
-        The size of the plot figure
+        The size of the scatter plot figure
     alpha: float, optional
         sets the transparency of the curtain
     markersize: int
@@ -75,5 +75,6 @@ def clusterplot(df, labels, column_x:str="x", column_y:str="y", column_selection
     return grid([[
         image_display,
         scatterplot,
+        
     ]])
 
