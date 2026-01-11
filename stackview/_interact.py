@@ -47,6 +47,7 @@ def interact(func,
     from ._context import Context
     from ._utilities import _no_resize
     from ._slice_viewer import _SliceViewer
+    from ._utilities import SliderWithButtons
 
     if 'cupy.ndarray' in str(type(image)):
         image = image.get()
@@ -94,17 +95,20 @@ def interact(func,
                                        continuous_update=continuous_update)
             exposable = True
         elif sig.parameters[key].annotation is int:
-            default_value = int_slider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
+            slider = int_slider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
+            default_value = SliderWithButtons(slider)
             exposable = True
         elif sig.parameters[key].annotation is float or 'sigma' in key or 'radius' in key:
-            default_value = float_slider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
+            slider = float_slider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
+            default_value = SliderWithButtons(slider)
             exposable = True
         elif key.startswith("is_") or sig.parameters[key].annotation is bool:
             default_value = ipywidgets.Checkbox(value=default_value)
             exposable = True
         elif key == 'footprint' or key == 'selem' or key == 'structuring_element':
             footprint_parameters.append(key)
-            default_value = ipywidgets.IntSlider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
+            slider = ipywidgets.IntSlider(min=min_value, max=max_value, step=step, value=default_value, continuous_update=continuous_update)
+            default_value = SliderWithButtons(slider)
             exposable = True
         elif parameter_is_image_parameter(sig.parameters[key]) and "destination" not in key and key != "out"  and key != "output":
             if context is not None:

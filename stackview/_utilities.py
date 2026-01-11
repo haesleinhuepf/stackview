@@ -96,3 +96,38 @@ def _gif_to_html(gif, width=None):
 
     url = 'data:image/gif;base64,' + base64.b64encode(gif).decode('utf-8')
     return f'<img src="{url}" {style}></img>'
+
+import ipywidgets
+
+class SliderWithButtons(ipywidgets.HBox, ipywidgets.ValueWidget):
+    """Custom widget that wraps a slider with +/- buttons and exposes the slider's value."""
+    
+    def __init__(self, slider):
+        self.slider = slider
+        
+        def on_minus_click(b):
+            self.slider.value = max(self.slider.min, self.slider.value - self.slider.step)
+        
+        def on_plus_click(b):
+            self.slider.value = min(self.slider.max, self.slider.value + self.slider.step)
+        
+        minus_button = ipywidgets.Button(description='-', layout=ipywidgets.Layout(width='30px'))
+        minus_button.on_click(on_minus_click)
+        
+        plus_button = ipywidgets.Button(description='+', layout=ipywidgets.Layout(width='30px'))
+        plus_button.on_click(on_plus_click)
+        
+        super().__init__([slider, minus_button, plus_button])
+    
+    @property
+    def value(self):
+        return self.slider.value
+    
+    @value.setter
+    def value(self, val):
+        self.slider.value = val
+    
+    def observe(self, handler, names='value', type='change'):
+        """Delegate observe to the slider."""
+        if hasattr(self, 'slider'):
+            return self.slider.observe(handler, names=names, type=type)
