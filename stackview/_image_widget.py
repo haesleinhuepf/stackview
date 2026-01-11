@@ -97,7 +97,7 @@ def _img_to_rgb(image,
     image = np.maximum(image, 0)
 
     if colormap is None:
-        return np.asarray([image, image, image]).swapaxes(0, 2).swapaxes(1, 0)
+        return (np.asarray([image, image, image]).swapaxes(0, 2).swapaxes(1, 0)).astype(np.uint8)
     else:
         lut = np.asarray(create_colormap(colormap).colors)
-        return np.asarray([lut[:, c].take(image.astype(int)) for c in range(0, 3)]).swapaxes(0, 2).swapaxes(1, 0) * 255
+        return (np.asarray([lut[:, c].take(image.astype(int)) for c in range(0, 3)]).swapaxes(0, 2).swapaxes(1, 0) * 255).astype(np.uint8)
