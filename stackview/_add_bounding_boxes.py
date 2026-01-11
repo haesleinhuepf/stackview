@@ -31,7 +31,7 @@ def add_bounding_boxes(image, bounding_boxes, line_width=2):
         List of dictionaries, each with 'x', 'y', 'width', 'height' keys, optional also 'color' and 'description'.
         If image is a 3D image, the list of bounding boxes should be a list of lists of dictionaries,
         for each image slice a separate list.
-    linewidth : int, optional
+    line_width : int, optional
         Width of the bounding box lines, default is 2
     """
     # handle n-d images and bounding boxes
