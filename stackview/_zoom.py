@@ -62,6 +62,8 @@ def zoom(
                           display_max=display_max,
                           slider_text=slider_text)
     view = viewer.view
+    view.layout = ipywidgets.Layout(max_height='200px')
+    
     # setup user interface for changing the slice
     slice_slider = viewer.slice_slider
 
@@ -112,6 +114,7 @@ def zoom(
                                colormap=colormap,
                                display_min=display_min,
                                display_max=display_max)
+    zoom_viewer.view.layout = ipywidgets.Layout(max_height='200px')
 
     layout = layout=ipywidgets.Layout(display="flex", max_height="25px")
     slice_lbl = ipywidgets.Label(f"(..., 0:{height}, 0:{width}", layout=layout)
@@ -158,24 +161,27 @@ def zoom(
         view.data = annotated_image
 
 
+    fixed_layout = ipywidgets.Layout(max_height='200px')
+
     # user interface for zoomed area
     tool_box = ipywidgets.VBox([
-        zoom_viewer.view,
+        _no_resize(zoom_viewer.view),
         table
     ])
+
 
     event_handler = Event(source=view, watched_events=['mousemove'])
 
     if slice_slider is not None:
         # connect user interface with event
         result = _no_resize(ipywidgets.HBox([
-            ipywidgets.VBox([_no_resize(view), slice_slider]),
+            ipywidgets.VBox([_no_resize(view), slice_slider], layout=fixed_layout),
             tool_box
         ]))
     else:
         result = _no_resize(ipywidgets.VBox([
-            ipywidgets.HBox([_no_resize(view), tool_box], layout=ipywidgets.Layout(height='500px')),
-        ]))
+            ipywidgets.HBox([_no_resize(view), tool_box]),
+        ]), layout=fixed_layout)
 
     # event handler for when something was drawn
     def update_display_while_drawing(event):
