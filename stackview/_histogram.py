@@ -180,7 +180,6 @@ def histogram(
 
     # event handler for when something was drawn
     def update_display_while_drawing(event):
-
         # get position from event
         relative_position_x = event['relativeX'] / zoom_factor
         relative_position_y = event['relativeY'] / zoom_factor
@@ -213,7 +212,7 @@ def histogram(
         w = abs(former_drawn_position['start_x'] - former_drawn_position['end_x'])
         h = abs(former_drawn_position['start_y'] - former_drawn_position['end_y'])
 
-        update_display()
+        #update_display()
 
     # draw everything once
     update_display()
