@@ -73,11 +73,11 @@ def zoom(
         img_width = image.shape[-1]
         img_height = image.shape[-2]
 
-    former_drawn_position = {'state':None,
+    former_drawn_position = {'state': "mouse-up",
                              'start_x': 0,
                              'start_y': 0,
-                             'end_x': img_width,
-                             'end_y': img_height,
+                             'end_x': int(img_width/2),
+                             'end_y': int(img_height/2),
                              }
 
     def create_zoom_image(image, x, y, width, height):
@@ -118,7 +118,7 @@ def zoom(
     ])
 
     # event handler when the user changed the slider:
-    def update_display(event=None):
+    def update_display(event=None, height=height):
         slice_image1 = viewer.get_view_slice()
 
         rgb_image1 = _img_to_rgb(slice_image1, colormap=colormap, display_min=display_min, display_max=display_max)
@@ -138,7 +138,8 @@ def zoom(
                 'width': 50,
                 'height': 50
             }
-        annotated_image = add_bounding_boxes(rgb_image1, [bb])
+            
+        annotated_image = add_bounding_boxes(rgb_image1, [bb], line_width=max(1, int(height/500 + 0.5)))
         slice_lbl.value = f"(..., {bb['y']}:{bb['y']+bb['height']}, {bb['x']}:{bb['x']+bb['width']})"
 
         if former_drawn_position['state'] == "mouse-up" and bb is not None:
@@ -154,8 +155,8 @@ def zoom(
 
     # user interface for zoomed area
     tool_box = ipywidgets.VBox([
-        table,
-        zoom_viewer.view
+        zoom_viewer.view,
+        table
     ])
 
     event_handler = Event(source=view, watched_events=['mousemove'])
@@ -165,10 +166,10 @@ def zoom(
         result = _no_resize(ipywidgets.HBox([
             ipywidgets.VBox([_no_resize(view), slice_slider]),
             tool_box
-        ], layout=ipywidgets.Layout(max_width='500px')))
+        ]))
     else:
         result = _no_resize(ipywidgets.VBox([
-            ipywidgets.HBox([_no_resize(view), tool_box], layout=ipywidgets.Layout(max_width='500px')),
+            ipywidgets.HBox([_no_resize(view), tool_box], layout=ipywidgets.Layout(height='500px')),
         ]))
 
     # event handler for when something was drawn
