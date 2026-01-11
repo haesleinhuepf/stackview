@@ -6,7 +6,8 @@ def zoom(
         zoom_spline_order: int = 0,
         colormap:str = None,
         display_min:float = None,
-        display_max:float = None
+        display_max:float = None,
+        max_height: int = 300,
 ):
     """Shows an image with a slider to go through a stack plus a label with the current mouse position and intensity at that position.
 
@@ -30,6 +31,8 @@ def zoom(
         Lower bound of properly shown intensities
     display_max: float, optional
         Upper bound of properly shown intensities
+    max_height: int, optional
+        Maximum height of the image display in pixels
 
     Returns
     -------
@@ -62,8 +65,8 @@ def zoom(
                           display_max=display_max,
                           slider_text=slider_text)
     view = viewer.view
-    view.layout = ipywidgets.Layout(max_height='200px')
-    
+    view.layout = ipywidgets.Layout(max_height=f'{max_height}px')
+
     # setup user interface for changing the slice
     slice_slider = viewer.slice_slider
 
@@ -114,7 +117,7 @@ def zoom(
                                colormap=colormap,
                                display_min=display_min,
                                display_max=display_max)
-    zoom_viewer.view.layout = ipywidgets.Layout(max_height='200px')
+    zoom_viewer.view.layout = ipywidgets.Layout(max_height=f'{max_height}px')
 
     layout = layout=ipywidgets.Layout(display="flex", max_height="25px")
     slice_lbl = ipywidgets.Label(f"(..., 0:{height}, 0:{width}", layout=layout)
@@ -160,9 +163,6 @@ def zoom(
 
         view.data = annotated_image
 
-
-    fixed_layout = ipywidgets.Layout(max_height='200px')
-
     # user interface for zoomed area
     tool_box = ipywidgets.VBox([
         _no_resize(zoom_viewer.view),
@@ -175,13 +175,16 @@ def zoom(
     if slice_slider is not None:
         # connect user interface with event
         result = _no_resize(ipywidgets.HBox([
-            ipywidgets.VBox([_no_resize(view), slice_slider], layout=fixed_layout),
+            ipywidgets.VBox([_no_resize(view), slice_slider]),
+            ipywidgets.Label(" "),
             tool_box
         ]))
     else:
         result = _no_resize(ipywidgets.VBox([
-            ipywidgets.HBox([_no_resize(view), tool_box]),
-        ]), layout=fixed_layout)
+            ipywidgets.HBox([_no_resize(view),
+                             ipywidgets.Label(" "),
+                             tool_box]),
+        ]))
 
     # event handler for when something was drawn
     def update_display_while_drawing(event):
