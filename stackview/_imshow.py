@@ -72,6 +72,8 @@ def imshow(image,
     if len(image.shape) == 1:
         image = image[np.newaxis]
 
+    is_rgb = (image.shape[-1] == 3 or image.shape[-1] == 4) and len(image.shape) == 3
+
     if labels is None:
         labels = is_label_image(image)
 
@@ -94,6 +96,11 @@ def imshow(image,
             min_display_intensity = min(0, image.min())
         if max_display_intensity is None:
             max_display_intensity = min_display_intensity + 65536
+
+    if is_rgb:
+        colormap = None
+        min_display_intensity = None
+        max_display_intensity = None
 
     if plot is None:
         import matplotlib.pyplot as plt
