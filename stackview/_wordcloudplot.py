@@ -74,9 +74,13 @@ def wordcloudplot(df, column_x: str = "x", column_y: str = "y", column_text: str
     scatterplot = scatterplot(df, column_x, column_y, column_selection, figsize=figsize,
                               selection_changed_callback=update_selection, markersize=markersize)
 
-    return grid([[
+
+    a_grid = grid([[
         image_display,
         scatterplot,
 
     ]])
+    a_grid.observe = scatterplot.observe
+
+    return a_grid
 
