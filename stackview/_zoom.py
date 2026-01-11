@@ -65,34 +65,49 @@ def zoom(
     # setup user interface for changing the slice
     slice_slider = viewer.slice_slider
 
+    # Get the correct width and height for both RGB and grayscale images
+    if image.ndim > 2 and image.shape[-1] in [3,4]:
+        img_width = image.shape[-2]
+        img_height = image.shape[-3]
+    else:
+        img_width = image.shape[-1]
+        img_height = image.shape[-2]
+
     former_drawn_position = {'state':None,
                              'start_x': 0,
                              'start_y': 0,
-                             'end_x': image.shape[-1],
-                             'end_y': image.shape[-2],
+                             'end_x': img_width,
+                             'end_y': img_height,
                              }
 
     def create_zoom_image(image, x, y, width, height):
-        if image.shape[-1] in [3,4]: #RGB image
-            zoomed_image = np.zeros((image.shape[0], height, width, image.shape[-1]), dtype=image.dtype)
-            zoomed_image[..., :, :, :] = image[..., y:y+height, x:x+width, :]
+        if image.ndim > 2 and image.shape[-1] in [3,4]: #RGB image
+            zoomed_image = image[..., y:y+height, x:x+width, :]
         else:
             zoomed_image = image[..., y:y+height, x:x+width]
         return zoomed_image
 
-    zoom_image = create_zoom_image(image, 0, 0, image.shape[-2], image.shape[-1])
+    # For RGB images, shape is (..., height, width, channels), for grayscale it's (..., height, width)
+    if image.ndim > 2 and image.shape[-1] in [3,4]:
+        height = image.shape[-3]
+        width = image.shape[-2]
+    else:
+        height = image.shape[-2]
+        width = image.shape[-1]
+    zoom_image = create_zoom_image(image, 0, 0, width, height)
     
     # Calculate the zoom factor for the zoom viewer so it matches the height of the main view
-    # Main view height = image.shape[-2] * zoom_factor
+    # Main view height = image.shape[-2] * zoom_factor (for grayscale) or image.shape[-3] * zoom_factor (for RGB)
     # We want zoom_viewer height = main view height
-    # So: zoom_image.shape[-2] * zoom_viewer_zoom_factor = image.shape[-2] * zoom_factor
-    main_view_height = image.shape[-2] * zoom_factor
-    zoom_viewer_zoom_factor = main_view_height / zoom_image.shape[-2]
+    # So: zoom_image.shape[-2] * zoom_viewer_zoom_factor = actual_height * zoom_factor
+    if image.ndim > 2 and image.shape[-1] in [3,4]:
+        main_view_height = image.shape[-3] * zoom_factor
+    else:
+        main_view_height = image.shape[-2] * zoom_factor
+    zoom_viewer_zoom_factor = main_view_height / zoom_image.shape[-2] if zoom_image.shape[-2] > 0 else 1.0
     
     zoom_viewer = _SliceViewer(zoom_image, zoom_factor=zoom_viewer_zoom_factor, zoom_spline_order=zoom_spline_order)
 
-    width = image.shape[-1]
-    height = image.shape[-2]
     layout = layout=ipywidgets.Layout(display="flex", max_height="25px")
     slice_lbl = ipywidgets.Label(f"(..., 0:{height}, 0:{width}", layout=layout)
 
@@ -170,9 +185,13 @@ def zoom(
         displayed_width = event['boundingRectWidth']
         displayed_height = event['boundingRectHeight']
         
-        # Calculate the actual image dimensions (accounting for zoom_factor)
-        actual_image_width = image.shape[-1]
-        actual_image_height = image.shape[-2]
+        # Calculate the actual image dimensions - handle RGB images differently
+        if image.ndim > 2 and image.shape[-1] in [3,4]:
+            actual_image_width = image.shape[-2]
+            actual_image_height = image.shape[-3]
+        else:
+            actual_image_width = image.shape[-1]
+            actual_image_height = image.shape[-2]
         
         # Calculate scale factors: display pixels -> image pixels
         scale_x = actual_image_width / displayed_width
