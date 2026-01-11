@@ -26,3 +26,4 @@ from ._wordcloudplot import wordcloudplot
 from ._add_bounding_boxes import add_bounding_boxes
 from ._histogram import histogram
 from ._blend import blend
+from ._zoom import zoom

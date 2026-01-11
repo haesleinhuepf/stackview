@@ -94,7 +94,7 @@ def zoom(
     else:
         height = image.shape[-2]
         width = image.shape[-1]
-    zoom_image = create_zoom_image(image, 0, 0, width, height)
+    zoom_image = create_zoom_image(image, 0, 0, int(img_width/2), int(img_height/2))
     
     # Calculate the zoom factor for the zoom viewer so it matches the height of the main view
     # Main view height = image.shape[-2] * zoom_factor (for grayscale) or image.shape[-3] * zoom_factor (for RGB)
@@ -106,7 +106,12 @@ def zoom(
         main_view_height = image.shape[-2] * zoom_factor
     zoom_viewer_zoom_factor = main_view_height / zoom_image.shape[-2] if zoom_image.shape[-2] > 0 else 1.0
     
-    zoom_viewer = _SliceViewer(zoom_image, zoom_factor=zoom_viewer_zoom_factor, zoom_spline_order=zoom_spline_order)
+    zoom_viewer = _SliceViewer(zoom_image, 
+                               zoom_factor=zoom_viewer_zoom_factor, 
+                               zoom_spline_order=zoom_spline_order,
+                               colormap=colormap,
+                               display_min=display_min,
+                               display_max=display_max)
 
     layout = layout=ipywidgets.Layout(display="flex", max_height="25px")
     slice_lbl = ipywidgets.Label(f"(..., 0:{height}, 0:{width}", layout=layout)
