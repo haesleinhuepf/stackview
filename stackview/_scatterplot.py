@@ -59,6 +59,7 @@ def scatterplot(df, column_x: str = "x", column_y: str = "y", column_selection: 
     ]))
 
     result.update = plotter.update
+    result.observe = plotter.observe
 
     return result
 
@@ -99,7 +100,7 @@ class ScatterPlotter():
         # store variables
         self.set_data(df, column_x, column_y)
         self.selection_column = column_selection
-        self.selection_changed_callback = selection_changed_callback
+        self.selection_changed_callback = [selection_changed_callback]
         self.markersize = markersize
 
         # create figure
@@ -142,8 +143,8 @@ class ScatterPlotter():
     def set_selection(self, selection):
         self.dataframe[self.selection_column] = selection
         self.selector.set_selection(selection)
-        if self.selection_changed_callback is not None:
-            self.selection_changed_callback(selection)
+        for f in self.selection_changed_callback:
+            f(selection)
 
     def update(self):
         self.fig.clf()
@@ -156,6 +157,13 @@ class ScatterPlotter():
             self.selector.set_selection(self.dataframe[self.selection_column])
 
         self.selector.update()
+        
+
+    def observe(self, callback):
+        self.selection_changed_callback.append(callback)
+
+    def unobserve(self, callback):
+        self.selection_changed_callback.remove(callback)
 
 
 # modified from https://matplotlib.org/3.1.1/gallery/widgets/lasso_selector_demo_sgskip.html
