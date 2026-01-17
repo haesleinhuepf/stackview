@@ -36,6 +36,14 @@ def list_bia_bob_plugins():
     * Allows switching between multiple images and displaying them with a slider.
       stackview.switch(images:list)
     
+    * Add bounding boxes to an image.
+      bounding_boxes = [ {'x':5, 'y':5, 'width':10, 'height':15} ]
+      stackview.add_bounding_boxes(image, bounding_boxes)
+    
+    * Add text to images at specified positions.
+      texts = ["Sample Text"] # List of texts for each image
+      stackview.add_text([image], texts, position='top-left')
+
     * Allows plotting a scatterplot of a pandas dataframe while interactively choosing the columns and using a lasso tool for selecting data points
       stackview.scatterplot(dataframe, column_x, column_y, selection_column)
     
