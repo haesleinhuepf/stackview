@@ -6,6 +6,7 @@ def add_text(
     texts: List[str],
     font_size: int = 16,
     text_color: str = 'white',
+    bg_color: str = 'black',
     position: str = 'top',
     colormap: str = 'Greys_r'
 ) -> List[np.ndarray]:
@@ -74,6 +75,16 @@ def add_text(
             x_pos, ha = 0.95, 'right'
 
         # Add text with background
+        px = 1.0 / w
+        for delta_x, delta_y in [(-px, -px), (px, -px), (-px, px), (px, px)]:
+            ax.text(
+                x_pos+delta_x, y_pos+delta_y, text,
+                transform=ax.transAxes,
+                fontsize=font_size,
+                color=bg_color,
+                ha=ha,
+                va=va
+            )
         ax.text(
             x_pos, y_pos, text,
             transform=ax.transAxes,
