@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="stackview",
-    version="0.19.1",
+    version="0.19.2",
     license="BSD-3-Clause",
     author="Robert Haase",
     author_email="robert.haase@uni-leipzig.de",
