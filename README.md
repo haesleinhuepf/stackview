@@ -402,6 +402,19 @@ If you combine stackview with [voila](https://voila.readthedocs.io/en/stable/), 
 
 ![img.png](https://raw.githubusercontent.com/haesleinhuepf/stackview/main/docs/images/voila.png)
 
+## Future Development
+
+We're planning exciting new features for stackview! Check out our comprehensive proposals:
+* 📋 [Next Generation Stackview Proposals](PROPOSALS_INDEX.md) - Feature proposals and roadmap
+* 🎯 [Executive Summary](EXECUTIVE_SUMMARY.md) - Strategic overview and priorities
+* 🔬 [Feature Details](NEXT_GENERATION_PROPOSALS.md) - 29 proposed features
+* 🛠️ [Implementation Roadmap](IMPLEMENTATION_ROADMAP.md) - Technical specifications
+* 📊 [Competitive Analysis](FEATURE_COMPARISON.md) - How stackview compares
+
+Top priorities include: scale bars (Issue #167), performance improvements (Issue #61), multi-image curtain (Issue #80), measurement tools, and 3D volume rendering (Issue #140).
+
+**Your feedback is valuable!** Please comment on the proposals via GitHub issues or discussions.
+
 ## Contributing
 
 Contributions, bug-reports and ideas for further development are very welcome.
