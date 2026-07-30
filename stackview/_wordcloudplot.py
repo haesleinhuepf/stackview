@@ -39,7 +39,7 @@ def wordcloudplot(df, column_x: str = "x", column_y: str = "y", column_text: str
     from wordcloud import WordCloud
 
     if column_selection in df.columns:
-        selected_texts = df[df['selection'] == 1][column_text]
+        selected_texts = df[df[column_selection] == 1][column_text]
         text = "\n".join(selected_texts)
     else:
         selected_texts = df[column_text]
