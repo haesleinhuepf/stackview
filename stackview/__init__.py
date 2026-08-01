@@ -28,3 +28,4 @@ from ._histogram import histogram
 from ._blend import blend
 from ._zoom import zoom
 from ._add_text import add_text
+from ._plot_profile import plot_profile
